@@ -1,7 +1,7 @@
+import { Roboto_Mono } from "next/font/google";
 import "./globals.css";
 import type { Metadata } from "next";
 import Providers from "./providers";
-import { Roboto_Mono } from "next/font/google";
 import Header from "./header";
 
 export const metadata: Metadata = {
@@ -14,6 +14,7 @@ const robotoMono = Roboto_Mono({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   style: ["normal", "italic"],
+  display: "swap",
 });
 
 export default function RootLayout({
@@ -23,7 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={robotoMono.className}>
-      <body>
+      <body className="overflow-hidden">
         <div className="flex flex-col h-full">
           <Providers>
             <Header />
