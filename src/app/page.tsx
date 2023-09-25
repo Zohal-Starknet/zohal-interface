@@ -1,3 +1,4 @@
+import TradeSwapPanel from "./trade-swap-panel";
 import Panel from "./ui/panel";
 
 export default function Home() {
@@ -7,7 +8,7 @@ export default function Home() {
         <Panel className="flex-auto">Chart</Panel>
         <Panel className="flex-initial basis-[20rem]">Position</Panel>
       </div>
-      <Panel className="w-80">Trade / Swap</Panel>
+      <TradeSwapPanel />
     </main>
   );
 }
