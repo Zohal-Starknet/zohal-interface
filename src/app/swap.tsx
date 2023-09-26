@@ -2,6 +2,7 @@
 import Fieldset from "./ui/fieldset";
 import Input from "./ui/input";
 import { SwapIcon } from "./ui/icons";
+import SwapMoreInformations from "./components/swap/more-informations";
 
 export default function Swap() {
   return (
@@ -22,6 +23,8 @@ export default function Swap() {
       </div>
 
       <Fieldset label="Receive" field={<Input />} />
+
+      <SwapMoreInformations />
 
       <button
         type="submit"
