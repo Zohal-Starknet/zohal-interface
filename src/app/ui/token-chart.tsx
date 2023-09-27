@@ -1,12 +1,11 @@
 "use client";
 
 // TODO @YohanTz: Add NOTICE file mentioning Trading view for using their chart library
-
 import { createChart, ColorType, CrosshairMode } from "lightweight-charts";
 import React, { useEffect, useRef } from "react";
 
 /**
- * TODO @YohanTz: Check for time zones
+ * TODO @YohanTz: Handle different time zones
  * https://tradingview.github.io/lightweight-charts/docs/time-zones
  */
 const data = [
@@ -162,28 +161,22 @@ const data = [
   { time: "2019-05-28", open: 59.21, high: 59.66, low: 59.02, close: 59.57 },
 ];
 
-export default function TokenChart() {
-  const {
-    colors: {
-      backgroundColor = "transparent",
-      upColor = "#00ff4d",
-      downColor = "#ff00b2",
-      textColor = "white",
-      gridLinesColor = "#333333",
-    } = {},
-  } = {};
+const backgroundColor = "transparent";
+const upColor = "#00ff4d";
+const downColor = "#ff0000";
+const textColor = "white";
+const gridLinesColor = "#333333";
 
+export default function TokenChart() {
   const chartContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleResize = () => {
-      chart.applyOptions({
-        width: chartContainerRef.current.clientWidth,
-        height: chartContainerRef.current.clientHeight,
-      });
-    };
+    if (chartContainerRef.current === null) {
+      return;
+    }
 
     const chart = createChart(chartContainerRef.current, {
+      autoSize: true,
       layout: {
         background: {
           type: ColorType.Solid,
@@ -197,10 +190,20 @@ export default function TokenChart() {
         horzLines: { color: gridLinesColor },
       },
       crosshair: { mode: CrosshairMode.Normal },
-      width: chartContainerRef.current.clientWidth,
-      height: chartContainerRef.current?.clientHeight,
     });
     chart.timeScale().fitContent();
+
+    // Make Chart Responsive with screen resize
+    new ResizeObserver((entries) => {
+      if (
+        entries.length === 0 ||
+        entries[0].target !== chartContainerRef.current
+      ) {
+        return;
+      }
+      const newRect = entries[0].contentRect;
+      chart.applyOptions({ height: newRect.height, width: newRect.width });
+    }).observe(chartContainerRef.current);
 
     const newSeries = chart.addCandlestickSeries({
       upColor,
@@ -209,19 +212,13 @@ export default function TokenChart() {
       wickDownColor: downColor,
       borderVisible: false,
       baseLineVisible: false,
-      borderColor: "#FF0000",
-      // priceLineVisible: false,
     });
     newSeries.setData(data);
 
-    window.addEventListener("resize", handleResize);
-
     return () => {
-      window.removeEventListener("resize", handleResize);
-
       chart.remove();
     };
-  }, [backgroundColor, textColor, upColor, downColor, gridLinesColor]);
+  }, []);
 
-  return <div ref={chartContainerRef} className="h-full" />;
+  return <div ref={chartContainerRef} className="h-full w-full" />;
 }
