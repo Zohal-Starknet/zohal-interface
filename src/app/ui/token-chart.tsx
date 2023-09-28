@@ -194,7 +194,7 @@ export default function TokenChart() {
     chart.timeScale().fitContent();
 
     // Make Chart Responsive with screen resize
-    new ResizeObserver((entries) => {
+    const chartResizeObserver = new ResizeObserver((entries) => {
       if (
         entries.length === 0 ||
         entries[0].target !== chartContainerRef.current
@@ -203,7 +203,8 @@ export default function TokenChart() {
       }
       const newRect = entries[0].contentRect;
       chart.applyOptions({ height: newRect.height, width: newRect.width });
-    }).observe(chartContainerRef.current);
+    });
+    chartResizeObserver.observe(chartContainerRef.current);
 
     const newSeries = chart.addCandlestickSeries({
       upColor,
@@ -217,6 +218,7 @@ export default function TokenChart() {
 
     return () => {
       chart.remove();
+      chartResizeObserver.disconnect();
     };
   }, []);
 
