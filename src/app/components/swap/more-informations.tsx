@@ -5,16 +5,13 @@ import { useState } from "react";
 
 // TODO - Export Chevron animated in its own component
 export default function SwapMoreInformations() {
-  const [open, setOpen] = useState(false);
-  // TODO - find a better way not to display close animation
-  const [clickedOnce, setClickedOnce] = useState(false);
+  const [open, setOpen] = useState<boolean | undefined>(undefined);
 
   return (
     <Collapsible.Root
       open={open}
       onOpenChange={(openValue) => {
         setOpen(openValue);
-        setClickedOnce(true);
       }}
       className="mt-5 pl-1"
     >
@@ -22,12 +19,13 @@ export default function SwapMoreInformations() {
         <div className="flex items-center justify-between">
           <span>More informations</span>
           <ChevronRight
+            label={open ? "Hide" : "Show"}
             className={`text-white text-right ${
-              open
+              open === undefined
+                ? ""
+                : open
                 ? "animate-[rotate90_200ms_ease_forwards]"
-                : clickedOnce
-                ? "animate-[rotate0_200ms_ease_forwards]"
-                : ""
+                : "animate-[rotate0_200ms_ease_forwards]"
             }`}
           />
         </div>
