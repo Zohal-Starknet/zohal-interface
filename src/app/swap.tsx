@@ -17,7 +17,7 @@ export default function Swap() {
           type="button"
           className="mx-auto absolute p-2 bg-[#4b4f5d] rounded-full"
         >
-          <SwapIcon className="w-5 h-5 text-[#FFF]" />
+          <SwapIcon label="Swap" className="w-5 h-5 text-white" />
         </button>
       </div>
 

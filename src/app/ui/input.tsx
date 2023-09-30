@@ -1,8 +1,14 @@
 // TODO - Handle state
-export default function Input() {
+type Props = {
+  id?: string;
+};
+
+export default function Input(props: Props) {
+  const { id } = props;
   return (
     <input
-      className="bg-[transparent] appearance-none outline-none text-lg"
+      id={id}
+      className="bg-transparent appearance-none outline-none text-lg"
       type="number"
       inputMode="decimal"
       placeholder="0.0"

@@ -2,7 +2,7 @@
 import * as RadixTabs from "@radix-ui/react-tabs";
 import { useState, ReactNode } from "react";
 
-type TabItem = {
+export type TabItemType = {
   /** Label shown in the Tab Trigger */
   label: string;
   /** Value of the Tab */
@@ -13,7 +13,7 @@ type TabItem = {
 
 type TabsProps = {
   /** Tab items */
-  items: Array<TabItem>;
+  items: [TabItemType, TabItemType, ...TabItemType[]];
   /** a11y label for the Trigger buttons list */
   ariaLabel?: string;
 };
@@ -24,15 +24,16 @@ export default function Tabs(props: TabsProps) {
   return (
     <RadixTabs.Root
       className="w-full flex flex-col"
-      defaultValue={items[0]?.value}
+      defaultValue={items[0].value}
     >
       <RadixTabs.List
         className="w-full rounded-md p-2 bg-[#25272E] flex"
         aria-label={ariaLabel}
       >
-        {items.map((item) => (
-          <TabItem key={item.value} label={item.label} value={item.value} />
-        ))}
+        {items.map((item) => {
+          const { value, label } = item;
+          return <TabItem key={value} label={label} value={value} />;
+        })}
       </RadixTabs.List>
       {items.map((item) => {
         const { value, content } = item;
@@ -46,12 +47,12 @@ export default function Tabs(props: TabsProps) {
   );
 }
 
-function TabItem(props: Pick<TabItem, "label" | "value">) {
+function TabItem(props: Pick<TabItemType, "label" | "value">) {
   const { label, value } = props;
 
   return (
     <RadixTabs.Trigger
-      className="p-2 rounded-md flex-auto data-[state=active]:bg-[#BBA5FF] data-[state=active]:text-[#000]"
+      className="p-2 rounded-md flex-auto data-[state=active]:bg-[#BBA5FF] data-[state=active]:text-black"
       value={value}
     >
       {label}
