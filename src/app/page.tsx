@@ -1,3 +1,4 @@
+import TradeSwapPanel from "./trade-swap-panel";
 import Panel from "./ui/panel";
 import TokenChart from "./ui/token-chart";
 
@@ -12,7 +13,7 @@ export default function Home() {
 
         <Panel className="flex-initial basis-[20rem]">Position</Panel>
       </div>
-      <Panel className="w-80">Trade / Swap</Panel>
+      <TradeSwapPanel />
     </main>
   );
 }
