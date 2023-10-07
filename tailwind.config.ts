@@ -9,7 +9,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        "button-primary": "#4681f4",
+        "btn-primary": "#4681f4",
+        "btn-success": "#28a745",
+        "btn-danger": "#dc3545",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
@@ -38,6 +40,6 @@ const config: Config = {
   },
   plugins: [],
   // We add our custom colors to the safeList to be able to use them for our components
-  safelist: ["bg-button-primary"],
+  safelist: ["bg-btn-primary", "bg-btn-success", "bg-btn-danger"],
 };
 export default config;

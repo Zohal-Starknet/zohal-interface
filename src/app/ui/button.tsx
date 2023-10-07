@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes } from "react";
 
-type ButtonVariant = "primary";
+type ButtonVariant = "primary" | "success" | "danger";
 
 type ButtonProps = {
   /**
@@ -15,12 +15,14 @@ type ButtonProps = {
 export default function Button(props: ButtonProps) {
   const { variant = "primary", label, className, ...buttonProps } = props;
 
-  const buttonColor = `bg-button-${variant}`;
+  const buttonColor = `bg-btn-${variant}`;
 
   return (
     <button
       {...buttonProps}
-      className={`${buttonColor} ${className !== undefined ? className : ""}`}
+      className={`p-2 rounded-md ${buttonColor} ${
+        className !== undefined ? className : ""
+      }`}
       aria-label={label}
     >
       {label}

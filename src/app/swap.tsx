@@ -19,7 +19,8 @@ export default function Swap() {
 
       <Button
         type="submit"
-        className="mt-auto p-2 rounded-md justify-self-end"
+        variant="primary"
+        className="mt-auto"
         label="Connect Wallet"
       />
     </Form>
