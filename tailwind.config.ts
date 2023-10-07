@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      colors: {
+        "button-primary": "#4681f4",
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
@@ -34,5 +37,7 @@ const config: Config = {
     },
   },
   plugins: [],
+  // We add our custom colors to the safeList to be able to use them for our components
+  safelist: ["bg-button-primary"],
 };
 export default config;
