@@ -9,7 +9,6 @@ export const metadata: Metadata = {
   description: "Satoru",
 };
 
-// TODO - Link this to the Tailwind Font
 const robotoMono = Roboto_Mono({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
@@ -23,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={robotoMono.className}>
+    <html lang="en" className={`${robotoMono.className}`}>
       <body>
         <div className="flex flex-col h-full">
           <Providers>

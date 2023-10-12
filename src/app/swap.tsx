@@ -7,7 +7,7 @@ import SwapMoreInformations from "./components/swap/more-informations";
 export default function Swap() {
   return (
     <form
-      className="py-4 flex flex-col gap-1.5 h-full"
+      className="pt-4 flex flex-col gap-1.5 h-full"
       // TODO - Handle correctly Submit event
       onSubmit={(event) => event.preventDefault()}
     >
