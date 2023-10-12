@@ -30,6 +30,10 @@ const config: Config = {
           from: { transform: "rotate(90deg)" },
           to: { transform: "rotate(0deg)" },
         },
+        moveRTL: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-100%)" },
+        },
       },
     },
   },
