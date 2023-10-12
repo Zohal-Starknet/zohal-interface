@@ -1,21 +1,13 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import Providers from "./providers";
-import { Roboto_Mono } from "next/font/google";
 import Header from "./header";
+import { robotoMono } from "@satoru/utils/fonts";
 
 export const metadata: Metadata = {
   title: "Satoru",
   description: "Satoru",
 };
-
-// TODO - Link this to the Tailwind Font
-const robotoMono = Roboto_Mono({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  style: ["normal", "italic"],
-  display: "swap",
-});
 
 export default function RootLayout({
   children,
