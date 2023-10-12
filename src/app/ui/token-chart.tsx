@@ -1,5 +1,6 @@
 "use client";
 
+import { robotoMono } from "@satoru/utils/fonts";
 // TODO @YohanTz: Add NOTICE file mentioning Trading view for using their chart library
 import { createChart, ColorType, CrosshairMode } from "lightweight-charts";
 import React, { useEffect, useRef } from "react";
@@ -183,7 +184,7 @@ export default function TokenChart() {
           color: backgroundColor,
         },
         textColor,
-        // TODO @YohanTz: Apply Roboto Mono font here
+        fontFamily: robotoMono.style.fontFamily,
       },
       grid: {
         vertLines: { color: gridLinesColor },

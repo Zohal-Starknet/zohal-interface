@@ -2,6 +2,7 @@
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { ChevronRight } from "@satoru/app/ui/icons";
 import { useState } from "react";
+import PriceInfo from "../price-info";
 
 // TODO - Export Chevron animated in its own component
 export default function SwapMoreInformations() {
@@ -48,19 +49,3 @@ const priceInfos = [
   { label: "Available Liquidity", value: "$272,569.02" },
   { label: "Price", value: "31913.0674 ARB / BTC" },
 ];
-
-type PriceInfoProps = {
-  label: string;
-  value: string;
-};
-
-function PriceInfo(props: PriceInfoProps) {
-  const { label, value } = props;
-
-  return (
-    <div className="flex">
-      <span className="text-xs text-[#ffffffb3]">{label}</span>
-      <span className="ml-auto text-xs">{value}</span>
-    </div>
-  );
-}

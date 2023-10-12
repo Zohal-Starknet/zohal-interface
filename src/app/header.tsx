@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ConnectButton } from "./zohal-modal";
+import Divider from "./ui/divider";
 
 /* eslint-disable @next/next/no-img-element */
 export default function Header() {
@@ -13,7 +14,7 @@ export default function Header() {
         </Link>
         <ConnectButton />
       </header>
-      <hr className="h-0 w-full bg-[#2A2E37] border-[#2A2E37] border-solid" />
+      <Divider />
     </>
   );
 }
