@@ -17,13 +17,13 @@ export default function Trade() {
 
       <Fieldset label="Long/Short" field={<Input />} />
 
-      <Divider verticalMargin={3} />
+      <Divider className="my-3" />
 
       <div className="py-3">
         <div className="flex pl-1 items-center w-full justify-between">
           <label className="text-sm">Leverage</label>
           <div className="flex items-center gap-1">
-            <label className="text-xs text-[#FFFFFF99]">Slider</label>
+            <label className="text-xs text-[#A5A5A7]">Slider</label>
             <Switch />
           </div>
         </div>
@@ -33,23 +33,15 @@ export default function Trade() {
             <Input />
           </div>
           <div className="grid grid-cols-4 items-center gap-3">
-            <button className="text-xs rounded-lg bg-[#3b3d43] h-[36px]">
-              2×
-            </button>
-            <button className="text-xs rounded-lg bg-[#3b3d43] h-[36px]">
-              5×
-            </button>
-            <button className="text-xs rounded-lg bg-[#3b3d43] h-[36px]">
-              10×
-            </button>
-            <button className="text-xs rounded-lg bg-[#3b3d43] h-[36px]">
-              20×
-            </button>
+            <button className="text-xs rounded-lg bg-[#3b3d43] h-9">2×</button>
+            <button className="text-xs rounded-lg bg-[#3b3d43] h-9">5×</button>
+            <button className="text-xs rounded-lg bg-[#3b3d43] h-9">10×</button>
+            <button className="text-xs rounded-lg bg-[#3b3d43] h-9">20×</button>
           </div>
         </div>
       </div>
 
-      <Divider verticalMargin={3} />
+      <Divider className="my-3" />
 
       <div className="flex flex-col gap-2">
         {priceInfos.map((priceInfo, index) => (
@@ -57,11 +49,15 @@ export default function Trade() {
         ))}
       </div>
 
-      <Divider verticalMargin={3} />
+      <Divider className="my-3" />
 
       <div className="grid items-center gap-2 grid-cols-2 mt-auto w-full">
-        <Button type="submit" variant="success" label="Buy/Long" />
-        <Button type="submit" variant="danger" label="Sell/Short" />
+        <Button type="submit" variant="success">
+          Buy/Long
+        </Button>
+        <Button type="submit" variant="danger">
+          Sell/Short
+        </Button>
       </div>
     </Form>
   );

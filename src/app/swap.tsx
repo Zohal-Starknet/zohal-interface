@@ -17,12 +17,9 @@ export default function Swap() {
 
       <SwapMoreInformations />
 
-      <Button
-        type="submit"
-        variant="primary"
-        className="mt-auto"
-        label="Connect Wallet"
-      />
+      <Button type="submit" variant="primary" className="mt-auto">
+        Connect Wallet
+      </Button>
     </Form>
   );
 }

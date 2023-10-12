@@ -9,23 +9,29 @@ type ButtonProps = {
    * */
   variant?: ButtonVariant;
   /** Label displayed in the Button */
-  label: string;
+  children: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export default function Button(props: ButtonProps) {
-  const { variant = "primary", label, className, ...buttonProps } = props;
+  const { variant = "primary", children, className, ...buttonProps } = props;
 
-  const buttonColor = `bg-btn-${variant}`;
+  const buttonStyle = buttonVariantStyles[variant];
 
   return (
     <button
       {...buttonProps}
-      className={`p-2 rounded-md ${buttonColor} ${
+      className={`p-2 rounded-md ${buttonStyle} ${
         className !== undefined ? className : ""
       }`}
-      aria-label={label}
+      aria-label={children}
     >
-      {label}
+      {children}
     </button>
   );
 }
+
+const buttonVariantStyles: Record<ButtonVariant, string> = {
+  primary: "bg-btn-primary",
+  success: "bg-btn-success",
+  danger: "bg-btn-danger",
+};

@@ -39,7 +39,5 @@ const config: Config = {
     },
   },
   plugins: [],
-  // We add our custom colors to the safeList to be able to use them for our components
-  safelist: ["bg-btn-primary", "bg-btn-success", "bg-btn-danger"],
 };
 export default config;

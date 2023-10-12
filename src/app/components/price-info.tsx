@@ -8,7 +8,7 @@ export default function PriceInfo(props: PriceInfoProps) {
 
   return (
     <div className="flex">
-      <span className="text-xs text-[#ffffffb3]">{label}</span>
+      <span className="text-xs text-[#BCBCBD]">{label}</span>
       <span className="ml-auto text-xs">{value}</span>
     </div>
   );
