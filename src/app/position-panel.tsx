@@ -17,7 +17,7 @@ export default function PositionPanel() {
   ];
 
   return (
-    <Panel className="flex-initial basis-[25rem] p-6">
+    <Panel className="flex-initial basis-[25rem] px-8 py-4">
       <Tabs items={tabItems} ariaLabel="Manage position" />
     </Panel>
   );

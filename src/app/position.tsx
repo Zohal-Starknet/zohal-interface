@@ -36,28 +36,32 @@ export default function Position() {
 
   return (
     <table className="w-full mt-8">
-      <thead className="text-left">
+      <thead className="text-left border-b border-neutral-800">
         <tr className="text-[#bcbcbd]">
-          <th className="font-normal">Position</th>
-          <th className="font-normal">Net Value</th>
-          <th className="font-normal">Size</th>
-          <th className="font-normal">Collateral</th>
-          <th className="font-normal">Entry Price</th>
-          <th className="font-normal">Mark Price</th>
-          <th className="font-normal">Liquidation Price</th>
+          <th className="font-normal pb-4">Position</th>
+          <th className="font-normal pb-4">Net Value</th>
+          <th className="font-normal pb-4">Size</th>
+          <th className="font-normal pb-4">Collateral</th>
+          <th className="font-normal pb-4">Entry Price</th>
+          <th className="font-normal pb-4">Market Price</th>
+          <th className="font-normal pb-4">Liquidation Price</th>
         </tr>
       </thead>
       <tbody>
         {tableData.map((data, index) => {
           return (
-            <tr key={index} className="text-sm">
+            <tr key={index} className="text-sm border-b border-neutral-800">
               <td className="py-4">
                 {data.position}
-                {
-                  <span className="ml-4 px-2 py-0.5 text-xs font-semibold rounded-sm bg-[#40B68B]">
+                {index === 1 ? (
+                  <span className="ml-4 px-1 py-0.5 text-xs font-semibold rounded-sm bg-[#40B68B] text-black">
                     LONG
                   </span>
-                }
+                ) : (
+                  <span className="ml-4 px-1 py-0.5 text-xs font-semibold rounded-sm bg-[#FF5354] text-black">
+                    SHORT
+                  </span>
+                )}
                 <br />
                 <span className="text-sm text-[#bcbcbd]">{data.leverage}</span>
               </td>
@@ -74,7 +78,7 @@ export default function Position() {
                   </span>
                 )}
               </td>
-              <td>{data.size}</td>
+              <td className="pr-6">{data.size}</td>
               <td>
                 {data.collateral.dollar}
                 <br />
