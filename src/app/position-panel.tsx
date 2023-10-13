@@ -6,13 +6,13 @@ import Tabs, { TabItemType } from "./ui/tabs";
 export default function PositionPanel() {
   const tabItems: [TabItemType, TabItemType, TabItemType, TabItemType] = [
     { label: "Positions", value: "trade", content: <></> },
-    { label: "Orders", value: "swap", content: <></> },
-    { label: "Trades", value: "swap", content: <></> },
-    { label: "Claims", value: "swap", content: <></> },
+    { label: "Orders", value: "orders", content: <></> },
+    { label: "Trades", value: "trades", content: <></> },
+    { label: "Claims", value: "claims", content: <></> },
   ];
 
   return (
-    <Panel className="flex-initial basis-[20rem] p-3">
+    <Panel className="flex-initial basis-[25rem] p-3">
       <Tabs items={tabItems} ariaLabel="Manage position" />
     </Panel>
   );
