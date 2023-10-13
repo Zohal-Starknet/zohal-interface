@@ -9,15 +9,15 @@ import Button from "./ui/button";
 export default function Swap() {
   return (
     <Form>
-      <Fieldset label="Pay" field={<Input />} />
+      <Fieldset label="Pay" field={<Input placeholder="0.00" />} />
 
       <TokenSwapButton />
 
-      <Fieldset label="Receive" field={<Input />} />
+      <Fieldset label="Receive" field={<Input placeholder="0.00" />} />
 
       <SwapMoreInformations />
 
-      <Button type="submit" variant="primary" className="mt-auto">
+      <Button type="submit" variant="primary" className="mt-8">
         Connect Wallet
       </Button>
     </Form>

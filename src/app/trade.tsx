@@ -60,7 +60,7 @@ export default function Trade() {
 
       {/* <Divider className="my-3" /> */}
 
-      <div className="grid items-center gap-2 grid-cols-2 mt-auto w-full">
+      <div className="grid items-center gap-2 grid-cols-2 mt-8 w-full">
         <Button type="submit" variant="success">
           Buy/Long
         </Button>

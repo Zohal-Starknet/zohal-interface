@@ -165,7 +165,7 @@ const data = [
 const backgroundColor = "transparent";
 const upColor = "#40B68B";
 const downColor = "#FF5354";
-const textColor = "white";
+const textColor = "#bcbcbd";
 const gridLinesColor = "#222222";
 
 export default function TokenChart() {
