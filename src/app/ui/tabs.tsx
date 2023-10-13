@@ -1,6 +1,6 @@
 "use client";
 import * as RadixTabs from "@radix-ui/react-tabs";
-import { useState, ReactNode } from "react";
+import { ReactNode } from "react";
 
 export type TabItemType = {
   /** Label shown in the Tab Trigger */
@@ -26,10 +26,7 @@ export default function Tabs(props: TabsProps) {
       className="w-full flex flex-col"
       defaultValue={items[0].value}
     >
-      <RadixTabs.List
-        className="w-full rounded-md p-2 bg-[#25272E] flex"
-        aria-label={ariaLabel}
-      >
+      <RadixTabs.List aria-label={ariaLabel}>
         {items.map((item) => {
           const { value, label } = item;
           return <TabItem key={value} label={label} value={value} />;
@@ -52,7 +49,7 @@ function TabItem(props: Pick<TabItemType, "label" | "value">) {
 
   return (
     <RadixTabs.Trigger
-      className="p-2 rounded-md flex-auto data-[state=active]:bg-[#BBA5FF] data-[state=active]:text-black"
+      className="p-2 flex-auto data-[state=active]:border-white  data-[state=active]:text-white text-neutral-400 border-b-2 border-transparent"
       value={value}
     >
       {label}

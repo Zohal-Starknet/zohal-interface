@@ -163,10 +163,10 @@ const data = [
 ];
 
 const backgroundColor = "transparent";
-const upColor = "#00ff4d";
-const downColor = "#ff0000";
+const upColor = "#40B68B";
+const downColor = "#FF5354";
 const textColor = "white";
-const gridLinesColor = "#333333";
+const gridLinesColor = "#222222";
 
 export default function TokenChart() {
   const chartContainerRef = useRef<HTMLDivElement>(null);

@@ -35,7 +35,7 @@ export function ConnectButton() {
                 className="flex items-center rounded-xl font-semibold h-10 bg-[#1d1f23] p-0.5"
               >
                 {displayBalance !== undefined && (
-                  <span className="whitespace-nowrap px-2">
+                  <span className="whitespace-nowrap px-2 text-neutral-300 text-sm">
                     {displayBalance}
                   </span>
                 )}

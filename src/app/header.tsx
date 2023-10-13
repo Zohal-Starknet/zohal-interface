@@ -8,7 +8,7 @@ import Divider from "./ui/divider";
 export default function Header() {
   return (
     <>
-      <header className="flex-initial flex justify-between items-center p-5">
+      <header className="flex-initial flex justify-between items-center p-3">
         <Link href="/">
           <img className="w-28" src="/logo.svg" alt="Zohal" />
         </Link>

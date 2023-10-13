@@ -8,9 +8,5 @@ type PanelProps = {
 export default function Panel(props: PropsWithChildren<PanelProps>) {
   const { children, className } = props;
 
-  return (
-    <div className={`bg-[#1D1F23] flex rounded-md p-2 ${className}`}>
-      {children}
-    </div>
-  );
+  return <div className={`flex ${className}`}>{children}</div>;
 }

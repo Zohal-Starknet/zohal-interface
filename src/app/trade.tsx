@@ -11,15 +11,15 @@ import Switch from "./ui/switch";
 export default function Trade() {
   return (
     <Form>
-      <Fieldset label="Pay" field={<Input />} />
+      <Fieldset label="Pay" field={<Input placeholder="0.00" />} />
 
       <TokenSwapButton />
 
-      <Fieldset label="Long/Short" field={<Input />} />
+      <Fieldset label="Long/Short" field={<Input placeholder="0.00" />} />
 
-      <Divider className="my-3" />
+      {/* <Divider className="my-3" /> */}
 
-      <div className="py-3">
+      <div className="py-6">
         <div className="flex pl-1 items-center w-full justify-between">
           <label className="text-sm">Leverage</label>
           <div className="flex items-center gap-1">
@@ -29,19 +29,28 @@ export default function Trade() {
         </div>
 
         <div className="flex flex-col gap-2 w-full mt-3">
-          <div className="flex-auto p-2 rounded-md bg-[#25272E]">
-            <Input />
+          {/* TODO: Input full width */}
+          <div className="flex-auto p-2 rounded-md bg-[#25272E] border border-[#363636]">
+            <Input placeholder="0.00×" />
           </div>
           <div className="grid grid-cols-4 items-center gap-3">
-            <button className="text-xs rounded-lg bg-[#3b3d43] h-9">2×</button>
-            <button className="text-xs rounded-lg bg-[#3b3d43] h-9">5×</button>
-            <button className="text-xs rounded-lg bg-[#3b3d43] h-9">10×</button>
-            <button className="text-xs rounded-lg bg-[#3b3d43] h-9">20×</button>
+            <button className="text-xs rounded-lg bg-[#1b1d22] h-9 border border-[#363636]">
+              2×
+            </button>
+            <button className="text-xs rounded-lg bg-[#1b1d22] h-9 border border-[#363636]">
+              5×
+            </button>
+            <button className="text-xs rounded-lg bg-[#1b1d22] h-9 border border-[#363636]">
+              10×
+            </button>
+            <button className="text-xs rounded-lg bg-[#1b1d22] h-9 border border-[#363636]">
+              20×
+            </button>
           </div>
         </div>
       </div>
 
-      <Divider className="my-3" />
+      {/* <Divider className="my-3" /> */}
 
       <div className="flex flex-col gap-2">
         {priceInfos.map((priceInfo, index) => (
@@ -49,7 +58,7 @@ export default function Trade() {
         ))}
       </div>
 
-      <Divider className="my-3" />
+      {/* <Divider className="my-3" /> */}
 
       <div className="grid items-center gap-2 grid-cols-2 mt-auto w-full">
         <Button type="submit" variant="success">

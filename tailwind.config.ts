@@ -10,8 +10,8 @@ const config: Config = {
     extend: {
       colors: {
         "btn-primary": "#4681f4",
-        "btn-success": "#28a745",
-        "btn-danger": "#dc3545",
+        "btn-success": "#40B68B",
+        "btn-danger": "#FF5354",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

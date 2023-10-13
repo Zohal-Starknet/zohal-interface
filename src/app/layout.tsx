@@ -6,7 +6,8 @@ import { robotoMono } from "@satoru/utils/fonts";
 
 export const metadata: Metadata = {
   title: "Satoru",
-  description: "Satoru",
+  description:
+    "Next-generation Perpetual Exchange on Starknet. Revolutionizing User Experience.",
 };
 
 export default function RootLayout({
