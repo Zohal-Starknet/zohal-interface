@@ -2,31 +2,34 @@ const tableData = [
   {
     position: "ETH-USD",
     leverage: "20.00×",
-    netValue: { price: "$2.38", purcentage: "(-$0.03 / -1.26%)" },
+    netValue: { price: "$2.38", purcentage: "(+$0.03 / +1.26%)" },
     size: "$48.35",
     collateral: { dollar: "$48.35", token: "48 USDC" },
     entryPrice: "$1581.35",
     markPrice: "$1581.35",
     liquidationPrice: "$1581.35",
+    token: "ethereum",
+  },
+  {
+    position: "BTC-USD",
+    leverage: "10.00×",
+    netValue: { price: "$2.38", purcentage: "(-$0.03 / -1.26%)" },
+    size: "$18.35",
+    collateral: { dollar: "$18.35", token: "18 USDC" },
+    entryPrice: "$2581.35",
+    markPrice: "$2581.35",
+    liquidationPrice: "$2581.35",
+    token: "bitcoin",
   },
   {
     position: "ETH-USD",
-    leverage: "20.00×",
-    netValue: { price: "$2.38", purcentage: "(-$0.03 / -1.26%)" },
+    leverage: "2.00×",
+    netValue: { price: "$2.38", purcentage: "(+$10.03 / -5.26%)" },
     size: "$48.35",
     collateral: { dollar: "$48.35", token: "48 USDC" },
     entryPrice: "$1581.35",
     markPrice: "$1581.35",
-    liquidationPrice: "$1581.35",
-  },
-  {
-    position: "ETH-USD",
-    leverage: "20.00×",
-    netValue: { price: "$2.38", purcentage: "(-$0.03 / -1.26%)" },
-    size: "$48.35",
-    collateral: { dollar: "$48.35", token: "48 USDC" },
-    entryPrice: "$1581.35",
-    markPrice: "$1581.35",
+    token: "white_ethereum",
     liquidationPrice: "$1581.35",
   },
 ];
@@ -51,19 +54,30 @@ export default function Position() {
         {tableData.map((data, index) => {
           return (
             <tr key={index} className="text-sm border-b border-neutral-800">
-              <td className="py-4">
-                {data.position}
-                {index === 1 ? (
-                  <span className="ml-4 px-1 py-0.5 text-xs font-semibold rounded-sm bg-[#40B68B] text-black">
-                    LONG
+              <td className="py-4 flex gap-4">
+                <div className="rounded-full border border-neutral-600 p-1 flex-shrink-0">
+                  <img
+                    src={`/tokens/${data.token}.png`}
+                    className="w-8 rounded-full"
+                    alt={`${data.token}`}
+                  />
+                </div>
+                <div>
+                  {data.position}
+                  {index === 1 ? (
+                    <span className="ml-4 px-1 py-0.5 text-xs font-semibold rounded-sm bg-[#40B68B] text-black">
+                      LONG
+                    </span>
+                  ) : (
+                    <span className="ml-4 px-1 py-0.5 text-xs font-semibold rounded-sm bg-[#FF5354] text-black">
+                      SHORT
+                    </span>
+                  )}
+                  <br />
+                  <span className="text-sm text-[#bcbcbd]">
+                    {data.leverage}
                   </span>
-                ) : (
-                  <span className="ml-4 px-1 py-0.5 text-xs font-semibold rounded-sm bg-[#FF5354] text-black">
-                    SHORT
-                  </span>
-                )}
-                <br />
-                <span className="text-sm text-[#bcbcbd]">{data.leverage}</span>
+                </div>
               </td>
               <td className="py-4">
                 {data.netValue.price}
