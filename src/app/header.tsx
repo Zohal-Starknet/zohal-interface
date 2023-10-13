@@ -8,10 +8,14 @@ import Divider from "./ui/divider";
 export default function Header() {
   return (
     <>
-      <header className="flex-initial flex justify-between items-center p-3">
+      <header className="flex-initial flex justify-between items-center p-4">
         <div className="flex gap-4 items-center">
           <Link href="/">
-            <img className="w-10 rounded-lg" src="/logo.png" alt="Zohal" />
+            <img
+              className="w-10 rounded-lg rotate-[-35deg]"
+              src="/logo.png"
+              alt="Zohal"
+            />
           </Link>
           <nav>
             <ul className="flex gap-2">

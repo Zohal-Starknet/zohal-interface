@@ -52,7 +52,7 @@ export default function Trade() {
 
       {/* <Divider className="my-3" /> */}
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 border border-[#363636] rounded-md p-3">
         {priceInfos.map((priceInfo, index) => (
           <PriceInfo key={index} {...priceInfo} />
         ))}
@@ -60,13 +60,20 @@ export default function Trade() {
 
       {/* <Divider className="my-3" /> */}
 
-      <div className="grid items-center gap-2 grid-cols-2 mt-8 w-full">
+      <div className="grid items-center gap-2 grid-cols-2 mt-4 w-full">
         <Button type="submit" variant="success">
           Buy/Long
         </Button>
         <Button type="submit" variant="danger">
           Sell/Short
         </Button>
+      </div>
+
+      <h3 className="mt-8">ETH Trade</h3>
+      <div className="flex flex-col gap-2 border border-[#363636] rounded-md p-3">
+        {tokenPriceInfos.map((priceInfo, index) => (
+          <PriceInfo key={index} {...priceInfo} />
+        ))}
       </div>
     </Form>
   );
@@ -77,5 +84,15 @@ const priceInfos = [
   { label: "Price Impact", value: "12%" },
   { label: "Acceptable Price", value: "$0.882" },
   { label: "Liq. Price", value: "$0.156" },
-  { label: "Fees and Price Impact", value: "$-85.91" },
+  { label: "Fees and Price Impact", value: "-$85.91" },
+];
+
+const tokenPriceInfos = [
+  { label: "Market", value: "ETH-USD" },
+  { label: "Entry Price", value: "$1 612.12" },
+  { label: "Exit Price", value: "$1 612.12" },
+  { label: "Borrow Fee", value: "$0.0007/h" },
+  { label: "Funding Fee", value: "$0.0007/h" },
+  { label: "Available Liquidity", value: "$100 000.00" },
+  { label: "Open Interest Balance", value: "-$85.91" },
 ];
