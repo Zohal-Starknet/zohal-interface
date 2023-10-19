@@ -25,9 +25,13 @@ function useModalState() {
 }
 
 type ModalContextValue = {
+  /** Is the account modal currently open */
   accountModalOpen: boolean;
+  /** Is the connect modal currently open */
   connectModalOpen: boolean;
+  /** Function used to open the account modal */
   openAccountModal?: () => void;
+  /** Function used to open the connect modal */
   openConnectModal?: () => void;
 };
 

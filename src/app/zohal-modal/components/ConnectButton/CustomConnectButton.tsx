@@ -39,7 +39,7 @@ export function CustomConnectButton(props: CustomConnectButtonProps) {
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
   const { truncatedAddress, starkName } = useDisplayName();
-  const { displayBalance } = useDisplayBalance();
+  const displayBalance = useDisplayBalance();
 
   // TODO @YohanTz: ready = mounted && !isReconnecting when implemented in starknet-react
   const ready = mounted;

@@ -8,5 +8,5 @@ export function useDisplayBalance() {
     ? `${parseFloat(balanceData.formatted).toFixed(4)} ${balanceData.symbol}`
     : undefined;
 
-  return { displayBalance };
+  return displayBalance;
 }
