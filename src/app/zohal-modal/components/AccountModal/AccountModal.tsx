@@ -24,7 +24,7 @@ export function AccountModal(props: AccountModalProps) {
   const { disconnect } = useConnectors();
 
   const { truncatedAddress, starkName } = useDisplayName();
-  const { displayBalance } = useDisplayBalance();
+  const displayBalance = useDisplayBalance();
 
   const displayName = starkName ?? truncatedAddress;
 
