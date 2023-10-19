@@ -16,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${robotoMono.className}`}>
+    <html lang="en" className={robotoMono.className}>
       <body>
         <div className="flex flex-col h-full">
           <Providers>

@@ -12,11 +12,14 @@ import {
   DialogTitle,
 } from "@satoru/app/ui/Modal";
 
-interface AccountModalProps {
+type AccountModalProps = {
+  /** Callback function called when the modal is closed */
   onClose: () => void;
+  /** Whethere the modal is open or not */
   open: boolean;
-}
-export function AccountModal({ onClose, open }: AccountModalProps) {
+};
+export function AccountModal(props: AccountModalProps) {
+  const { onClose, open } = props;
   const { address } = useAccount();
   const { disconnect } = useConnectors();
 
@@ -35,7 +38,6 @@ export function AccountModal({ onClose, open }: AccountModalProps) {
   return (
     <Dialog
       // TODO @YohanTz: only rely on open
-      // open={open}
       open={open && address !== undefined}
       modal
       onOpenChange={(open) => !open && onClose()}
