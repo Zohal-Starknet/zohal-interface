@@ -29,11 +29,6 @@ export function AccountModal(props: AccountModalProps) {
   const displayName = starkName ?? truncatedAddress;
 
   // TODO @YohanTz: rely only on onDisconnect and onConnect in ModalContext.tsx
-  useEffect(() => {
-    if (address === undefined) {
-      onClose();
-    }
-  }, [address, onClose]);
 
   return (
     <Dialog
