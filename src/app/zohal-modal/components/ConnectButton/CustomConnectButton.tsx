@@ -10,7 +10,7 @@ import {
   useConnectModal,
 } from "../ZohalKitProvider/ModalContext";
 
-interface CustomConnectButtonProps {
+type CustomConnectButtonProps = {
   children: (props: {
     /** The currently connected user starknet address */
     address?: string;
@@ -29,10 +29,11 @@ interface CustomConnectButtonProps {
     /** Whether the connect button is ready to be displayed or not */
     ready: boolean;
   }) => React.ReactNode;
-}
+};
 
-// TODO @YohanTz: Make a ConnectButton component that is a ready to go version of this button
-export function CustomConnectButton({ children }: CustomConnectButtonProps) {
+// TODO @YohanTz: Implement hook for custom connect button instead of this component
+export function CustomConnectButton(props: CustomConnectButtonProps) {
+  const { children } = props;
   const { address, connector } = useAccount();
   const mounted = useIsMounted();
   const { openConnectModal } = useConnectModal();

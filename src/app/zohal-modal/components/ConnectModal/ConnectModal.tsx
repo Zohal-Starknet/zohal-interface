@@ -10,11 +10,14 @@ import {
 } from "@satoru/app/ui/Modal";
 import { connector_id_to_name } from "@satoru/utils/connectors";
 
-interface ConnectModalProps {
+type ConnectModalProps = {
+  /** Callback function called when the modal is closed */
   onClose: () => void;
+  /** Whethere the modal is open or not */
   open: boolean;
-}
-export function ConnectModal({ onClose, open }: ConnectModalProps) {
+};
+export function ConnectModal(props: ConnectModalProps) {
+  const { onClose, open } = props;
   const { address } = useAccount();
   const { connect, connectors } = useConnectors();
 

@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  connector_id_to_img,
-  connector_id_to_name,
-} from "@satoru/utils/connectors";
+import { connector_id_to_img } from "@satoru/utils/connectors";
 import { CustomConnectButton } from "./CustomConnectButton";
 
 /** This component should be an exported version of CustomConnectButton, with customizable propos

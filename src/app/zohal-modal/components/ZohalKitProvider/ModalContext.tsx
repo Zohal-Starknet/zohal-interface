@@ -24,19 +24,20 @@ function useModalState() {
   };
 }
 
-interface ModalContextValue {
+type ModalContextValue = {
   accountModalOpen: boolean;
   connectModalOpen: boolean;
   openAccountModal?: () => void;
   openConnectModal?: () => void;
-}
+};
 
 const ModalContext = createContext<ModalContextValue>({
   accountModalOpen: false,
   connectModalOpen: false,
 });
 
-export function ModalProvider({ children }: PropsWithChildren) {
+export function ModalProvider(props: PropsWithChildren) {
+  const { children } = props;
   const {
     closeModal: closeAccountModal,
     isModalOpen: accountModalOpen,
@@ -50,37 +51,27 @@ export function ModalProvider({ children }: PropsWithChildren) {
   } = useModalState();
 
   const { address } = useAccount({
-    // TODO @YohanTz: onConnect / onDisconnect callbacks below
-    // onConnect() {
-    //   closeConnectModal();
-    //   closeAccountModal();
-    // },
-    // onDisconnect() {
-    //   closeConnectModal();
-    //   closeAccountModal();
-    // }
+    // TODO @YohanTz: implement and use onConnect / onDisconnect callbacks in @starknet-react/core
   });
 
+  const value = useMemo(
+    () => ({
+      accountModalOpen,
+      connectModalOpen,
+      openAccountModal: address !== undefined ? openAccountModal : undefined,
+      openConnectModal: address === undefined ? openConnectModal : undefined,
+    }),
+    [
+      address,
+      accountModalOpen,
+      connectModalOpen,
+      openAccountModal,
+      openConnectModal,
+    ]
+  );
+
   return (
-    <ModalContext.Provider
-      value={useMemo(
-        () => ({
-          accountModalOpen,
-          connectModalOpen,
-          openAccountModal:
-            address !== undefined ? openAccountModal : undefined,
-          openConnectModal:
-            address === undefined ? openConnectModal : undefined,
-        }),
-        [
-          address,
-          accountModalOpen,
-          connectModalOpen,
-          openAccountModal,
-          openConnectModal,
-        ]
-      )}
-    >
+    <ModalContext.Provider value={value}>
       {children}
       <ConnectModal onClose={closeConnectModal} open={connectModalOpen} />
       <AccountModal onClose={closeAccountModal} open={accountModalOpen} />
