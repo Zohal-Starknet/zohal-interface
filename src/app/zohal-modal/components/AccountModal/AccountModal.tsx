@@ -20,7 +20,6 @@ type AccountModalProps = {
 };
 export function AccountModal(props: AccountModalProps) {
   const { onClose, open } = props;
-  const { address } = useAccount();
   const { disconnect } = useConnectors();
 
   const { truncatedAddress, starkName } = useDisplayName();
@@ -28,12 +27,17 @@ export function AccountModal(props: AccountModalProps) {
 
   const displayName = starkName ?? truncatedAddress;
 
+  function onDisconnect() {
+    onClose();
+    disconnect();
+  }
+
   // TODO @YohanTz: rely only on onDisconnect and onConnect in ModalContext.tsx
 
   return (
     <Dialog
       // TODO @YohanTz: only rely on open
-      open={open && address !== undefined}
+      open={open}
       modal
       onOpenChange={(open) => !open && onClose()}
     >
@@ -50,7 +54,7 @@ export function AccountModal(props: AccountModalProps) {
           </p>
         </div>
         <button
-          onClick={disconnect}
+          onClick={onDisconnect}
           className="w-full bg-[#1d1f23] rounded-md p-2"
         >
           Disconnect
