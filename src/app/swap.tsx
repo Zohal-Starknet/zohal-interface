@@ -14,17 +14,18 @@ import { useAccount, useBalance } from "@starknet-react/core";
  */
 export default function Swap() {
   const ethBtcRatio = 0.055;
-  // TODO: Type this state
+  // TODO: Type this state stronger than string
   const [payTokenSymbol, setPayTokenSymbol] = useState("ETH");
   const [payTokenValue, setPayTokenValue] = useState("");
 
-  // TODO: Type this state
+  // TODO: Type this state stronger than string
   const [receiveTokenSymbol, setReceiveTokenSymbol] = useState("BTC");
   const [receiveTokenValue, setReceiveTokenValue] = useState("");
 
   const { openConnectModal } = useConnectModal();
 
   const { address } = useAccount();
+
   const { data: balance } = useBalance({ address });
 
   const hasAmountBeenEntered =

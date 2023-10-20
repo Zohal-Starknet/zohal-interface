@@ -43,7 +43,7 @@ export default function SwapMoreInformations(props: SwapMoreInformationsProps) {
       onOpenChange={(openValue) => {
         setOpen(openValue);
       }}
-      className="mt-5 pl-1"
+      className="mt-5 border border-[#363636] p-2 rounded-md"
     >
       <Collapsible.CollapsibleTrigger className="w-full">
         <div className="flex items-center justify-between">
@@ -60,8 +60,8 @@ export default function SwapMoreInformations(props: SwapMoreInformationsProps) {
           />
         </div>
       </Collapsible.CollapsibleTrigger>
-      <Collapsible.CollapsibleContent className="mt-4 overflow-hidden data-[state=open]:animate-[slideDown_200ms_ease] data-[state=closed]:animate-[slideUp_200ms_ease]">
-        <div className="flex flex-col gap-2 pr-2">
+      <Collapsible.CollapsibleContent className="overflow-hidden data-[state=open]:animate-[slideDown_200ms_ease] data-[state=closed]:animate-[slideUp_200ms_ease]">
+        <div className="flex flex-col gap-2 pr-2 mt-4">
           {priceInfos.map((info, index) => (
             <PriceInfo key={index} {...info} />
           ))}
