@@ -8,6 +8,7 @@ type TokenSwapButtonProps = {
 /** TODO - Transform button into proper IconButton component */
 export default function TokenSwapButton(props: TokenSwapButtonProps) {
   const { onClick } = props;
+
   return (
     <div className="relative flex items-center justify-center">
       <button

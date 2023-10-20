@@ -2,10 +2,12 @@
 type Props = {
   id?: string;
   placeholder: string;
+  value: string;
+  onChange: (newValue: string) => void;
 };
 
 export default function Input(props: Props) {
-  const { id, placeholder } = props;
+  const { id, placeholder, value, onChange } = props;
   return (
     <input
       id={id}
@@ -13,6 +15,8 @@ export default function Input(props: Props) {
       type="number"
       inputMode="decimal"
       placeholder={placeholder}
+      value={value}
+      onChange={(event) => onChange(event.target.value)}
     />
   );
 }

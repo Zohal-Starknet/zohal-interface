@@ -9,7 +9,6 @@ type ButtonProps = {
    * */
   variant?: ButtonVariant;
   /** Label displayed in the Button */
-  children: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export default function Button(props: ButtonProps) {
@@ -23,7 +22,7 @@ export default function Button(props: ButtonProps) {
       className={`p-2 rounded-md ${buttonStyle} ${
         className !== undefined ? className : ""
       }`}
-      aria-label={children}
+      // aria-label={children}
     >
       {children}
     </button>

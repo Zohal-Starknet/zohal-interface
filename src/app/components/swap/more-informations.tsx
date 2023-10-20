@@ -4,9 +4,38 @@ import { ChevronRight } from "@satoru/app/ui/icons";
 import { useState } from "react";
 import PriceInfo from "../price-info";
 
+type SwapMoreInformationsProps = {
+  /** Ratio between the price of the token to be sold and the token that will be received */
+  ratio: number;
+  /**
+   * Token symbol of the token that is going to be sold
+   * TODO: Type this prop stronger than just string
+   */
+  payTokenSymbol: string;
+  /**
+   * Token symbol of the token that is going to be received after the swap
+   * TODO: Type this prop stronger than just string
+   */
+  receiveTokenSymbol: string;
+};
+
 // TODO - Export Chevron animated in its own component
-export default function SwapMoreInformations() {
-  const [open, setOpen] = useState<boolean | undefined>(undefined);
+export default function SwapMoreInformations(props: SwapMoreInformationsProps) {
+  const { ratio, payTokenSymbol, receiveTokenSymbol } = props;
+  const [open, setOpen] = useState<boolean | undefined>(true);
+
+  const priceInfos = [
+    // TODO - Do real Price informations based on User selection and input
+    { label: `${payTokenSymbol} Price`, value: "$26,146.00" },
+    { label: `${receiveTokenSymbol} Price`, value: "$0.818" },
+    { label: "Available Liquidity", value: "$272,569.02" },
+    {
+      label: "Price",
+      value: `${(1 / ratio).toFixed(
+        4
+      )} ${payTokenSymbol} / ${receiveTokenSymbol}`,
+    },
+  ];
 
   return (
     <Collapsible.Root
@@ -41,11 +70,3 @@ export default function SwapMoreInformations() {
     </Collapsible.Root>
   );
 }
-
-// TODO - Do real Price informations based on User selection and input
-const priceInfos = [
-  { label: "Token 1 Price", value: "$26,146.00" },
-  { label: "Token 2 Price", value: "$0.818" },
-  { label: "Available Liquidity", value: "$272,569.02" },
-  { label: "Price", value: "31913.0674 ARB / BTC" },
-];
