@@ -1,39 +1,3 @@
-const tableData = [
-  {
-    position: "ETH-USD",
-    leverage: "20.00×",
-    netValue: { price: "$2.38", purcentage: "(+$0.03 / +1.26%)" },
-    size: "$48.35",
-    collateral: { dollar: "$48.35", token: "48 USDC" },
-    entryPrice: "$1581.35",
-    markPrice: "$1581.35",
-    liquidationPrice: "$1581.35",
-    token: "ethereum",
-  },
-  {
-    position: "BTC-USD",
-    leverage: "10.00×",
-    netValue: { price: "$2.38", purcentage: "(-$0.03 / -1.26%)" },
-    size: "$18.35",
-    collateral: { dollar: "$18.35", token: "18 USDC" },
-    entryPrice: "$2581.35",
-    markPrice: "$2581.35",
-    liquidationPrice: "$2581.35",
-    token: "bitcoin",
-  },
-  {
-    position: "ETH-USD",
-    leverage: "2.00×",
-    netValue: { price: "$2.38", purcentage: "(+$10.03 / -5.26%)" },
-    size: "$48.35",
-    collateral: { dollar: "$48.35", token: "48 USDC" },
-    entryPrice: "$1581.35",
-    markPrice: "$1581.35",
-    token: "white_ethereum",
-    liquidationPrice: "$1581.35",
-  },
-];
-
 export default function Position() {
   // TODO @YohanTz: Add ? icon to explain each of the table header
 
@@ -115,3 +79,39 @@ export default function Position() {
     </table>
   );
 }
+
+const tableData = [
+  {
+    position: "ETH-USD",
+    leverage: "20.00×",
+    netValue: { price: "$2.38", purcentage: "(+$0.03 / +1.26%)" },
+    size: "$48.35",
+    collateral: { dollar: "$48.35", token: "48 USDC" },
+    entryPrice: "$1581.35",
+    markPrice: "$1581.35",
+    liquidationPrice: "$1581.35",
+    token: "ethereum",
+  },
+  {
+    position: "BTC-USD",
+    leverage: "10.00×",
+    netValue: { price: "$2.38", purcentage: "(-$0.03 / -1.26%)" },
+    size: "$18.35",
+    collateral: { dollar: "$18.35", token: "18 USDC" },
+    entryPrice: "$2581.35",
+    markPrice: "$2581.35",
+    liquidationPrice: "$2581.35",
+    token: "bitcoin",
+  },
+  {
+    position: "ETH-USD",
+    leverage: "2.00×",
+    netValue: { price: "$2.38", purcentage: "(+$10.03 / -5.26%)" },
+    size: "$48.35",
+    collateral: { dollar: "$48.35", token: "48 USDC" },
+    entryPrice: "$1581.35",
+    markPrice: "$1581.35",
+    token: "white_ethereum",
+    liquidationPrice: "$1581.35",
+  },
+];
