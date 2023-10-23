@@ -4,7 +4,7 @@ import TokenChart from "./ui/token-chart";
 
 export default function Home() {
   return (
-    <main className="flex flex-auto gap-3 p-3 h-full">
+    <main className="flex h-full flex-auto gap-3 p-3">
       <div className="flex flex-auto flex-col gap-3 rounded-md">
         <Panel className="flex-auto flex-col">
           Trading View
