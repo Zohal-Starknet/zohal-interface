@@ -1,6 +1,3 @@
-import { useEffect } from "react";
-
-import { useAccount, useConnectors } from "@starknet-react/core";
 import {
   Dialog,
   DialogContent,
@@ -9,6 +6,8 @@ import {
   DialogTitle,
 } from "@satoru/app/ui/Modal";
 import { connector_id_to_name } from "@satoru/utils/connectors";
+import { useAccount, useConnectors } from "@starknet-react/core";
+import { useEffect } from "react";
 
 type ConnectModalProps = {
   /** Callback function called when the modal is closed */
@@ -30,7 +29,7 @@ export function ConnectModal(props: ConnectModalProps) {
 
   return (
     // TODO @YohanTz: only rely on open
-    <Dialog open={open} modal onOpenChange={(open) => !open && onClose()}>
+    <Dialog modal onOpenChange={(open) => !open && onClose()} open={open}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Connect a wallet</DialogTitle>
@@ -43,8 +42,8 @@ export function ConnectModal(props: ConnectModalProps) {
             return (
               <li key={connector.id}>
                 <button
+                  className="w-full rounded-md bg-[#1d1f23] p-2"
                   onClick={() => connect(connector)}
-                  className="w-full rounded-md p-2 bg-[#1d1f23]"
                 >
                   {connector_id_to_name[connector.id]}
                 </button>

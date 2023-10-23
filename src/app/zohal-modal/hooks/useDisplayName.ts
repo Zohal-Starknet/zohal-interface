@@ -1,5 +1,3 @@
-import { useEffect, useMemo } from "react";
-
 import { useAccount, useStarkName } from "@starknet-react/core";
 
 export function useDisplayName() {

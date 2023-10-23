@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactNode } from "react";
+import { type PropsWithChildren } from "react";
 
 type PanelProps = {
   className?: string;
@@ -9,7 +9,7 @@ export default function Panel(props: PropsWithChildren<PanelProps>) {
   const { children, className } = props;
 
   return (
-    <div className={`bg-[#1D1F23] flex rounded-md p-2 ${className}`}>
+    <div className={`flex rounded-md bg-[#1D1F23] p-2 ${className}`}>
       {children}
     </div>
   );
