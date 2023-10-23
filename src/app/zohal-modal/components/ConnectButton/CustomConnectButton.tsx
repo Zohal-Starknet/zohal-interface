@@ -18,16 +18,16 @@ type CustomConnectButtonProps = {
     connectorId?: string;
     /** Formatted balance of the currently connected user */
     displayBalance?: string;
-    /** truncated address of the currently connected user */
-    truncatedAddress?: string;
-    /** Starknet id name of the currently connected user */
-    starkName?: string;
     /** Opens the account modal */
     openAccountModal?: () => void;
     /** Opens the wallet connection modal */
     openConnectModal?: () => void;
     /** Whether the connect button is ready to be displayed or not */
     ready: boolean;
+    /** Starknet id name of the currently connected user */
+    starkName?: string;
+    /** truncated address of the currently connected user */
+    truncatedAddress?: string;
   }) => React.ReactNode;
 };
 
@@ -38,7 +38,7 @@ export function CustomConnectButton(props: CustomConnectButtonProps) {
   const mounted = useIsMounted();
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
-  const { truncatedAddress, starkName } = useDisplayName();
+  const { starkName, truncatedAddress } = useDisplayName();
   const displayBalance = useDisplayBalance();
 
   // TODO @YohanTz: ready = mounted && !isReconnecting when implemented in starknet-react
@@ -49,11 +49,11 @@ export function CustomConnectButton(props: CustomConnectButtonProps) {
     address,
     connectorId,
     displayBalance,
-    truncatedAddress,
-    starkName,
     openAccountModal,
     openConnectModal,
     ready,
+    starkName,
+    truncatedAddress,
   });
 }
 

@@ -1,26 +1,26 @@
 "use client";
-import Fieldset from "./ui/fieldset";
-import Input from "./ui/input";
-import Form from "./ui/form/form";
-import Button from "./ui/button";
-import TokenSwapButton from "./ui/form/token-swap-button";
-import Divider from "./ui/divider";
 import PriceInfo from "./components/price-info";
+import Button from "./ui/button";
+import Divider from "./ui/divider";
+import Fieldset from "./ui/fieldset";
+import Form from "./ui/form/form";
+import TokenSwapButton from "./ui/form/token-swap-button";
+import Input from "./ui/input";
 import Switch from "./ui/switch";
 
 export default function Trade() {
   return (
     <Form>
-      <Fieldset label="Pay" field={<Input />} />
+      <Fieldset field={<Input />} label="Pay" />
 
       <TokenSwapButton />
 
-      <Fieldset label="Long/Short" field={<Input />} />
+      <Fieldset field={<Input />} label="Long/Short" />
 
       <Divider className="my-3" />
 
       <div className="py-3">
-        <div className="flex pl-1 items-center w-full justify-between">
+        <div className="flex w-full items-center justify-between pl-1">
           <label className="text-sm">Leverage</label>
           <div className="flex items-center gap-1">
             <label className="text-xs text-[#A5A5A7]">Slider</label>
@@ -28,15 +28,15 @@ export default function Trade() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 w-full mt-3">
-          <div className="flex-auto p-2 rounded-md bg-[#25272E]">
+        <div className="mt-3 flex w-full flex-col gap-2">
+          <div className="flex-auto rounded-md bg-[#25272E] p-2">
             <Input />
           </div>
           <div className="grid grid-cols-4 items-center gap-3">
-            <button className="text-xs rounded-lg bg-[#3b3d43] h-9">2×</button>
-            <button className="text-xs rounded-lg bg-[#3b3d43] h-9">5×</button>
-            <button className="text-xs rounded-lg bg-[#3b3d43] h-9">10×</button>
-            <button className="text-xs rounded-lg bg-[#3b3d43] h-9">20×</button>
+            <button className="h-9 rounded-lg bg-[#3b3d43] text-xs">2×</button>
+            <button className="h-9 rounded-lg bg-[#3b3d43] text-xs">5×</button>
+            <button className="h-9 rounded-lg bg-[#3b3d43] text-xs">10×</button>
+            <button className="h-9 rounded-lg bg-[#3b3d43] text-xs">20×</button>
           </div>
         </div>
       </div>
@@ -51,7 +51,7 @@ export default function Trade() {
 
       <Divider className="my-3" />
 
-      <div className="grid items-center gap-2 grid-cols-2 mt-auto w-full">
+      <div className="mt-auto grid w-full grid-cols-2 items-center gap-2">
         <Button type="submit" variant="success">
           Buy/Long
         </Button>
