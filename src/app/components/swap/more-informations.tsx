@@ -2,7 +2,6 @@
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { ChevronRight } from "@satoru/app/ui/icons";
 import { useState } from "react";
-
 import PriceInfo from "../price-info";
 
 // TODO - Export Chevron animated in its own component
@@ -11,28 +10,28 @@ export default function SwapMoreInformations() {
 
   return (
     <Collapsible.Root
+      open={open}
       onOpenChange={(openValue) => {
         setOpen(openValue);
       }}
       className="mt-5 pl-1"
-      open={open}
     >
       <Collapsible.CollapsibleTrigger className="w-full">
         <div className="flex items-center justify-between">
           <span>More informations</span>
           <ChevronRight
-            className={`text-right text-white ${
+            label={open ? "Hide" : "Show"}
+            className={`text-white text-right ${
               open === undefined
                 ? ""
                 : open
                 ? "animate-[rotate90_200ms_ease_forwards]"
                 : "animate-[rotate0_200ms_ease_forwards]"
             }`}
-            label={open ? "Hide" : "Show"}
           />
         </div>
       </Collapsible.CollapsibleTrigger>
-      <Collapsible.CollapsibleContent className="mt-4 overflow-hidden data-[state=closed]:animate-[slideUp_200ms_ease] data-[state=open]:animate-[slideDown_200ms_ease]">
+      <Collapsible.CollapsibleContent className="mt-4 overflow-hidden data-[state=open]:animate-[slideDown_200ms_ease] data-[state=closed]:animate-[slideUp_200ms_ease]">
         <div className="flex flex-col gap-2 pr-2">
           {priceInfos.map((info, index) => (
             <PriceInfo key={index} {...info} />

@@ -1,13 +1,16 @@
+import { useEffect } from "react";
+
+import { useAccount, useConnectors } from "@starknet-react/core";
+
+import { useDisplayBalance } from "../../hooks/useDisplayBalance";
+import { useDisplayName } from "../../hooks/useDisplayName";
+
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@satoru/app/ui/Modal";
-import { useConnectors } from "@starknet-react/core";
-
-import { useDisplayBalance } from "../../hooks/useDisplayBalance";
-import { useDisplayName } from "../../hooks/useDisplayName";
 
 type AccountModalProps = {
   /** Callback function called when the modal is closed */
@@ -19,7 +22,7 @@ export function AccountModal(props: AccountModalProps) {
   const { onClose, open } = props;
   const { disconnect } = useConnectors();
 
-  const { starkName, truncatedAddress } = useDisplayName();
+  const { truncatedAddress, starkName } = useDisplayName();
   const displayBalance = useDisplayBalance();
 
   const displayName = starkName ?? truncatedAddress;
@@ -33,10 +36,10 @@ export function AccountModal(props: AccountModalProps) {
 
   return (
     <Dialog
-      modal
-      onOpenChange={(open) => !open && onClose()}
       // TODO @YohanTz: only rely on open
       open={open}
+      modal
+      onOpenChange={(open) => !open && onClose()}
     >
       <DialogContent>
         <DialogHeader className="mb-4">
@@ -44,15 +47,15 @@ export function AccountModal(props: AccountModalProps) {
         </DialogHeader>
         <div className="flex flex-col">
           <div>
-            <p className="text-center text-lg">{displayName}</p>
+            <p className="text-lg text-center">{displayName}</p>
           </div>
-          <p className="text-muted-foreground text-center text-sm">
+          <p className="text-sm text-muted-foreground text-center">
             {displayBalance}
           </p>
         </div>
         <button
-          className="w-full rounded-md bg-[#1d1f23] p-2"
           onClick={onDisconnect}
+          className="w-full bg-[#1d1f23] rounded-md p-2"
         >
           Disconnect
         </button>

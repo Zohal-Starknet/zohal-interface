@@ -1,20 +1,20 @@
-import { type ReactElement, cloneElement, useId } from "react";
+import { ReactElement, cloneElement, useId } from "react";
 
 type FieldsetProps = {
-  /** Component displayed for the Field */
-  field: ReactElement;
   /** Label shown for the Field */
   label: string;
+  /** Component displayed for the Field */
+  field: ReactElement;
 };
 
 export default function Fieldset(props: FieldsetProps) {
-  const { field, label } = props;
+  const { label, field } = props;
 
   const id = useId();
 
   return (
-    <fieldset className="flex flex-col gap-1 rounded-md bg-[#25272E] p-3">
-      <label className="block text-xs" htmlFor={id}>
+    <fieldset className="p-3 rounded-md bg-[#25272E] flex flex-col gap-1">
+      <label htmlFor={id} className="block text-xs">
         {label}
       </label>
       {cloneElement(field, { id })}

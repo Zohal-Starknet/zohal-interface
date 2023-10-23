@@ -7,11 +7,11 @@ export default function Input(props: Props) {
   const { id } = props;
   return (
     <input
-      className="appearance-none bg-transparent text-lg outline-none"
       id={id}
+      className="bg-transparent appearance-none outline-none text-lg"
+      type="number"
       inputMode="decimal"
       placeholder="0.0"
-      type="number"
     />
   );
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import { connector_id_to_img } from "@satoru/utils/connectors";
-
 import { CustomConnectButton } from "./CustomConnectButton";
 
 /** This component should be an exported version of CustomConnectButton, with customizable propos
@@ -14,11 +13,11 @@ export function ConnectButton() {
         address,
         connectorId,
         displayBalance,
+        truncatedAddress,
+        starkName,
         openAccountModal,
         openConnectModal,
         ready,
-        starkName,
-        truncatedAddress,
       }) => {
         return (
           <div
@@ -29,17 +28,16 @@ export function ConnectButton() {
           >
             {address !== undefined && (
               <button
-                className="flex h-10 items-center rounded-xl bg-[#1d1f23] p-0.5 font-semibold"
                 onClick={openAccountModal}
+                className="flex items-center rounded-xl font-semibold h-10 bg-[#1d1f23] p-0.5"
               >
                 {displayBalance !== undefined && (
                   <span className="whitespace-nowrap px-2">
                     {displayBalance}
                   </span>
                 )}
-                <div className="flex h-full items-center gap-2 rounded-[10px] bg-[#2f3339] px-2">
+                <div className="flex h-full items-center rounded-[10px] bg-[#2f3339] px-2 gap-2">
                   {connectorId !== undefined && (
-                    // eslint-disable-next-line @next/next/no-img-element
                     <img
                       alt={`${connectorId}`}
                       className="h-6 w-6 rounded-full"
@@ -52,8 +50,8 @@ export function ConnectButton() {
             )}
             {address === undefined && (
               <button
-                className="font-seimbold flex h-10 items-center rounded-xl bg-[#1d1f23] px-4"
                 onClick={openConnectModal}
+                className="bg-[#1d1f23] px-4 h-10 flex items-center rounded-xl font-seimbold"
               >
                 Connect wallet
               </button>

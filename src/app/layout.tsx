@@ -1,14 +1,12 @@
+import "./globals.css";
 import type { Metadata } from "next";
-
+import Providers from "./providers";
+import Header from "./header";
 import { robotoMono } from "@satoru/utils/fonts";
 
-import "./globals.css";
-import Header from "./header";
-import Providers from "./providers";
-
 export const metadata: Metadata = {
-  description: "Satoru",
   title: "Satoru",
+  description: "Satoru",
 };
 
 export default function RootLayout({
@@ -17,9 +15,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html className={robotoMono.className} lang="en">
+    <html lang="en" className={robotoMono.className}>
       <body>
-        <div className="flex h-full flex-col">
+        <div className="flex flex-col h-full">
           <Providers>
             <Header />
             {children}

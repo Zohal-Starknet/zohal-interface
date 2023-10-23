@@ -1,14 +1,15 @@
 "use client";
 
-import { useAccount } from "@starknet-react/core";
 import {
-  type PropsWithChildren,
   createContext,
+  PropsWithChildren,
   useCallback,
   useContext,
   useMemo,
   useState,
 } from "react";
+
+import { useAccount } from "@starknet-react/core";
 
 import { AccountModal } from "../AccountModal/AccountModal";
 import { ConnectModal } from "../ConnectModal/ConnectModal";
@@ -70,7 +71,7 @@ export function ModalProvider(props: PropsWithChildren) {
       connectModalOpen,
       openAccountModal,
       openConnectModal,
-    ],
+    ]
   );
 
   return (
