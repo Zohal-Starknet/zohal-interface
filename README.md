@@ -5,7 +5,7 @@
   <b>🪐 Zohal's interface, made on top of the <a href="https://github.com/keep-starknet-strange/satoru">Satoru</a> project</b>
 </p>
 <p align="center">
-  <a href="https://github.com/Zohal-Starknet/zohal-interface/blob/master/LICENSE.txt">
+  <a href="https://github.com/Zohal-Starknet/zohal-interface/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/Zohal-Starknet/zohal-interface.svg?style=flat-square" alt="License Badge">
   </a>
   <a href="https://reactjs.org">
@@ -20,7 +20,7 @@
 </p>
 
 ## License
-This repository is licensed under the [GNU General Public License v3.0](LICENSE.txt)
+This repository is licensed under the [GNU General Public License v3.0](LICENSE)
 
 ## Getting Started
 
