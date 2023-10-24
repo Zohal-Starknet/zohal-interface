@@ -14,24 +14,23 @@ export function SwapIcon(props: IconProps) {
     <Root label={label}>
       <svg
         aria-hidden="true"
+        fill="none"
         height="24"
         role="img"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
         viewBox="0 0 24 24"
         width="24"
         x="256"
         xmlns="http://www.w3.org/2000/svg"
-        xmlnsXlink="http://www.w3.org/1999/xlink"
-        y="256"
         {...otherProps}
       >
-        <path
-          d="M11 8L7 4m0 0L3 8m4-4v16m6-4l4 4m0 0l4-4m-4 4V4"
-          fill="none"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.5"
-        ></path>
+        <path d="m3 16 4 4 4-4" />
+        <path d="M7 20V4" />
+        <path d="m21 8-4-4-4 4" />
+        <path d="M17 4v16" />
       </svg>
     </Root>
   );

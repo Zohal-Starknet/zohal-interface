@@ -7,7 +7,8 @@ import Header from "./header";
 import Providers from "./providers";
 
 export const metadata: Metadata = {
-  description: "Satoru",
+  description:
+    "Next-generation Perpetual Exchange on Starknet. Revolutionizing User Experience.",
   title: "Satoru",
 };
 

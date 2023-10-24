@@ -5,12 +5,14 @@ type PanelProps = {
 };
 
 // TODO - Use clsx package to resolve className merge issues
+// TODO @YohanTz: take tabsItems as a prop
 export default function Panel(props: PropsWithChildren<PanelProps>) {
   const { children, className } = props;
 
-  return (
-    <div className={`flex rounded-md bg-[#1D1F23] p-2 ${className}`}>
-      {children}
-    </div>
-  );
+  return <div className={`flex ${className}`}>{children}</div>;
 }
+
+
+
+
+

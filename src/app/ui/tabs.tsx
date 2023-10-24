@@ -26,10 +26,7 @@ export default function Tabs(props: TabsProps) {
       className="flex w-full flex-col"
       defaultValue={items[0].value}
     >
-      <RadixTabs.List
-        aria-label={ariaLabel}
-        className="flex w-full rounded-md bg-[#25272E] p-2"
-      >
+      <RadixTabs.List aria-label={ariaLabel}>
         {items.map((item) => {
           const { label, value } = item;
           return <TabItem key={value} label={label} value={value} />;
@@ -52,7 +49,7 @@ function TabItem(props: Pick<TabItemType, "label" | "value">) {
 
   return (
     <RadixTabs.Trigger
-      className="flex-auto rounded-md p-2 data-[state=active]:bg-[#BBA5FF] data-[state=active]:text-black"
+      className="p-2 flex-auto data-[state=active]:border-white data-[state=active]:text-white text-neutral-400 border-b-2 border-transparent"
       value={value}
     >
       {label}

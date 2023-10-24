@@ -13,7 +13,7 @@ export default function Fieldset(props: FieldsetProps) {
   const id = useId();
 
   return (
-    <fieldset className="flex flex-col gap-1 rounded-md bg-[#25272E] p-3">
+    <fieldset className="p-3 rounded-md bg-[#25272E] flex flex-col gap-1 border border-[#363636]">
       <label className="block text-xs" htmlFor={id}>
         {label}
       </label>

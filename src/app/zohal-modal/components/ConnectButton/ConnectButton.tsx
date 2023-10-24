@@ -29,11 +29,11 @@ export function ConnectButton() {
           >
             {address !== undefined && (
               <button
-                className="flex h-10 items-center rounded-xl bg-[#1d1f23] p-0.5 font-semibold"
+                className="flex items-center rounded-xl h-10 bg-[#1d1f23] p-0.5"
                 onClick={openAccountModal}
               >
                 {displayBalance !== undefined && (
-                  <span className="whitespace-nowrap px-2">
+                  <span className="whitespace-nowrap px-2 text-neutral-300 text-sm">
                     {displayBalance}
                   </span>
                 )}
@@ -52,7 +52,7 @@ export function ConnectButton() {
             )}
             {address === undefined && (
               <button
-                className="font-seimbold flex h-10 items-center rounded-xl bg-[#1d1f23] px-4"
+                className="bg-[#1d1f23] px-4 h-10 flex items-center rounded-xl"
                 onClick={openConnectModal}
               >
                 Connect wallet

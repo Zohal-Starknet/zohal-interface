@@ -15,9 +15,9 @@ const config: Config = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
       },
       colors: {
-        "btn-danger": "#dc3545",
+        "btn-danger": "#FF5354",
         "btn-primary": "#4681f4",
-        "btn-success": "#28a745",
+        "btn-success": "#40B68B",
       },
       keyframes: {
         rotate0: {
