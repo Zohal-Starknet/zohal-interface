@@ -1,23 +1,23 @@
 "use client";
-import Fieldset from "./ui/fieldset";
-import Input from "./ui/input";
 import SwapMoreInformations from "./components/swap/more-informations";
-import TokenSwapButton from "./ui/form/token-swap-button";
-import Form from "./ui/form/form";
 import Button from "./ui/button";
+import Fieldset from "./ui/fieldset";
+import Form from "./ui/form/form";
+import TokenSwapButton from "./ui/form/token-swap-button";
+import Input from "./ui/input";
 
 export default function Swap() {
   return (
     <Form>
-      <Fieldset label="Pay" field={<Input placeholder="0.00" />} />
+      <Fieldset field={<Input placeholder="0.00" />} label="Pay" />
 
       <TokenSwapButton />
 
-      <Fieldset label="Receive" field={<Input placeholder="0.00" />} />
+      <Fieldset field={<Input placeholder="0.00" />} label="Receive" />
 
       <SwapMoreInformations />
 
-      <Button type="submit" variant="primary" className="mt-8">
+      <Button className="mt-8" type="submit" variant="primary">
         Connect Wallet
       </Button>
     </Form>

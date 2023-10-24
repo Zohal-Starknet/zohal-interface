@@ -1,21 +1,21 @@
 "use client";
-import Fieldset from "./ui/fieldset";
-import Input from "./ui/input";
-import Form from "./ui/form/form";
-import Button from "./ui/button";
-import TokenSwapButton from "./ui/form/token-swap-button";
-import Divider from "./ui/divider";
 import PriceInfo from "./components/price-info";
+import Button from "./ui/button";
+import Divider from "./ui/divider";
+import Fieldset from "./ui/fieldset";
+import Form from "./ui/form/form";
+import TokenSwapButton from "./ui/form/token-swap-button";
+import Input from "./ui/input";
 import Switch from "./ui/switch";
 
 export default function Trade() {
   return (
     <Form>
-      <Fieldset label="Pay" field={<Input placeholder="0.00" />} />
+      <Fieldset field={<Input placeholder="0.00" />} label="Pay" />
 
       <TokenSwapButton />
 
-      <Fieldset label="Long/Short" field={<Input placeholder="0.00" />} />
+      <Fieldset field={<Input placeholder="0.00" />} label="Long/Short" />
 
       <div className="py-6">
         <div className="flex pl-1 items-center w-full justify-between">

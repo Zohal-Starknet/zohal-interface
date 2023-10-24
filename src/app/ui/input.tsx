@@ -4,15 +4,21 @@ type Props = {
   placeholder: string;
 };
 
+// TODO: Add type in props
 export default function Input(props: Props) {
   const { id, placeholder } = props;
   return (
     <input
+      className="appearance-none bg-transparent text-lg outline-none"
       id={id}
-      className="bg-transparent appearance-none outline-none text-lg"
-      type="number"
       inputMode="decimal"
       placeholder={placeholder}
     />
   );
 }
+
+
+
+
+
+
