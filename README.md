@@ -1,21 +1,21 @@
 <p align="center">
-  <img width="40%" src="https://github.com/Zohal-Starknet/satoru-interface/assets/37301269/023b0aea-186a-4b23-b1cd-00ae3af95926" alt="Zohal's Banner">
+  <img width="40%" src="https://github.com/Zohal-Starknet/zohal-interface/assets/37301269/023b0aea-186a-4b23-b1cd-00ae3af95926" alt="Zohal's Banner">
 </p>
 <p align="center">
   <b>🪐 Zohal's interface, made on top of the <a href="https://github.com/keep-starknet-strange/satoru">Satoru</a> project</b>
 </p>
 <p align="center">
-  <a href="https://github.com/Zohal-Starknet/satoru-interface/blob/master/LICENSE.txt">
-    <img src="https://img.shields.io/github/license/Zohal-Starknet/satoru-interface.svg?style=flat-square" alt="License Badge">
+  <a href="https://github.com/Zohal-Starknet/zohal-interface/blob/master/LICENSE.txt">
+    <img src="https://img.shields.io/github/license/Zohal-Starknet/zohal-interface.svg?style=flat-square" alt="License Badge">
   </a>
   <a href="https://reactjs.org">
     <img src="https://img.shields.io/badge/Made%20with-React-61dafb.svg?style=flat-square" alt="React Custom Badge">
   </a>
-  <a href="https://github.com/Zohal-Starknet/satoru-interface/pulls">
+  <a href="https://github.com/Zohal-Starknet/zohal-interface/pulls">
       <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="Prs Welcome">
   </a>
-  <a href="https://github.com/Zohal-Starknet/satoru-interface/graphs/contributors">
-      <img src="https://img.shields.io/github/contributors/Zohal-Starknet/satoru-interface.svg?style=flat-square" alt="Contributors Number">
+  <a href="https://github.com/Zohal-Starknet/zohal-interface/graphs/contributors">
+      <img src="https://img.shields.io/github/contributors/Zohal-Starknet/zohal-interface.svg?style=flat-square" alt="Contributors Number">
   </a>
 </p>
 
