@@ -49,7 +49,7 @@ function TabItem(props: Pick<TabItemType, "label" | "value">) {
 
   return (
     <RadixTabs.Trigger
-      className="p-2 flex-auto data-[state=active]:border-white data-[state=active]:text-white text-neutral-400 border-b-2 border-transparent"
+      className="flex-auto border-b-2 border-transparent p-2 text-neutral-400 data-[state=active]:border-white data-[state=active]:text-white"
       value={value}
     >
       {label}
