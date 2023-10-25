@@ -10,7 +10,7 @@ export default function TradeSwapPanel() {
   ];
 
   return (
-    <Panel className="w-96 border-l border-[#2A2E37] p-4 flex">
+    <Panel className="flex w-96 border-l border-[#2A2E37] p-4">
       <Tabs ariaLabel="Trade or Swap" items={tabItems} />
     </Panel>
   );

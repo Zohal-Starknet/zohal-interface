@@ -11,8 +11,3 @@ export default function Panel(props: PropsWithChildren<PanelProps>) {
 
   return <div className={`flex ${className}`}>{children}</div>;
 }
-
-
-
-
-

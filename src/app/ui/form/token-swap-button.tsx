@@ -11,7 +11,7 @@ export default function TokenSwapButton(props: TokenSwapButtonProps) {
   return (
     <div className="relative flex items-center justify-center">
       <button
-        className="mx-auto absolute p-2 bg-[#4b4f5d] rounded-lg border border-[#363636]"
+        className="absolute mx-auto rounded-lg border border-[#363636] bg-[#4b4f5d] p-2"
         onClick={onClick}
         type="button"
       >

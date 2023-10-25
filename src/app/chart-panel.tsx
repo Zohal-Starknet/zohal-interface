@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Divider from "./ui/divider";
 import Panel from "./ui/panel";
 import TokenChart from "./ui/token-chart";
@@ -5,15 +6,15 @@ import TokenChart from "./ui/token-chart";
 export default function ChartPanel() {
   return (
     <div className="flex flex-auto flex-col">
-      <div className="h-[4.75rem] flex items-center px-4">
-        <div className="flex items-center gap-4 border-r border-[#2A2E37] h-full pr-[10rem]">
-          <img src="/tokens/ethereum.png" className="w-8" />
+      <div className="flex h-[4.75rem] items-center px-4">
+        <div className="flex h-full items-center gap-4 border-r border-[#2A2E37] pr-[10rem]">
+          <img alt="ethereum logo" className="w-8" src="/tokens/ethereum.png" />
           <span>ETH-USD</span>
         </div>
         <div className="flex items-center gap-8">
-          <div className="flex gap-2 items-center pl-5">
+          <div className="flex items-center gap-2 pl-5">
             <span className="text-[#40B68B]">$1,544.27</span>
-            <span className="py-1 px-2 text-xs font-semibold rounded-md bg-[#40B68B] text-black">
+            <span className="rounded-md bg-[#40B68B] px-2 py-1 text-xs font-semibold text-black">
               +0.71%
             </span>
           </div>

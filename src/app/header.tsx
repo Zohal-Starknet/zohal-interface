@@ -9,42 +9,42 @@ import { ConnectButton } from "./zohal-modal";
 export default function Header() {
   return (
     <>
-      <header className="flex-initial flex justify-between items-center p-4">
-        <div className="flex gap-4 items-center">
+      <header className="flex flex-initial items-center justify-between p-4">
+        <div className="flex items-center gap-4">
           <Link href="/">
             <img
               alt="Zohal"
-              className="w-10 rounded-lg rotate-[-35deg]"
+              className="w-10 rotate-[-35deg] rounded-lg"
               src="/logo.png"
             />
           </Link>
           <nav>
             <ul className="flex gap-2">
               <li>
-                <Link className="px-2 py-2 rounded-md" href="/trade">
+                <Link className="rounded-md px-2 py-2" href="/trade">
                   Portfolio
                 </Link>
               </li>
               <li>
                 <Link
-                  className="bg-[#1d1f23] px-2 py-2 rounded-md"
+                  className="rounded-md bg-[#1d1f23] px-2 py-2"
                   href="/trade"
                 >
                   Trade
                 </Link>
               </li>
               <li>
-                <Link className="px-2 py-2 rounded-md" href="/trade">
+                <Link className="rounded-md px-2 py-2" href="/trade">
                   Dashboard
                 </Link>
               </li>
               <li>
-                <Link className="px-2 py-2 rounded-md" href="/trade">
+                <Link className="rounded-md px-2 py-2" href="/trade">
                   Rewards
                 </Link>
               </li>
               <li>
-                <Link className="px-2 py-2 rounded-md" href="/trade">
+                <Link className="rounded-md px-2 py-2" href="/trade">
                   Docs
                 </Link>
               </li>
