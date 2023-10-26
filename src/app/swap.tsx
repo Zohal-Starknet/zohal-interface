@@ -1,8 +1,8 @@
 "use client";
 import { useAccount, useBalance } from "@starknet-react/core";
-import { useRef, useState } from "react";
 
 import SwapMoreInformations from "./components/swap/more-informations";
+import { useTokenInputs } from "./hooks/use-token-input";
 import SwapActionButton from "./swap-action-button";
 import Fieldset from "./ui/fieldset";
 import Form from "./ui/form/form";
@@ -14,20 +14,20 @@ import Input from "./ui/input";
  */
 export default function Swap() {
   const ethBtcRatio = 0.055;
-  // TODO: Type this state stronger than string
-  const [payTokenSymbol, setPayTokenSymbol] = useState("ETH");
-  const [payTokenValue, setPayTokenValue] = useState("");
-
-  // TODO: Type this state stronger than string
-  const [receiveTokenSymbol, setReceiveTokenSymbol] = useState("BTC");
-  const [receiveTokenValue, setReceiveTokenValue] = useState("");
-
-  const temporaryPayTokenValueRef = useRef("");
-  const temporaryPayTokenSymbolRef = useRef("");
 
   const { address } = useAccount();
 
   const { data: balance } = useBalance({ address });
+
+  const {
+    payTokenSymbol,
+    payTokenValue,
+    receiveTokenSymbol,
+    receiveTokenValue,
+    switchTokens,
+    updatePayTokenValue,
+    updateReceiveTokenValue,
+  } = useTokenInputs({ ratio: ethBtcRatio });
 
   const noEnteredAmount =
     payTokenValue.length === 0 && receiveTokenValue.length === 0;
@@ -35,34 +35,6 @@ export default function Swap() {
   const insufficientBalance = balance
     ? parseFloat(balance.formatted) < parseFloat(payTokenValue)
     : true;
-
-  function updatePayTokenValue(tokenValue: string) {
-    setPayTokenValue(tokenValue);
-    setReceiveTokenValue(
-      tokenValue !== ""
-        ? (parseFloat(tokenValue) * ethBtcRatio).toString()
-        : "",
-    );
-  }
-
-  function updateReceiveTokenValue(tokenValue: string) {
-    setReceiveTokenValue(tokenValue);
-    setPayTokenValue(
-      tokenValue !== ""
-        ? (parseFloat(tokenValue) / ethBtcRatio).toString()
-        : "",
-    );
-  }
-
-  function switchTokens() {
-    temporaryPayTokenValueRef.current = payTokenValue;
-    setPayTokenValue(receiveTokenValue);
-    setReceiveTokenValue(temporaryPayTokenValueRef.current);
-
-    temporaryPayTokenSymbolRef.current = payTokenSymbol;
-    setPayTokenSymbol(receiveTokenSymbol);
-    setReceiveTokenSymbol(temporaryPayTokenSymbolRef.current);
-  }
 
   return (
     <Form>
