@@ -2,7 +2,7 @@
 import { useAccount, useBalance } from "@starknet-react/core";
 
 import SwapMoreInformations from "./components/swap/more-informations";
-import { useTokenInputs } from "./hooks/token-input";
+import { useTokenInputs } from "./hooks/use-token-input";
 import SwapActionButton from "./swap-action-button";
 import Fieldset from "./ui/fieldset";
 import Form from "./ui/form/form";

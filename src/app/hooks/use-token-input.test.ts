@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
 
-import { useTokenInputs } from "./token-input";
+import { useTokenInputs } from "./use-token-input";
 
 describe("Token Input Hook", () => {
   it("should apply ratio on receive state when updating pay token value", () => {
@@ -14,7 +14,25 @@ describe("Token Input Hook", () => {
     expect(result.current.receiveTokenValue).toEqual("4");
   });
 
-  it("should apply ration on pay state when updating receive token value", () => {
+  it("should apply values and then erase it when user clean the pay token value", () => {
+    const { result } = renderHook(() => useTokenInputs({ ratio: 2 }));
+
+    act(() => {
+      result.current.updatePayTokenValue("2");
+    });
+
+    expect(result.current.payTokenValue).toEqual("2");
+    expect(result.current.receiveTokenValue).toEqual("4");
+
+    act(() => {
+      result.current.updatePayTokenValue("");
+    });
+
+    expect(result.current.payTokenValue).toEqual("");
+    expect(result.current.receiveTokenValue).toEqual("");
+  });
+
+  it("should apply ratio on pay state when updating receive token value", () => {
     const { result } = renderHook(() => useTokenInputs({ ratio: 2 }));
 
     act(() => {
