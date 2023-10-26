@@ -1,75 +1,40 @@
-const tableData = [
-  {
-    position: "ETH-USD",
-    leverage: "20.00×",
-    netValue: { price: "$2.38", purcentage: "(+$0.03 / +1.26%)" },
-    size: "$48.35",
-    collateral: { dollar: "$48.35", token: "48 USDC" },
-    entryPrice: "$1581.35",
-    markPrice: "$1581.35",
-    liquidationPrice: "$1581.35",
-    token: "ethereum",
-  },
-  {
-    position: "BTC-USD",
-    leverage: "10.00×",
-    netValue: { price: "$2.38", purcentage: "(-$0.03 / -1.26%)" },
-    size: "$18.35",
-    collateral: { dollar: "$18.35", token: "18 USDC" },
-    entryPrice: "$2581.35",
-    markPrice: "$2581.35",
-    liquidationPrice: "$2581.35",
-    token: "bitcoin",
-  },
-  {
-    position: "ETH-USD",
-    leverage: "2.00×",
-    netValue: { price: "$2.38", purcentage: "(+$10.03 / -5.26%)" },
-    size: "$48.35",
-    collateral: { dollar: "$48.35", token: "48 USDC" },
-    entryPrice: "$1581.35",
-    markPrice: "$1581.35",
-    token: "white_ethereum",
-    liquidationPrice: "$1581.35",
-  },
-];
-
+/* eslint-disable @next/next/no-img-element */
 export default function Position() {
   // TODO @YohanTz: Add ? icon to explain each of the table header
 
   return (
-    <table className="w-full mt-8">
-      <thead className="text-left border-b border-neutral-800">
+    <table className="mt-8 w-full">
+      <thead className="border-b border-neutral-800 text-left">
         <tr className="text-[#bcbcbd]">
-          <th className="font-normal pb-4">Position</th>
-          <th className="font-normal pb-4">Net Value</th>
-          <th className="font-normal pb-4">Size</th>
-          <th className="font-normal pb-4">Collateral</th>
-          <th className="font-normal pb-4">Entry Price</th>
-          <th className="font-normal pb-4">Market Price</th>
-          <th className="font-normal pb-4">Liquidation Price</th>
+          <th className="pb-4 font-normal">Position</th>
+          <th className="pb-4 font-normal">Net Value</th>
+          <th className="pb-4 font-normal">Size</th>
+          <th className="pb-4 font-normal">Collateral</th>
+          <th className="pb-4 font-normal">Entry Price</th>
+          <th className="pb-4 font-normal">Market Price</th>
+          <th className="pb-4 font-normal">Liquidation Price</th>
         </tr>
       </thead>
       <tbody>
         {tableData.map((data, index) => {
           return (
-            <tr key={index} className="text-sm border-b border-neutral-800">
-              <td className="py-4 flex gap-4">
-                <div className="rounded-full border border-neutral-600 p-1 flex-shrink-0">
+            <tr className="border-b border-neutral-800 text-sm" key={index}>
+              <td className="flex gap-4 py-4">
+                <div className="flex-shrink-0 rounded-full border border-neutral-600 p-1">
                   <img
-                    src={`/tokens/${data.token}.png`}
-                    className="w-8 rounded-full"
                     alt={`${data.token}`}
+                    className="w-8 rounded-full"
+                    src={`/tokens/${data.token}.png`}
                   />
                 </div>
                 <div>
                   {data.position}
                   {index === 1 ? (
-                    <span className="ml-4 px-1 py-0.5 text-xs font-semibold rounded-sm bg-[#40B68B] text-black">
+                    <span className="ml-4 rounded-sm bg-[#40B68B] px-1 py-0.5 text-xs font-semibold text-black">
                       LONG
                     </span>
                   ) : (
-                    <span className="ml-4 px-1 py-0.5 text-xs font-semibold rounded-sm bg-[#FF5354] text-black">
+                    <span className="ml-4 rounded-sm bg-[#FF5354] px-1 py-0.5 text-xs font-semibold text-black">
                       SHORT
                     </span>
                   )}
@@ -83,11 +48,11 @@ export default function Position() {
                 {data.netValue.price}
                 <br />
                 {index === 1 ? (
-                  <span className="text-[#FF5354] text-sm">
+                  <span className="text-sm text-[#FF5354]">
                     {data.netValue.purcentage}
                   </span>
                 ) : (
-                  <span className="text-[#40B68B] text-sm">
+                  <span className="text-sm text-[#40B68B]">
                     {data.netValue.purcentage}
                   </span>
                 )}
@@ -104,7 +69,7 @@ export default function Position() {
               <td>{data.markPrice}</td>
               <td>{data.liquidationPrice}</td>
               <td className="text-right">
-                <button className="py-2 px-3 rounded-lg bg-[#1b1d22] border border-[#363636]">
+                <button className="rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2">
                   Close
                 </button>
               </td>
@@ -115,3 +80,39 @@ export default function Position() {
     </table>
   );
 }
+
+const tableData = [
+  {
+    collateral: { dollar: "$48.35", token: "48 USDC" },
+    entryPrice: "$1581.35",
+    leverage: "20.00×",
+    liquidationPrice: "$1581.35",
+    markPrice: "$1581.35",
+    netValue: { price: "$2.38", purcentage: "(+$0.03 / +1.26%)" },
+    position: "ETH-USD",
+    size: "$48.35",
+    token: "ethereum",
+  },
+  {
+    collateral: { dollar: "$18.35", token: "18 USDC" },
+    entryPrice: "$2581.35",
+    leverage: "10.00×",
+    liquidationPrice: "$2581.35",
+    markPrice: "$2581.35",
+    netValue: { price: "$2.38", purcentage: "(-$0.03 / -1.26%)" },
+    position: "BTC-USD",
+    size: "$18.35",
+    token: "bitcoin",
+  },
+  {
+    collateral: { dollar: "$48.35", token: "48 USDC" },
+    entryPrice: "$1581.35",
+    leverage: "2.00×",
+    liquidationPrice: "$1581.35",
+    markPrice: "$1581.35",
+    netValue: { price: "$2.38", purcentage: "(+$10.03 / -5.26%)" },
+    position: "ETH-USD",
+    size: "$48.35",
+    token: "white_ethereum",
+  },
+];

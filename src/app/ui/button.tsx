@@ -1,6 +1,6 @@
-import { ButtonHTMLAttributes } from "react";
+import { type ButtonHTMLAttributes } from "react";
 
-type ButtonVariant = "primary" | "success" | "danger";
+type ButtonVariant = "danger" | "primary" | "success";
 
 type ButtonProps = {
   /**
@@ -8,21 +8,18 @@ type ButtonProps = {
    * @default "primary"
    * */
   variant?: ButtonVariant;
-  /** Label displayed in the Button */
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export default function Button(props: ButtonProps) {
-  const { variant = "primary", children, className, ...buttonProps } = props;
+  const { children, className, variant = "primary", ...buttonProps } = props;
 
   const buttonStyle = buttonVariantStyles[variant];
 
   return (
     <button
       {...buttonProps}
-      className={`p-2 rounded-md ${buttonStyle} ${
-        className !== undefined ? className : ""
-      }`}
-      // aria-label={children}
+      aria-label={children}
+      className={`rounded-md p-2 ${buttonStyle} ${className ?? ""}`}
     >
       {children}
     </button>
@@ -30,7 +27,7 @@ export default function Button(props: ButtonProps) {
 }
 
 const buttonVariantStyles: Record<ButtonVariant, string> = {
+  danger: "bg-btn-danger",
   primary: "bg-btn-primary",
   success: "bg-btn-success",
-  danger: "bg-btn-danger",
 };

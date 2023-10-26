@@ -1,49 +1,50 @@
 // TODO : See correct usage of Next Image component, Image optimization is not a free feature we actually need to pay for it on Vercel
 
 import Link from "next/link";
-import { ConnectButton } from "./zohal-modal";
+
 import Divider from "./ui/divider";
+import { ConnectButton } from "./zohal-modal";
 
 /* eslint-disable @next/next/no-img-element */
 export default function Header() {
   return (
     <>
-      <header className="flex-initial flex justify-between items-center p-4">
-        <div className="flex gap-4 items-center">
+      <header className="flex flex-initial items-center justify-between p-4">
+        <div className="flex items-center gap-4">
           <Link href="/">
             <img
-              className="w-10 rounded-lg rotate-[-35deg]"
-              src="/logo.png"
               alt="Zohal"
+              className="w-10 rotate-[-35deg] rounded-lg"
+              src="/logo.png"
             />
           </Link>
           <nav>
             <ul className="flex gap-2">
               <li>
-                <Link href="/trade" className="px-2 py-2 rounded-md">
+                <Link className="rounded-md px-2 py-2" href="/trade">
                   Portfolio
                 </Link>
               </li>
               <li>
                 <Link
+                  className="rounded-md bg-[#1d1f23] px-2 py-2"
                   href="/trade"
-                  className="bg-[#1d1f23] px-2 py-2 rounded-md"
                 >
                   Trade
                 </Link>
               </li>
               <li>
-                <Link href="/trade" className="px-2 py-2 rounded-md">
+                <Link className="rounded-md px-2 py-2" href="/trade">
                   Dashboard
                 </Link>
               </li>
               <li>
-                <Link href="/trade" className="px-2 py-2 rounded-md">
+                <Link className="rounded-md px-2 py-2" href="/trade">
                   Rewards
                 </Link>
               </li>
               <li>
-                <Link href="/trade" className="px-2 py-2 rounded-md">
+                <Link className="rounded-md px-2 py-2" href="/trade">
                   Docs
                 </Link>
               </li>

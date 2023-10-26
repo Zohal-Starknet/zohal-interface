@@ -1,4 +1,7 @@
-import { Root, AccessibleIconProps } from "@radix-ui/react-accessible-icon";
+import {
+  type AccessibleIconProps,
+  Root,
+} from "@radix-ui/react-accessible-icon";
 
 type IconProps = {
   className?: string;
@@ -10,15 +13,18 @@ export function SwapIcon(props: IconProps) {
   return (
     <Root label={label}>
       <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
+        aria-hidden="true"
         fill="none"
+        height="24"
+        role="img"
         stroke="currentColor"
-        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+        width="24"
+        x="256"
+        xmlns="http://www.w3.org/2000/svg"
         {...otherProps}
       >
         <path d="m3 16 4 4 4-4" />
@@ -33,20 +39,20 @@ export function SwapIcon(props: IconProps) {
 export function ChevronRight(props: IconProps) {
   return (
     <svg
+      aria-hidden="true"
+      height="24"
+      role="img"
+      viewBox="0 0 24 24"
+      width="24"
+      x="256"
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
-      aria-hidden="true"
-      role="img"
-      x="256"
       y="256"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
       {...props}
     >
       <path
-        fill="currentColor"
         d="M12.6 12L8 7.4L9.4 6l6 6l-6 6L8 16.6l4.6-4.6Z"
+        fill="currentColor"
       ></path>
     </svg>
   );

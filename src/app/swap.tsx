@@ -1,13 +1,14 @@
 "use client";
-import Fieldset from "./ui/fieldset";
-import Input from "./ui/input";
-import SwapMoreInformations from "./components/swap/more-informations";
-import TokenSwapButton from "./ui/form/token-swap-button";
-import Form from "./ui/form/form";
-import Button from "./ui/button";
-import { useState } from "react";
-import { useConnectModal } from "./zohal-modal";
 import { useAccount, useBalance } from "@starknet-react/core";
+import { useState } from "react";
+
+import SwapMoreInformations from "./components/swap/more-informations";
+import Button from "./ui/button";
+import Fieldset from "./ui/fieldset";
+import Form from "./ui/form/form";
+import TokenSwapButton from "./ui/form/token-swap-button";
+import Input from "./ui/input";
+import { useConnectModal } from "./zohal-modal";
 
 /**
  * TODO @YohanTz - Use big numbers for calculations
@@ -66,42 +67,42 @@ export default function Swap() {
     <Form>
       {payTokenSymbol}
       <Fieldset
-        label="Pay"
         field={
           <Input
+            onChange={updatePayTokenValue}
             placeholder="0.00"
             value={payTokenValue}
-            onChange={updatePayTokenValue}
           />
         }
+        label="Pay"
       />
 
       <TokenSwapButton onClick={switchSwapDirection} />
 
       {receiveTokenSymbol}
       <Fieldset
-        label="Receive"
         field={
           <Input
+            onChange={updateReceiveTokenValue}
             placeholder="0.00"
             value={receiveTokenValue}
-            onChange={updateReceiveTokenValue}
           />
         }
+        label="Receive"
       />
 
       <SwapMoreInformations
-        ratio={ethBtcRatio}
         payTokenSymbol={payTokenSymbol}
+        ratio={ethBtcRatio}
         receiveTokenSymbol={receiveTokenSymbol}
       />
 
       {openConnectModal ? (
         <Button
-          type="submit"
-          variant="primary"
           className="mt-8"
           onClick={openConnectModal}
+          type="submit"
+          variant="primary"
         >
           Connect Wallet
         </Button>

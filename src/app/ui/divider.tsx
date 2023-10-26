@@ -9,7 +9,7 @@ export default function Divider(props: DividerProps) {
 
   return (
     <hr
-      className={`h-0 w-full bg-[#2A2E37] border-[#2A2E37] border-solid ${
+      className={`h-0 w-full border-solid border-[#2A2E37] bg-[#2A2E37] ${
         className !== undefined ? `${className}` : ""
       }`}
     />
