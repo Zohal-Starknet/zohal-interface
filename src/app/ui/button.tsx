@@ -1,4 +1,4 @@
-import { type ButtonHTMLAttributes } from "react";
+import { type ButtonHTMLAttributes, type PropsWithChildren } from "react";
 
 type ButtonVariant = "danger" | "primary" | "success";
 
@@ -10,7 +10,8 @@ type ButtonProps = {
   variant?: ButtonVariant;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-export default function Button(props: ButtonProps) {
+// TODO: Require aria-label on buttons
+export default function Button(props: PropsWithChildren<ButtonProps>) {
   const { children, className, variant = "primary", ...buttonProps } = props;
 
   const buttonStyle = buttonVariantStyles[variant];
@@ -18,7 +19,6 @@ export default function Button(props: ButtonProps) {
   return (
     <button
       {...buttonProps}
-      aria-label={children}
       className={`rounded-md p-2 ${buttonStyle} ${className ?? ""}`}
     >
       {children}
