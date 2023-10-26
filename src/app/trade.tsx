@@ -13,8 +13,8 @@ export default function Trade() {
       <Fieldset
         field={
           <Input
-            onChange={(value) => {
-              console.log(value);
+            onChange={() => {
+              return;
             }}
             placeholder="0.00"
             value=""
@@ -28,8 +28,8 @@ export default function Trade() {
       <Fieldset
         field={
           <Input
-            onChange={(value) => {
-              console.log(value);
+            onChange={() => {
+              return;
             }}
             placeholder="0.00"
             value=""
@@ -51,8 +51,8 @@ export default function Trade() {
           {/* TODO: Input full width */}
           <div className="flex-auto rounded-md border border-[#363636] bg-[#25272E] p-2">
             <Input
-              onChange={(value) => {
-                console.log(value);
+              onChange={() => {
+                return;
               }}
               placeholder="0.00×"
               value=""
@@ -80,8 +80,6 @@ export default function Trade() {
           <PriceInfo key={index} {...priceInfo} />
         ))}
       </div>
-
-      {/* <Divider className="my-3" /> */}
 
       <div className="mt-4 grid w-full grid-cols-2 items-center gap-2">
         <Button type="submit" variant="success">
