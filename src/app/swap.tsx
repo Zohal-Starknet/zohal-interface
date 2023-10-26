@@ -1,6 +1,6 @@
 "use client";
 import { useAccount, useBalance } from "@starknet-react/core";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import SwapMoreInformations from "./components/swap/more-informations";
 import Button from "./ui/button";
@@ -22,6 +22,9 @@ export default function Swap() {
   // TODO: Type this state stronger than string
   const [receiveTokenSymbol, setReceiveTokenSymbol] = useState("BTC");
   const [receiveTokenValue, setReceiveTokenValue] = useState("");
+
+  const temporaryPayTokenValueRef = useRef("");
+  const temporaryPayTokenSymbolRef = useRef("");
 
   const { openConnectModal } = useConnectModal();
 
@@ -46,21 +49,14 @@ export default function Swap() {
     setPayTokenValue((parseFloat(tokenValue) / ethBtcRatio).toString());
   }
 
-  function switchSwapDirection() {
-    // TODO: Switch selected token too
-    setPayTokenValue((prevReceiveTokenValue) => {
-      setPayTokenValue(receiveTokenValue);
-      setReceiveTokenValue(prevReceiveTokenValue);
+  function switchTokens() {
+    temporaryPayTokenValueRef.current = payTokenValue;
+    setPayTokenValue(receiveTokenValue);
+    setReceiveTokenValue(temporaryPayTokenValueRef.current);
 
-      return receiveTokenValue;
-    });
-
-    setPayTokenSymbol((prevReceiveTokenSymbol) => {
-      setPayTokenSymbol(receiveTokenSymbol);
-      setReceiveTokenSymbol(prevReceiveTokenSymbol);
-
-      return receiveTokenSymbol;
-    });
+    temporaryPayTokenSymbolRef.current = payTokenSymbol;
+    setPayTokenSymbol(receiveTokenSymbol);
+    setReceiveTokenSymbol(temporaryPayTokenSymbolRef.current);
   }
 
   return (
@@ -77,7 +73,7 @@ export default function Swap() {
         label="Pay"
       />
 
-      <TokenSwapButton onClick={switchSwapDirection} />
+      <TokenSwapButton onClick={switchTokens} />
 
       {receiveTokenSymbol}
       <Fieldset
