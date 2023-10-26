@@ -1,4 +1,4 @@
-import { SwapIcon } from "../icons";
+import { SwapIcon } from "../../_ui/icons";
 
 type TokenSwapButtonProps = {
   /** Handler called when clicking on the Swap button */

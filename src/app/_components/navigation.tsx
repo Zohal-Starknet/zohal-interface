@@ -4,7 +4,7 @@ import {
   getPortfolioPath,
   getRewardsPath,
   getTradePath,
-} from "../helpers/routes";
+} from "../_helpers/routes";
 import NavigationItem from "./navigation-item";
 
 export default function Navigation() {

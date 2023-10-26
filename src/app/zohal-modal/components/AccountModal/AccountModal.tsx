@@ -4,8 +4,8 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@zohal/app/ui/Modal";
-import Button from "@zohal/app/ui/button";
+} from "@zohal/app/_ui/Modal";
+import Button from "@zohal/app/_ui/button";
 
 import { useDisplayBalance } from "../../hooks/useDisplayBalance";
 import { useDisplayName } from "../../hooks/useDisplayName";

@@ -1,7 +1,7 @@
+import Panel from "../../_ui/panel";
+import Tabs, { type TabItemType } from "../../_ui/tabs";
 import Swap from "./swap";
 import Trade from "./trade";
-import Panel from "./ui/panel";
-import Tabs, { type TabItemType } from "./ui/tabs";
 
 export default function TradeSwapPanel() {
   const tabItems: [TabItemType, TabItemType] = [

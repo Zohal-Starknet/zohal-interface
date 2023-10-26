@@ -1,7 +1,7 @@
 "use client";
 
 import { StarknetConfig } from "@starknet-react/core";
-import { connectors } from "@zohal/utils/connectors";
+import { connectors } from "@zohal/app/_helpers/connectors";
 import { type PropsWithChildren } from "react";
 
 import { ZohalKitProvider } from "./zohal-modal";

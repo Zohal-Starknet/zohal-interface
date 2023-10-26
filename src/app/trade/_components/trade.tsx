@@ -1,11 +1,11 @@
 "use client";
-import PriceInfo from "./components/price-info";
-import Button from "./ui/button";
-import Fieldset from "./ui/fieldset";
-import Form from "./ui/form/form";
-import TokenSwapButton from "./ui/form/token-swap-button";
-import Input from "./ui/input";
-import Switch from "./ui/switch";
+import Button from "../../_ui/button";
+import Fieldset from "../../_ui/fieldset";
+import Form from "../../_ui/form";
+import Input from "../../_ui/input";
+import Switch from "../../_ui/switch";
+import PriceInfo from "./price-info";
+import TokenSwapButton from "./token-swap-button";
 
 export default function Trade() {
   return (

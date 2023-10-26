@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-import Divider from "./ui/divider";
-import Panel from "./ui/panel";
-import TokenChart from "./ui/token-chart";
+import Divider from "../../_ui/divider";
+import Panel from "../../_ui/panel";
+import TokenChart from "./token-chart";
 
 export default function ChartPanel() {
   return (

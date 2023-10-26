@@ -1,5 +1,5 @@
 export function getTradePath() {
-  return "/";
+  return "/trade";
 }
 
 export function getDashboardPath() {

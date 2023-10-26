@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 
-import Navigation from "./components/navigation";
-import Divider from "./ui/divider";
-import { ConnectButton } from "./zohal-modal";
+import Divider from "../_ui/divider";
+import { ConnectButton } from "../zohal-modal";
+import Navigation from "./navigation";
 
 /* eslint-disable @next/next/no-img-element */
 export default function Header() {
