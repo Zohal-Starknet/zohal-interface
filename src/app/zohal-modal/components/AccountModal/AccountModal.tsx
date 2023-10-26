@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@zohal/app/ui/Modal";
+import Button from "@zohal/app/ui/button";
 
 import { useDisplayBalance } from "../../hooks/useDisplayBalance";
 import { useDisplayName } from "../../hooks/useDisplayName";
@@ -50,12 +51,9 @@ export function AccountModal(props: AccountModalProps) {
             {displayBalance}
           </p>
         </div>
-        <button
-          className="w-full rounded-md bg-[#1d1f23] p-2"
-          onClick={onDisconnect}
-        >
+        <Button className="w-full" onClick={onDisconnect} variant="secondary">
           Disconnect
-        </button>
+        </Button>
       </DialogContent>
     </Dialog>
   );

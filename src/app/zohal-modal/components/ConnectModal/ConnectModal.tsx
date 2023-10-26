@@ -6,6 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@zohal/app/ui/Modal";
+import Button from "@zohal/app/ui/button";
 import { connector_id_to_name } from "@zohal/utils/connectors";
 import { useEffect } from "react";
 
@@ -41,12 +42,13 @@ export function ConnectModal(props: ConnectModalProps) {
           {connectors.map((connector) => {
             return (
               <li key={connector.id}>
-                <button
-                  className="w-full rounded-md bg-[#1d1f23] p-2"
+                <Button
+                  className="w-full"
                   onClick={() => connect(connector)}
+                  variant="secondary"
                 >
                   {connector_id_to_name[connector.id]}
-                </button>
+                </Button>
               </li>
             );
           })}

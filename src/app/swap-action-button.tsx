@@ -20,7 +20,7 @@ export default function SwapActionButton(props: SwapActionButtonProps) {
       <Button
         className={commonSwapActionButtonClassName}
         onClick={openConnectModal}
-        variant="primary"
+        variant="default"
       >
         Connect Wallet
       </Button>
