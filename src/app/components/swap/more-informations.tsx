@@ -23,7 +23,7 @@ type SwapMoreInformationsProps = {
 // TODO - Export Chevron animated in its own component
 export default function SwapMoreInformations(props: SwapMoreInformationsProps) {
   const { payTokenSymbol, ratio, receiveTokenSymbol } = props;
-  const [open, setOpen] = useState<boolean | undefined>(true);
+  const [open, setOpen] = useState<boolean | undefined>(undefined);
 
   const priceInfos = [
     // TODO - Do real Price informations based on User selection and input
