@@ -19,7 +19,7 @@
       }
     ],
     "paths": {
-      "@satoru/*": ["./src/*"]
+      "@zohal/*": ["./src/*"]
     }
   },
   "include": [

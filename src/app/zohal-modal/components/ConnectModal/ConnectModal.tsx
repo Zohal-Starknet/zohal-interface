@@ -1,12 +1,12 @@
+import { useAccount, useConnectors } from "@starknet-react/core";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@satoru/app/ui/Modal";
-import { connector_id_to_name } from "@satoru/utils/connectors";
-import { useAccount, useConnectors } from "@starknet-react/core";
+} from "@zohal/app/ui/Modal";
+import { connector_id_to_name } from "@zohal/utils/connectors";
 import { useEffect } from "react";
 
 type ConnectModalProps = {
