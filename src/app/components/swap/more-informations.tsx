@@ -1,6 +1,6 @@
 "use client";
 import * as Collapsible from "@radix-ui/react-collapsible";
-import { ChevronRight } from "@satoru/app/ui/icons";
+import { ChevronRight } from "@zohal/app/ui/icons";
 import { useState } from "react";
 
 import PriceInfo from "../price-info";
