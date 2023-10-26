@@ -8,13 +8,37 @@ import Input from "./ui/input";
 import Switch from "./ui/switch";
 
 export default function Trade() {
+  const test = 12;
+
   return (
     <Form>
-      <Fieldset field={<Input placeholder="0.00" />} label="Pay" />
+      <Fieldset
+        field={
+          <Input
+            onChange={(value) => {
+              console.log(value);
+            }}
+            placeholder="0.00"
+            value=""
+          />
+        }
+        label="Pay"
+      />
 
       <TokenSwapButton />
 
-      <Fieldset field={<Input placeholder="0.00" />} label="Long/Short" />
+      <Fieldset
+        field={
+          <Input
+            onChange={(value) => {
+              console.log(value);
+            }}
+            placeholder="0.00"
+            value=""
+          />
+        }
+        label="Long/Short"
+      />
 
       <div className="py-6">
         <div className="flex w-full items-center justify-between pl-1">
