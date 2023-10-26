@@ -19,7 +19,7 @@ export default function NavigationItem(props: NavigationItemProps) {
   return (
     <li>
       <Link
-        className={`rounded-md px-2 py-2 transition-colors hover:bg-[#1d1f23] ${
+        className={`rounded-md p-2 transition-colors hover:bg-[#1d1f23] ${
           isActiveLink ? "bg-[#1d1f23]" : ""
         }`}
         href={pathname}
