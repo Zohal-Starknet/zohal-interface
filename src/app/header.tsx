@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import Navigation from "./components/navigation";
 import Divider from "./ui/divider";
 import { ConnectButton } from "./zohal-modal";
 
@@ -18,38 +19,7 @@ export default function Header() {
               src="/logo.png"
             />
           </Link>
-          <nav>
-            <ul className="flex gap-2">
-              <li>
-                <Link className="rounded-md px-2 py-2" href="/trade">
-                  Portfolio
-                </Link>
-              </li>
-              <li>
-                <Link
-                  className="rounded-md bg-[#1d1f23] px-2 py-2"
-                  href="/trade"
-                >
-                  Trade
-                </Link>
-              </li>
-              <li>
-                <Link className="rounded-md px-2 py-2" href="/trade">
-                  Dashboard
-                </Link>
-              </li>
-              <li>
-                <Link className="rounded-md px-2 py-2" href="/trade">
-                  Rewards
-                </Link>
-              </li>
-              <li>
-                <Link className="rounded-md px-2 py-2" href="/trade">
-                  Docs
-                </Link>
-              </li>
-            </ul>
-          </nav>
+          <Navigation />
         </div>
         <ConnectButton />
       </header>

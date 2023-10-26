@@ -1,11 +1,11 @@
+import { useConnectors } from "@starknet-react/core";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@satoru/app/ui/Modal";
-import Button from "@satoru/app/ui/button";
-import { useConnectors } from "@starknet-react/core";
+} from "@zohal/app/ui/Modal";
+import Button from "@zohal/app/ui/button";
 
 import { useDisplayBalance } from "../../hooks/useDisplayBalance";
 import { useDisplayName } from "../../hooks/useDisplayName";
