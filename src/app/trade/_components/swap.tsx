@@ -3,11 +3,11 @@ import { useAccount, useBalance } from "@starknet-react/core";
 
 import Fieldset from "../../_ui/fieldset";
 import Form from "../../_ui/form";
-import TokenSwapButton from "./token-swap-button";
 import Input from "../../_ui/input";
 import { useTokenInputs } from "../_hooks/use-token-input";
 import SwapMoreInformations from "./more-informations";
 import SwapActionButton from "./swap-action-button";
+import TokenSwapButton from "./token-swap-button";
 
 /**
  * TODO @YohanTz - Use big numbers for calculations

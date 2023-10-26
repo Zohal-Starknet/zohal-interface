@@ -1,4 +1,5 @@
 import { useAccount, useConnectors } from "@starknet-react/core";
+import { connector_id_to_name } from "@zohal/app/_helpers/connectors";
 import {
   Dialog,
   DialogContent,
@@ -7,7 +8,6 @@ import {
   DialogTitle,
 } from "@zohal/app/_ui/Modal";
 import Button from "@zohal/app/_ui/button";
-import { connector_id_to_name } from "@zohal/app/_helpers/connectors";
 import { useEffect } from "react";
 
 type ConnectModalProps = {

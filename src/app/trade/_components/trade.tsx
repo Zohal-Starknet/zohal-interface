@@ -2,10 +2,10 @@
 import Button from "../../_ui/button";
 import Fieldset from "../../_ui/fieldset";
 import Form from "../../_ui/form";
-import TokenSwapButton from "./token-swap-button";
 import Input from "../../_ui/input";
 import Switch from "../../_ui/switch";
 import PriceInfo from "./price-info";
+import TokenSwapButton from "./token-swap-button";
 
 export default function Trade() {
   return (
