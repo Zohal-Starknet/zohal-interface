@@ -17,7 +17,11 @@ export default function SwapActionButton(props: SwapActionButtonProps) {
 
   if (openConnectModal) {
     return (
-      <Button className="mt-8" onClick={openConnectModal} variant="primary">
+      <Button
+        className={commonSwapActionButtonClassName}
+        onClick={openConnectModal}
+        variant="primary"
+      >
         Connect Wallet
       </Button>
     );
@@ -25,7 +29,7 @@ export default function SwapActionButton(props: SwapActionButtonProps) {
 
   if (noEnteredAmount) {
     return (
-      <Button className="mt-8" disabled>
+      <Button className={commonSwapActionButtonClassName} disabled>
         Enter an amount
       </Button>
     );
@@ -33,11 +37,13 @@ export default function SwapActionButton(props: SwapActionButtonProps) {
 
   if (insufficientBalance) {
     return (
-      <Button className="mt-8" disabled>
+      <Button className={commonSwapActionButtonClassName} disabled>
         Insufficient {payTokenSymbol} balance
       </Button>
     );
   }
 
-  return <Button className="mt-8">Swap</Button>;
+  return <Button className={commonSwapActionButtonClassName}>Swap</Button>;
 }
+
+const commonSwapActionButtonClassName = "mt-8";
