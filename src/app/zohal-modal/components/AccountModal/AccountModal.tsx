@@ -4,7 +4,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@satoru/app/ui/Modal";
-import { Button } from "@satoru/app/ui/button";
+import Button from "@satoru/app/ui/button";
 import { useConnectors } from "@starknet-react/core";
 
 import { useDisplayBalance } from "../../hooks/useDisplayBalance";

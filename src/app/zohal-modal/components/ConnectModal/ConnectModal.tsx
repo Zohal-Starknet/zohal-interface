@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@satoru/app/ui/Modal";
-import { Button } from "@satoru/app/ui/button";
+import Button from "@satoru/app/ui/button";
 import { connector_id_to_name } from "@satoru/utils/connectors";
 import { useAccount, useConnectors } from "@starknet-react/core";
 import { useEffect } from "react";

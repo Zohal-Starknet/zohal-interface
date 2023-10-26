@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { cn } from "../lib/utils";
 
-const buttonVariants = cva(
+export const buttonVariants = cva(
   "text-normal inline-flex items-center justify-center whitespace-nowrap rounded-md font-normal ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300",
   {
     defaultVariants: {
@@ -20,10 +20,10 @@ const buttonVariants = cva(
       },
 
       variant: {
+        danger:
+          "dark:hover:btn-danger dark:white bg-btn-danger text-white hover:bg-btn-danger dark:bg-btn-danger dark:text-white",
         default:
           "bg-btn-primary text-white hover:bg-btn-primary dark:bg-btn-primary dark:text-white dark:hover:bg-btn-primary",
-        destructive:
-          "bg-btn-destructive hover:bg-btn-destructive dark:bg-btn-destructive dark:hover:btn-destructive dark:white text-white dark:text-white",
         ghost:
           "hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50",
         link: "text-slate-900 underline-offset-4 hover:underline dark:text-slate-50",
@@ -38,14 +38,13 @@ const buttonVariants = cva(
   },
 );
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+export type ButtonProps = {
   asChild?: boolean;
-}
+} & React.ButtonHTMLAttributes<HTMLButtonElement> &
+  VariantProps<typeof buttonVariants>;
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (props, ref) => {
+export default React.forwardRef<HTMLButtonElement, ButtonProps>(
+  function Button(props, ref) {
     const { asChild = false, className, size, variant, ...buttonProps } = props;
     const Component = asChild ? Slot : "button";
 
@@ -58,6 +57,3 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     );
   },
 );
-Button.displayName = "Button";
-
-export { Button, buttonVariants };

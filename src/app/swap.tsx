@@ -1,6 +1,6 @@
 "use client";
 import SwapMoreInformations from "./components/swap/more-informations";
-import { Button } from "./ui/button";
+import Button from "./ui/button";
 import Fieldset from "./ui/fieldset";
 import Form from "./ui/form/form";
 import TokenSwapButton from "./ui/form/token-swap-button";
