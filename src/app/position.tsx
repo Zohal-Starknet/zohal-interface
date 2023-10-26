@@ -6,17 +6,19 @@ export default function Position() {
     <table className="mt-8 w-full">
       <thead className="border-b border-neutral-800 text-left">
         <tr className="text-[#bcbcbd]">
-          <th className="pb-4 font-normal">Position</th>
-          <th className="pb-4 font-normal">Net Value</th>
-          <th className="pb-4 font-normal">Size</th>
-          <th className="pb-4 font-normal">Collateral</th>
-          <th className="pb-4 font-normal">Entry Price</th>
-          <th className="pb-4 font-normal">Market Price</th>
-          <th className="pb-4 font-normal">Liquidation Price</th>
+          <th className={tableHeaderCommonStyles}>Position</th>
+          <th className={tableHeaderCommonStyles}>Net Value</th>
+          <th className={tableHeaderCommonStyles}>Size</th>
+          <th className={tableHeaderCommonStyles}>Collateral</th>
+          <th className={tableHeaderCommonStyles}>Entry Price</th>
+          <th className={tableHeaderCommonStyles}>Market Price</th>
+          <th className={tableHeaderCommonStyles}>Liquidation Price</th>
         </tr>
       </thead>
       <tbody>
         {tableData.map((data, index) => {
+          const isLongPosition = data.positionType === "long";
+
           return (
             <tr className="border-b border-neutral-800 text-sm" key={index}>
               <td className="flex gap-4 py-4">
@@ -29,15 +31,13 @@ export default function Position() {
                 </div>
                 <div>
                   {data.position}
-                  {index === 1 ? (
-                    <span className="ml-4 rounded-sm bg-[#40B68B] px-1 py-0.5 text-xs font-semibold text-black">
-                      LONG
-                    </span>
-                  ) : (
-                    <span className="ml-4 rounded-sm bg-[#FF5354] px-1 py-0.5 text-xs font-semibold text-black">
-                      SHORT
-                    </span>
-                  )}
+                  <span
+                    className={`ml-4 rounded-sm ${
+                      isLongPosition ? "bg-[#40B68B]" : "bg-[#FF5354]"
+                    } px-1 py-0.5 text-xs font-semibold text-black`}
+                  >
+                    {isLongPosition ? "LONG" : "SHORT"}
+                  </span>
                   <br />
                   <span className="text-sm text-[#bcbcbd]">
                     {data.leverage}
@@ -47,15 +47,13 @@ export default function Position() {
               <td className="py-4">
                 {data.netValue.price}
                 <br />
-                {index === 1 ? (
-                  <span className="text-sm text-[#FF5354]">
-                    {data.netValue.purcentage}
-                  </span>
-                ) : (
-                  <span className="text-sm text-[#40B68B]">
-                    {data.netValue.purcentage}
-                  </span>
-                )}
+                <span
+                  className={`text-sm ${
+                    isLongPosition ? "text-[#40B68B]" : "text-[#FF5354]"
+                  }`}
+                >
+                  {data.netValue.purcentage}
+                </span>
               </td>
               <td className="pr-6">{data.size}</td>
               <td>
@@ -81,6 +79,8 @@ export default function Position() {
   );
 }
 
+const tableHeaderCommonStyles = "pb-4 font-normal";
+
 const tableData = [
   {
     collateral: { dollar: "$48.35", token: "48 USDC" },
@@ -90,6 +90,7 @@ const tableData = [
     markPrice: "$1581.35",
     netValue: { price: "$2.38", purcentage: "(+$0.03 / +1.26%)" },
     position: "ETH-USD",
+    positionType: "short",
     size: "$48.35",
     token: "ethereum",
   },
@@ -101,6 +102,7 @@ const tableData = [
     markPrice: "$2581.35",
     netValue: { price: "$2.38", purcentage: "(-$0.03 / -1.26%)" },
     position: "BTC-USD",
+    positionType: "long",
     size: "$18.35",
     token: "bitcoin",
   },
@@ -112,6 +114,7 @@ const tableData = [
     markPrice: "$1581.35",
     netValue: { price: "$2.38", purcentage: "(+$10.03 / -5.26%)" },
     position: "ETH-USD",
+    positionType: "short",
     size: "$48.35",
     token: "white_ethereum",
   },
