@@ -1,5 +1,5 @@
-import Button from "./ui/button";
-import { useConnectModal } from "./zohal-modal";
+import Button from "../../_ui/button";
+import { useConnectModal } from "../../zohal-modal";
 
 type SwapActionButtonProps = {
   /** */

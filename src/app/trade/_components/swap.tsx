@@ -1,13 +1,13 @@
 "use client";
 import { useAccount, useBalance } from "@starknet-react/core";
 
-import SwapMoreInformations from "./components/swap/more-informations";
-import { useTokenInputs } from "./hooks/use-token-input";
+import Fieldset from "../../_ui/fieldset";
+import Form from "../../_ui/form";
+import TokenSwapButton from "./token-swap-button";
+import Input from "../../_ui/input";
+import { useTokenInputs } from "../_hooks/use-token-input";
+import SwapMoreInformations from "./more-informations";
 import SwapActionButton from "./swap-action-button";
-import Fieldset from "./ui/fieldset";
-import Form from "./ui/form/form";
-import TokenSwapButton from "./ui/form/token-swap-button";
-import Input from "./ui/input";
 
 /**
  * TODO @YohanTz - Use big numbers for calculations

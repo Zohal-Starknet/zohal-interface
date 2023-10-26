@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
-import { robotoMono } from "@zohal/utils/fonts";
+import { robotoMono } from "@zohal/app/_helpers/fonts";
 
 import "./globals.css";
-import Header from "./header";
+import Header from "./_components/header";
 import Providers from "./providers";
 
 export const metadata: Metadata = {

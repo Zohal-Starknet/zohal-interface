@@ -1,9 +1,9 @@
 "use client";
 import * as Collapsible from "@radix-ui/react-collapsible";
-import { ChevronRight } from "@zohal/app/ui/icons";
+import { ChevronRight } from "@zohal/app/_ui/icons";
 import { useState } from "react";
 
-import PriceInfo from "../price-info";
+import PriceInfo from "./price-info";
 
 type SwapMoreInformationsProps = {
   /**

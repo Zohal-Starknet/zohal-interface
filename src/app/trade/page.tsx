@@ -1,6 +1,6 @@
-import ChartPanel from "./chart-panel";
-import PositionPanel from "./position-panel";
-import TradeSwapPanel from "./trade-swap-panel";
+import ChartPanel from "./_components/chart-panel";
+import PositionPanel from "./_components/position-panel";
+import TradeSwapPanel from "./_components/trade-swap-panel";
 
 export default function Home() {
   return (

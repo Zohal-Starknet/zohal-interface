@@ -1,6 +1,6 @@
 import Position from "./position";
-import Panel from "./ui/panel";
-import Tabs, { type TabItemType } from "./ui/tabs";
+import Panel from "../../_ui/panel";
+import Tabs, { type TabItemType } from "../../_ui/tabs";
 
 export default function PositionPanel() {
   const tabItems: [TabItemType, TabItemType, TabItemType, TabItemType] = [
