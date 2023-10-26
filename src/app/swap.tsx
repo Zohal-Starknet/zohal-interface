@@ -1,6 +1,6 @@
 "use client";
 import SwapMoreInformations from "./components/swap/more-informations";
-import Button from "./ui/button";
+import { Button } from "./ui/button";
 import Fieldset from "./ui/fieldset";
 import Form from "./ui/form/form";
 import TokenSwapButton from "./ui/form/token-swap-button";
@@ -17,7 +17,7 @@ export default function Swap() {
 
       <SwapMoreInformations />
 
-      <Button className="mt-8" type="submit" variant="primary">
+      <Button className="mt-8" type="submit">
         Connect Wallet
       </Button>
     </Form>

@@ -4,6 +4,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@satoru/app/ui/Modal";
+import { Button } from "@satoru/app/ui/button";
 import { useConnectors } from "@starknet-react/core";
 
 import { useDisplayBalance } from "../../hooks/useDisplayBalance";
@@ -50,12 +51,9 @@ export function AccountModal(props: AccountModalProps) {
             {displayBalance}
           </p>
         </div>
-        <button
-          className="w-full rounded-md bg-[#1d1f23] p-2"
-          onClick={onDisconnect}
-        >
+        <Button className="w-full" onClick={onDisconnect} variant="secondary">
           Disconnect
-        </button>
+        </Button>
       </DialogContent>
     </Dialog>
   );

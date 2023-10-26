@@ -1,6 +1,6 @@
 "use client";
 import PriceInfo from "./components/price-info";
-import Button from "./ui/button";
+import { Button } from "./ui/button";
 import Fieldset from "./ui/fieldset";
 import Form from "./ui/form/form";
 import TokenSwapButton from "./ui/form/token-swap-button";
@@ -57,7 +57,7 @@ export default function Trade() {
         <Button type="submit" variant="success">
           Buy/Long
         </Button>
-        <Button type="submit" variant="danger">
+        <Button type="submit" variant="destructive">
           Sell/Short
         </Button>
       </div>
