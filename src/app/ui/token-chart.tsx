@@ -1,6 +1,6 @@
 "use client";
 
-import { robotoMono } from "@satoru/utils/fonts";
+import { robotoMono } from "@zohal/utils/fonts";
 // TODO @YohanTz: Add NOTICE file mentioning Trading view for using their chart library
 import { ColorType, CrosshairMode, createChart } from "lightweight-charts";
 import React, { useEffect, useRef } from "react";

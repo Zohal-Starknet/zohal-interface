@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { robotoMono } from "@satoru/utils/fonts";
+import { robotoMono } from "@zohal/utils/fonts";
 
 import "./globals.css";
 import Header from "./header";
@@ -9,7 +9,7 @@ import Providers from "./providers";
 export const metadata: Metadata = {
   description:
     "Next-generation Perpetual Exchange on Starknet. Revolutionizing User Experience.",
-  title: "Satoru",
+  title: "Zohal",
 };
 
 export default function RootLayout({

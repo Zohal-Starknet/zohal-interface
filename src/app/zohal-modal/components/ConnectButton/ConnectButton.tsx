@@ -1,6 +1,6 @@
 "use client";
 
-import { connector_id_to_img } from "@satoru/utils/connectors";
+import { connector_id_to_img } from "@zohal/utils/connectors";
 
 import { CustomConnectButton } from "./CustomConnectButton";
 
