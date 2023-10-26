@@ -8,8 +8,6 @@ import Input from "./ui/input";
 import Switch from "./ui/switch";
 
 export default function Trade() {
-  const test = 12;
-
   return (
     <Form>
       <Fieldset
