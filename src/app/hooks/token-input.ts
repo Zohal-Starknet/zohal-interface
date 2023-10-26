@@ -19,25 +19,27 @@ export function useTokenInputs(props: Props) {
   const temporaryPayTokenValueRef = useRef("");
   const temporaryPayTokenSymbolRef = useRef("");
 
-  const updatePayTokenValue = useCallback(function updatePayTokenValue(
-    tokenValue: string,
-  ) {
-    setPayTokenValue(tokenValue);
-    setReceiveTokenValue(
-      tokenValue !== "" ? (parseFloat(tokenValue) * ratio).toString() : "",
-    );
-  }, []);
+  const updatePayTokenValue = useCallback(
+    function updatePayTokenValue(tokenValue: string) {
+      setPayTokenValue(tokenValue);
+      setReceiveTokenValue(
+        tokenValue !== "" ? (parseFloat(tokenValue) * ratio).toString() : "",
+      );
+    },
+    [ratio],
+  );
 
-  const updateReceiveTokenValue = useCallback(function updateReceiveTokenValue(
-    tokenValue: string,
-  ) {
-    setReceiveTokenValue(tokenValue);
-    setPayTokenValue(
-      tokenValue !== "" ? (parseFloat(tokenValue) / ratio).toString() : "",
-    );
-  }, []);
+  const updateReceiveTokenValue = useCallback(
+    function updateReceiveTokenValue(tokenValue: string) {
+      setReceiveTokenValue(tokenValue);
+      setPayTokenValue(
+        tokenValue !== "" ? (parseFloat(tokenValue) / ratio).toString() : "",
+      );
+    },
+    [ratio],
+  );
 
-  const switchTokens = useCallback(function switchTokens() {
+  function switchTokens() {
     temporaryPayTokenValueRef.current = payTokenValue;
     setPayTokenValue(receiveTokenValue);
     setReceiveTokenValue(temporaryPayTokenValueRef.current);
@@ -45,15 +47,15 @@ export function useTokenInputs(props: Props) {
     temporaryPayTokenSymbolRef.current = payTokenSymbol;
     setPayTokenSymbol(receiveTokenSymbol);
     setReceiveTokenSymbol(temporaryPayTokenSymbolRef.current);
-  }, []);
+  }
 
   return {
     payTokenSymbol,
     payTokenValue,
     receiveTokenSymbol,
     receiveTokenValue,
+    switchTokens,
     updatePayTokenValue,
     updateReceiveTokenValue,
-    switchTokens,
   };
 }
