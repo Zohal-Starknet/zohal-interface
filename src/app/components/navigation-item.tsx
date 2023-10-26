@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-interface NavigationItemProps {
+type NavigationItemProps = {
+  /** Label shown in the link */
   label: string;
+  /** Path the user will get redirected to when clicking on the link */
   pathname: string;
-}
+};
 
 export default function NavigationItem(props: NavigationItemProps) {
   const { label, pathname } = props;
