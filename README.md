@@ -21,7 +21,7 @@
 
 ## License
 
-This repository is licensed under the [GNU General Public License v3.0](LICENSE)
+This repository is licensed under the [Business Source License 1.1 (BUSL-1.1)](LICENSE)
 
 ## Getting Started
 
