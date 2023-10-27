@@ -17,11 +17,6 @@ export default function ChartHeader() {
         </div>
         <VerticalDivider />
         <div className="flex flex-col gap-1">
-          <span className="text-xs text-[#A5A5A7]">Index Price</span>
-          <span className="text-white">$1,544.30</span>
-        </div>
-        <VerticalDivider />
-        <div className="flex flex-col gap-1">
           <span className="text-xs text-[#A5A5A7]">24h Change</span>
           <span className="text-[#40B68B]">$24.80(+0.71%)</span>
         </div>
