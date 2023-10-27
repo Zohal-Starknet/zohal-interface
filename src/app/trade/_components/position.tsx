@@ -116,6 +116,6 @@ const tableData = [
     position: "ETH-USD",
     positionType: "short",
     size: "$48.35",
-    token: "white_ethereum",
+    token: "ethereum",
   },
 ];
