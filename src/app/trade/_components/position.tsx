@@ -3,7 +3,7 @@ export default function Position() {
   // TODO @YohanTz: Add ? icon to explain each of the table header
 
   return (
-    <table className="mt-8 w-full">
+    <table className="mt-6 w-full">
       <thead className="border-b border-neutral-800 text-left">
         <tr className="text-[#bcbcbd]">
           <th className={tableHeaderCommonStyles}>Position</th>
