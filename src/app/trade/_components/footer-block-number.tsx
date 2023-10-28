@@ -31,6 +31,7 @@ export default function FooterBlockNumber() {
     <a
       className={badgeContainerClassName}
       href={`${testnetBlockUrl}/${block.block_hash}`}
+      rel="noopener noreferrer"
       target="_blank"
     >
       <div className="h-2 w-2 rounded-full bg-[#40B68B]" />
