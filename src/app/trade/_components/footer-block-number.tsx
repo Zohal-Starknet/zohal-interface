@@ -11,7 +11,7 @@ export default function FooterBlockNumber() {
 
   // TODO @YohanTz: Show Skeleton
   if (block === undefined) {
-    return <div></div>;
+    return null;
   }
 
   /**
