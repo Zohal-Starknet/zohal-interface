@@ -1,6 +1,7 @@
-import { TwitterIcon } from "@zohal/app/_ui/icons";
-import FooterBlockNumber from "./footer-block-number";
 import { TWITTER_URL } from "@zohal/app/_helpers/socials";
+import { TwitterIcon } from "@zohal/app/_ui/icons";
+
+import FooterBlockNumber from "./footer-block-number";
 
 export default function Footer() {
   return (

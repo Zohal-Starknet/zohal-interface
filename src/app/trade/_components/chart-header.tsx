@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 export default function ChartHeader() {
   return (
     <div className="flex h-[4.75rem] items-center px-4">
