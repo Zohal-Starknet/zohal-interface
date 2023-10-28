@@ -8,7 +8,7 @@ export default function Footer() {
     <footer className="flex h-[3.25rem] items-center justify-between border-t border-[#2A2E37] px-4">
       <FooterBlockNumber />
       <div className="flex items-center gap-2">
-        <a href={TWITTER_URL} target="_blank">
+        <a href={TWITTER_URL} rel="noopener noreferrer" target="_blank">
           <TwitterIcon label="twitter" />
         </a>
       </div>
