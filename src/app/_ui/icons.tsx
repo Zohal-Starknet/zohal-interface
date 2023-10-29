@@ -57,3 +57,27 @@ export function ChevronRight(props: IconProps) {
     </svg>
   );
 }
+
+export function ExternalLinkIcon(props: IconProps) {
+  const { label, ...otherProps } = props;
+
+  return (
+    <Root label={label}>
+      <svg
+        fill="none"
+        height="24"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+        {...otherProps}
+      >
+        <path d="M7 7h10v10" />
+        <path d="M7 17 17 7" />
+      </svg>
+    </Root>
+  );
+}
