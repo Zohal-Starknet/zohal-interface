@@ -44,6 +44,7 @@ export function ConnectModal(props: ConnectModalProps) {
               <li key={connector.id}>
                 <Button
                   className="w-full"
+                  disabled={!connector.available}
                   onClick={() => connect(connector)}
                   variant="secondary"
                 >
