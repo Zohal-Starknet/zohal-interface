@@ -3,7 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { ExternalLinkIcon } from "../_ui/icons";
+
 type NavigationItemProps = {
+  /** Is the link linking to an external website */
+  isExternal?: boolean;
   /** Label shown in the link */
   label: string;
   /** Path the user will get redirected to when clicking on the link */
@@ -11,7 +15,7 @@ type NavigationItemProps = {
 };
 
 export default function NavigationItem(props: NavigationItemProps) {
-  const { label, pathname } = props;
+  const { isExternal, label, pathname } = props;
 
   const currentPathname = usePathname();
   const isActiveLink = currentPathname === pathname;
@@ -19,12 +23,15 @@ export default function NavigationItem(props: NavigationItemProps) {
   return (
     <li>
       <Link
-        className={`rounded-md p-2 transition-colors hover:bg-[#1d1f23] ${
+        className={`flex items-center gap-1 rounded-md p-2 transition-colors hover:bg-[#1d1f23] ${
           isActiveLink ? "bg-[#1d1f23]" : ""
         }`}
         href={pathname}
+        rel={isExternal ? "noopener noreferrer" : undefined}
+        target={isExternal ? "_blank" : undefined}
       >
         {label}
+        {isExternal ? <ExternalLinkIcon label="External" /> : null}
       </Link>
     </li>
   );
