@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="40%" src="https://github.com/Zohal-Starknet/zohal-interface/assets/37301269/023b0aea-186a-4b23-b1cd-00ae3af95926" alt="Zohal's Banner">
+  <img width="40%" src="https://github.com/Zohal-Starknet/zohal-interface/assets/37301269/72373f3a-0b21-4a07-be7e-2d60cef8c48e" alt="Zohal's Banner">
 </p>
 <p align="center">
   <b>🪐 Zohal's interface, made on top of the <a href="https://github.com/keep-starknet-strange/satoru">Satoru</a> project</b>
