@@ -33,7 +33,7 @@ export function ConnectButton() {
                 onClick={openAccountModal}
               >
                 {displayBalance !== undefined && (
-                  <span className="whitespace-nowrap px-2 text-sm text-neutral-300">
+                  <span className="hidden whitespace-nowrap px-2 text-sm text-neutral-300 sm:block">
                     {displayBalance}
                   </span>
                 )}

@@ -224,8 +224,11 @@ export default function TokenChart() {
   }, []);
 
   return (
-    <div className="flex w-full flex-1 flex-col border-b relative border-[#2A2E37]" ref={chartContainerRef} >
+    <div
+      className="relative flex h-72 w-full flex-col border-b border-[#2A2E37] lg:h-auto lg:flex-1"
+      ref={chartContainerRef}
+    >
       <div className="absolute inset-0" ref={chartRef} />
     </div>
-  )
+  );
 }
