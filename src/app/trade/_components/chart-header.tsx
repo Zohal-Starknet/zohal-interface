@@ -6,7 +6,7 @@ export default function ChartHeader() {
         <img alt="ethereum logo" className="w-8" src="/tokens/ethereum.png" />
         <span className="whitespace-nowrap">ETH-USD</span>
       </div>
-      <div className="flex h-full items-center gap-8 overflow-auto">
+      <div className="flex h-full flex-1 items-center gap-8 overflow-scroll">
         <div className="flex items-center gap-4 pl-5">
           <div className="flex flex-col">
             <span className="text-white">$1,544.27</span>

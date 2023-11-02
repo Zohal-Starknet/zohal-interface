@@ -170,14 +170,14 @@ const gridLinesColor = "#222222";
 
 export default function TokenChart() {
   const chartContainerRef = useRef<HTMLDivElement>(null);
+  const chartRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (chartContainerRef.current === null) {
+    if (chartRef.current === null || chartContainerRef.current === null) {
       return;
     }
 
-    const chart = createChart(chartContainerRef.current, {
-      autoSize: true,
+    const chart = createChart(chartRef.current, {
       crosshair: { mode: CrosshairMode.Normal },
       grid: {
         horzLines: { color: gridLinesColor },
@@ -223,5 +223,12 @@ export default function TokenChart() {
     };
   }, []);
 
-  return <div className="h-72 w-full md:h-full" ref={chartContainerRef} />;
+  return (
+    <div
+      className="relative flex h-72 w-full flex-col border-b border-[#2A2E37] lg:h-auto lg:flex-1"
+      ref={chartContainerRef}
+    >
+      <div className="absolute inset-0" ref={chartRef} />
+    </div>
+  );
 }
