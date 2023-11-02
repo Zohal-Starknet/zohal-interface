@@ -223,5 +223,5 @@ export default function TokenChart() {
     };
   }, []);
 
-  return <div className="h-full w-full" ref={chartContainerRef} />;
+  return <div className="h-72 w-full md:h-full" ref={chartContainerRef} />;
 }

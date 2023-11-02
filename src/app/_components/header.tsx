@@ -12,7 +12,7 @@ export default function Header() {
     <>
       <header className="flex flex-initial items-center justify-between p-4">
         <div className="flex items-center gap-4">
-          <Link href="/">
+          <Link className="flex-shrink-0" href="/">
             <img
               alt="Zohal"
               className="w-10 rotate-[-35deg] rounded-lg"
