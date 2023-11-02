@@ -1,6 +1,7 @@
 "use client";
 
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import clsx from "clsx";
 import React from "react";
 
 const Dialog = DialogPrimitive.Root;
@@ -12,10 +13,10 @@ const DialogOverlay = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
-    className={`
-      bg-background-800 fixed inset-0 z-50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0
-      ${className}
-    `}
+    className={clsx(
+      "bg-background-800 fixed inset-0 z-50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      className,
+    )}
     ref={ref}
     {...props}
   />
@@ -29,10 +30,10 @@ const DialogContent = React.forwardRef<
   <DialogPortal>
     <DialogOverlay />
     <DialogPrimitive.Content
-      className={`
-        fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border border-neutral-800 bg-[#17181b] p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg lg:w-full
-        ${className}
-      `}
+      className={clsx(
+        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border border-neutral-800 bg-[#17181b] p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg md:w-full",
+        className,
+      )}
       ref={ref}
       {...props}
     >
@@ -65,7 +66,7 @@ const DialogHeader = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={`flex flex-col space-y-1.5 text-center ${className}`}
+    className={clsx("flex flex-col space-y-1.5 text-center", className)}
     {...props}
   />
 );
@@ -76,7 +77,10 @@ const DialogTitle = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
-    className={`text-lg font-semibold leading-none tracking-tight ${className}`}
+    className={clsx(
+      "text-lg font-semibold leading-none tracking-tight",
+      className,
+    )}
     ref={ref}
     {...props}
   />
@@ -88,7 +92,7 @@ const DialogDescription = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
-    className={`text-muted-foreground text-sm ${className}`}
+    className={clsx("text-muted-foreground text-sm", className)}
     ref={ref}
     {...props}
   />

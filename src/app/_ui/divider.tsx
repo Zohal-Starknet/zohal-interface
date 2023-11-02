@@ -1,4 +1,7 @@
 "use client";
+
+import clsx from "clsx";
+
 type DividerProps = {
   /** Vertical margin applied - in Tailwind spacing unit */
   className?: string;
@@ -9,9 +12,10 @@ export default function Divider(props: DividerProps) {
 
   return (
     <hr
-      className={`h-0 w-full border-solid border-[#2A2E37] bg-[#2A2E37] ${
-        className !== undefined ? `${className}` : ""
-      }`}
+      className={clsx(
+        "h-0 w-full border-solid border-[#2A2E37] bg-[#2A2E37]",
+        className,
+      )}
     />
   );
 }
