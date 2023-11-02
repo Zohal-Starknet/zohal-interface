@@ -15,7 +15,7 @@ export default function PositionPanel() {
   ];
 
   return (
-    <Panel className="h-72 overflow-scroll px-8 py-4">
+    <Panel className="h-72 overflow-auto px-8 py-4">
       <Tabs ariaLabel="Manage position" items={tabItems} />
     </Panel>
   );
