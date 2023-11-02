@@ -1,3 +1,5 @@
+import clsx from "clsx";
+
 /* eslint-disable @next/next/no-img-element */
 export default function Position() {
   // TODO @YohanTz: Add ? icon to explain each of the table header
@@ -32,9 +34,10 @@ export default function Position() {
                 <div>
                   {data.position}
                   <span
-                    className={`ml-4 rounded-sm ${
-                      isLongPosition ? "bg-[#40B68B]" : "bg-[#FF5354]"
-                    } px-1 py-0.5 text-xs font-semibold text-black`}
+                    className={clsx(
+                      "ml-4 rounded-sm px-1 py-0.5 text-xs font-semibold text-black",
+                      isLongPosition ? "bg-[#40B68B]" : "bg-[#FF5354]",
+                    )}
                   >
                     {isLongPosition ? "LONG" : "SHORT"}
                   </span>
@@ -48,9 +51,10 @@ export default function Position() {
                 {data.netValue.price}
                 <br />
                 <span
-                  className={`text-sm ${
-                    isLongPosition ? "text-[#40B68B]" : "text-[#FF5354]"
-                  }`}
+                  className={clsx(
+                    "text-sm",
+                    isLongPosition ? "text-[#40B68B]" : "text-[#FF5354]",
+                  )}
                 >
                   {data.netValue.purcentage}
                 </span>

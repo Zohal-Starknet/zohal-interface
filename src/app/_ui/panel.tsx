@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { type PropsWithChildren } from "react";
 
 type PanelProps = {
@@ -9,5 +10,5 @@ type PanelProps = {
 export default function Panel(props: PropsWithChildren<PanelProps>) {
   const { children, className } = props;
 
-  return <div className={`flex ${className}`}>{children}</div>;
+  return <div className={clsx("flex", className)}>{children}</div>;
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -23,9 +24,10 @@ export default function NavigationItem(props: NavigationItemProps) {
   return (
     <li>
       <Link
-        className={`flex items-center gap-1 rounded-md p-2 transition-colors hover:bg-[#1d1f23] ${
-          isActiveLink ? "bg-[#1d1f23]" : ""
-        }`}
+        className={clsx(
+          "flex items-center gap-1 rounded-md p-2 transition-colors hover:bg-[#1d1f23]",
+          isActiveLink ? "bg-[#1d1f23]" : "",
+        )}
         href={pathname}
         rel={isExternal ? "noopener noreferrer" : undefined}
         target={isExternal ? "_blank" : undefined}
