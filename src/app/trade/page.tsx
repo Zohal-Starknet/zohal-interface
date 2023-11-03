@@ -6,7 +6,7 @@ import TradeSwapPanel from "./_components/trade-swap-panel";
 export default function Home() {
   return (
     <>
-      <main className="flex flex-auto flex-col lg:flex-row">
+      <main className="flex flex-auto flex-col lg:flex-row lg:overflow-hidden">
         <div className="flex flex-auto flex-col">
           <ChartPanel />
           <PositionPanel className="hidden lg:block" />

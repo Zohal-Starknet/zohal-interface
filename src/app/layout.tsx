@@ -19,7 +19,8 @@ export default function RootLayout({
 }) {
   return (
     <html className={robotoMono.className} lang="en">
-      <body className="lg:overflow-hidden">
+      {/* <body className="lg:overflow-hidden"> */}
+      <body className="">
         <div className="flex h-full flex-col">
           <Providers>
             <Header />

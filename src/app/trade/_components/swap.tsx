@@ -1,5 +1,6 @@
 "use client";
 import { useAccount, useBalance } from "@starknet-react/core";
+import { TOKENS } from "@zohal/app/_helpers/tokens";
 
 import Fieldset from "../../_ui/fieldset";
 import Form from "../../_ui/form";
@@ -17,8 +18,6 @@ export default function Swap() {
 
   const { address } = useAccount();
 
-  const { data: balance } = useBalance({ address });
-
   const {
     payTokenSymbol,
     payTokenValue,
@@ -29,16 +28,24 @@ export default function Swap() {
     updateReceiveTokenValue,
   } = useTokenInputs({ ratio: ethBtcRatio });
 
+  const { data: payTokenBalance } = useBalance({
+    address,
+    token: TOKENS[payTokenSymbol].address,
+  });
+  const { data: receiveTokenBalance } = useBalance({
+    address,
+    token: TOKENS[receiveTokenSymbol].address,
+  });
+
   const noEnteredAmount =
     payTokenValue.length === 0 && receiveTokenValue.length === 0;
 
-  const insufficientBalance = balance
-    ? parseFloat(balance.formatted) < parseFloat(payTokenValue)
+  const insufficientBalance = payTokenBalance
+    ? parseFloat(payTokenBalance.formatted) < parseFloat(payTokenValue)
     : true;
 
   return (
     <Form>
-      {payTokenSymbol}
       <Fieldset
         field={
           <Input
@@ -52,14 +59,26 @@ export default function Swap() {
 
       <TokenSwapButton onClick={switchTokens} />
 
-      {receiveTokenSymbol}
       <Fieldset
         field={
-          <Input
-            onChange={updateReceiveTokenValue}
-            placeholder="0.00"
-            value={receiveTokenValue}
-          />
+          <div className="flex items-center justify-between">
+            <Input
+              className="w-full"
+              onChange={updateReceiveTokenValue}
+              placeholder="0.00"
+              value={receiveTokenValue}
+            />
+            <div>
+              <p>{receiveTokenSymbol}</p>
+
+              {receiveTokenBalance !== undefined && (
+                <span className="text-xs text-[#BCBCBD]">
+                  Balance:{" "}
+                  {parseFloat(receiveTokenBalance.formatted).toFixed(3)}
+                </span>
+              )}
+            </div>
+          </div>
         }
         label="Receive"
       />

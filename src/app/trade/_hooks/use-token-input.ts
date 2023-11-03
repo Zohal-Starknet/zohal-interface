@@ -1,3 +1,4 @@
+import { type TokenSymbol } from "@zohal/app/_helpers/tokens";
 import { useCallback, useRef, useState } from "react";
 
 type Props = {
@@ -8,16 +9,15 @@ type Props = {
 export function useTokenInputs(props: Props) {
   const { ratio } = props;
 
-  // TODO: Type this state stronger than string
-  const [payTokenSymbol, setPayTokenSymbol] = useState("ETH");
+  const [payTokenSymbol, setPayTokenSymbol] = useState<TokenSymbol>("ETH");
   const [payTokenValue, setPayTokenValue] = useState("");
 
-  // TODO: Type this state stronger than string
-  const [receiveTokenSymbol, setReceiveTokenSymbol] = useState("BTC");
+  const [receiveTokenSymbol, setReceiveTokenSymbol] =
+    useState<TokenSymbol>("WBTC");
   const [receiveTokenValue, setReceiveTokenValue] = useState("");
 
   const temporaryPayTokenValueRef = useRef("");
-  const temporaryPayTokenSymbolRef = useRef("");
+  const temporaryPayTokenSymbolRef = useRef<TokenSymbol>("ETH");
 
   const updatePayTokenValue = useCallback(
     function updatePayTokenValue(tokenValue: string) {
