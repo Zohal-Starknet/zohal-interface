@@ -6,16 +6,16 @@
 </p>
 <p align="center">
   <a href="https://github.com/Zohal-Starknet/zohal-interface/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/Zohal-Starknet/zohal-interface.svg?style=flat-square" alt="License Badge">
+    <img src="https://img.shields.io/badge/license-BSL-blue?style=flat-square">
   </a>
   <a href="https://reactjs.org">
     <img src="https://img.shields.io/badge/Made%20with-React-61dafb.svg?style=flat-square" alt="React Custom Badge">
   </a>
   <a href="https://github.com/Zohal-Starknet/zohal-interface/pulls">
-      <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="Prs Welcome">
+      <img src="https://img.shields.io/badge/PRs-welcome-blue.svg?style=flat-square" alt="Prs Welcome">
   </a>
   <a href="https://github.com/Zohal-Starknet/zohal-interface/graphs/contributors">
-      <img src="https://img.shields.io/github/contributors/Zohal-Starknet/zohal-interface.svg?style=flat-square" alt="Contributors Number">
+      <img src="https://img.shields.io/github/contributors/Zohal-Starknet/zohal-interface.svg?style=flat-square&color=blue" alt="Contributors Number">
   </a>
 </p>
 
