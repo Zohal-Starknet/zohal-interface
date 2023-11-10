@@ -1,5 +1,4 @@
 import { type TokenSymbol } from "@zohal/app/_helpers/tokens";
-import Fieldset from "@zohal/app/_ui/fieldset";
 import Input from "@zohal/app/_ui/input";
 
 type SwapInputProps = {
