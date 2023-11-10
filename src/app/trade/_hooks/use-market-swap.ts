@@ -32,6 +32,8 @@ export default function useMarketSwap(props: UseMarketSwapProps) {
       entrypoint: "approve",
     },
   ];
+
+  // TODO @YohanTz: Trigger toast here
   const { write: swap } = useContractWrite({ calls });
 
   return { swap };
