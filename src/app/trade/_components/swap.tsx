@@ -8,6 +8,7 @@ import Input from "../../_ui/input";
 import { useTokenInputs } from "../_hooks/use-token-input";
 import SwapMoreInformations from "./more-informations";
 import SwapActionButton from "./swap-action-button";
+import SwapInput from "./swap-input";
 import TokenSwapButton from "./token-swap-button";
 
 /**
@@ -46,41 +47,24 @@ export default function Swap() {
 
   return (
     <Form>
-      <Fieldset
-        field={
-          <Input
-            onChange={updatePayTokenValue}
-            placeholder="0.00"
-            value={payTokenValue}
-          />
-        }
+      <SwapInput
+        formattedTokenBalance={payTokenBalance?.formatted}
+        id="paySwapInput"
+        inputValue={payTokenValue}
         label="Pay"
+        onInputChange={updatePayTokenValue}
+        tokenSymbol={payTokenSymbol}
       />
 
       <TokenSwapButton onClick={switchTokens} />
 
-      <Fieldset
-        field={
-          <div className="flex items-center justify-between">
-            <Input
-              className="w-full"
-              onChange={updateReceiveTokenValue}
-              placeholder="0.00"
-              value={receiveTokenValue}
-            />
-            <div>
-              <p>{receiveTokenSymbol}</p>
-
-              {receiveTokenBalance !== undefined && (
-                <span className="text-xs text-[#BCBCBD]">
-                  Balance:{" "}
-                  {parseFloat(receiveTokenBalance.formatted).toFixed(3)}
-                </span>
-              )}
-            </div>
-          </div>
-        }
+      <SwapInput
+        formattedTokenBalance={receiveTokenBalance?.formatted}
+        id="receiveSwapInput"
+        inputValue={receiveTokenValue}
         label="Receive"
+        onInputChange={updateReceiveTokenValue}
+        tokenSymbol={receiveTokenSymbol}
       />
 
       <SwapMoreInformations
