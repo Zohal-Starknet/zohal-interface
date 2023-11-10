@@ -2,9 +2,7 @@
 import { useAccount, useBalance } from "@starknet-react/core";
 import { TOKENS } from "@zohal/app/_helpers/tokens";
 
-import Fieldset from "../../_ui/fieldset";
 import Form from "../../_ui/form";
-import Input from "../../_ui/input";
 import { useTokenInputs } from "../_hooks/use-token-input";
 import SwapMoreInformations from "./more-informations";
 import SwapActionButton from "./swap-action-button";
