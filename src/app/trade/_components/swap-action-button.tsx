@@ -1,5 +1,6 @@
 import Button from "../../_ui/button";
 import { useConnectModal } from "../../zohal-modal";
+import useMarketSwap from "../_hooks/use-market-swap";
 
 type SwapActionButtonProps = {
   /** Whether the user balance is sufficient or not */
@@ -8,10 +9,19 @@ type SwapActionButtonProps = {
   noEnteredAmount: boolean;
   /** Symbol of the token the user is going to pay with */
   payTokenSymbol: string;
+  /** The value of the token that will be swapped */
+  payTokenValue: string;
 };
 
 export default function SwapActionButton(props: SwapActionButtonProps) {
-  const { insufficientBalance, noEnteredAmount, payTokenSymbol } = props;
+  const {
+    insufficientBalance,
+    noEnteredAmount,
+    payTokenSymbol,
+    payTokenValue,
+  } = props;
+
+  const { swap } = useMarketSwap({ payTokenSymbol, payTokenValue });
 
   const { openConnectModal } = useConnectModal();
 
@@ -43,7 +53,11 @@ export default function SwapActionButton(props: SwapActionButtonProps) {
     );
   }
 
-  return <Button className={commonSwapActionButtonClassName}>Swap</Button>;
+  return (
+    <Button className={commonSwapActionButtonClassName} onClick={() => swap()}>
+      Swap
+    </Button>
+  );
 }
 
 const commonSwapActionButtonClassName = "mt-8";

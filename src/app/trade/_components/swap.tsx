@@ -75,6 +75,7 @@ export default function Swap() {
         insufficientBalance={insufficientBalance}
         noEnteredAmount={noEnteredAmount}
         payTokenSymbol={payTokenSymbol}
+        payTokenValue={payTokenValue}
       />
     </Form>
   );
