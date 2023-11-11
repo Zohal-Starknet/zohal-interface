@@ -2,6 +2,7 @@ import { type TokenSymbol } from "@zohal/app/_helpers/tokens";
 import Input from "@zohal/app/_ui/input";
 
 type SwapInputProps = {
+  /** Formatted balance of the current token */
   formattedTokenBalance?: string;
   /** Id used in htmlFor label and input id */
   id: string;
