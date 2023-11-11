@@ -51,6 +51,7 @@ export default function Swap() {
         inputValue={payTokenValue}
         label="Pay"
         onInputChange={updatePayTokenValue}
+        onTokenSymbolChange={(_tokenSymbol) => switchTokens()}
         tokenSymbol={payTokenSymbol}
       />
 
@@ -62,6 +63,7 @@ export default function Swap() {
         inputValue={receiveTokenValue}
         label="Receive"
         onInputChange={updateReceiveTokenValue}
+        onTokenSymbolChange={(_tokenSymbol) => switchTokens()}
         tokenSymbol={receiveTokenSymbol}
       />
 

@@ -16,6 +16,7 @@ export default function Trade() {
             onChange={() => {
               return;
             }}
+            className="bg-transparent text-lg"
             placeholder="0.00"
             value=""
           />
@@ -31,6 +32,7 @@ export default function Trade() {
             onChange={() => {
               return;
             }}
+            className="bg-transparent text-lg"
             placeholder="0.00"
             value=""
           />
@@ -54,6 +56,7 @@ export default function Trade() {
               onChange={() => {
                 return;
               }}
+              className="bg-transparent text-lg"
               placeholder="0.00×"
               value=""
             />
