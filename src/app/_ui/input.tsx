@@ -1,5 +1,8 @@
+import clsx from "clsx";
+
 // TODO - Handle state
 type Props = {
+  className?: string;
   id?: string;
   onChange: (newValue: string) => void;
   placeholder: string;
@@ -8,10 +11,13 @@ type Props = {
 
 // TODO: Add type in props
 export default function Input(props: Props) {
-  const { id, onChange, placeholder, value } = props;
+  const { className, id, onChange, placeholder, value } = props;
   return (
     <input
-      className="appearance-none bg-transparent text-lg outline-none"
+      className={clsx(
+        "appearance-none bg-transparent text-lg outline-none",
+        className,
+      )}
       id={id}
       inputMode="decimal"
       onChange={(event) => onChange(event.target.value)}

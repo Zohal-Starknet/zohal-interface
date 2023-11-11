@@ -1,23 +1,19 @@
 "use client";
 import * as Collapsible from "@radix-ui/react-collapsible";
+import { type TokenSymbol } from "@zohal/app/_helpers/tokens";
 import { ChevronRight } from "@zohal/app/_ui/icons";
+import clsx from "clsx";
 import { useState } from "react";
 
 import PriceInfo from "./price-info";
 
 type SwapMoreInformationsProps = {
-  /**
-   * Token symbol of the token that is going to be sold
-   * TODO: Type this prop stronger than just string
-   */
-  payTokenSymbol: string;
+  /** Token symbol of the token that is going to be sold */
+  payTokenSymbol: TokenSymbol;
   /** Ratio between the price of the token to be sold and the token that will be received */
   ratio: number;
-  /**
-   * Token symbol of the token that is going to be received after the swap
-   * TODO: Type this prop stronger than just string
-   */
-  receiveTokenSymbol: string;
+  /** Token symbol of the token that is going to be received after the swap */
+  receiveTokenSymbol: TokenSymbol;
 };
 
 // TODO - Export Chevron animated in its own component
@@ -49,19 +45,20 @@ export default function SwapMoreInformations(props: SwapMoreInformationsProps) {
         <div className="flex items-center justify-between">
           <span>More informations</span>
           <ChevronRight
-            className={`text-right text-white ${
+            className={clsx(
+              "text-right text-white",
               open === undefined
                 ? ""
                 : open
                 ? "animate-[rotate90_200ms_ease_forwards]"
-                : "animate-[rotate0_200ms_ease_forwards]"
-            }`}
+                : "animate-[rotate0_200ms_ease_forwards]",
+            )}
             label={open ? "Hide" : "Show"}
           />
         </div>
       </Collapsible.CollapsibleTrigger>
-      <Collapsible.CollapsibleContent className="mt-4 overflow-hidden data-[state=closed]:animate-[slideUp_200ms_ease] data-[state=open]:animate-[slideDown_200ms_ease]">
-        <div className="flex flex-col gap-2 pr-2">
+      <Collapsible.CollapsibleContent className="overflow-hidden data-[state=closed]:animate-[slideUp_200ms_ease] data-[state=open]:animate-[slideDown_200ms_ease]">
+        <div className="flex flex-col gap-2 pr-2 pt-4">
           {priceInfos.map((info, index) => (
             <PriceInfo key={index} {...info} />
           ))}

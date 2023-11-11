@@ -1,15 +1,19 @@
 import { useAccount, useStarkName } from "@starknet-react/core";
+import { useMemo } from "react";
+import { addAddressPadding } from "starknet";
 
 export function useDisplayName() {
   const { address } = useAccount();
 
-  const truncatedAddress = address
-    ? `${address.slice(0, 6)}...${address.slice(-4)}`
-    : undefined;
+  const truncatedAddress = useMemo(() => {
+    return address
+      ? `${address.slice(0, 6)}...${address.slice(-4)}`
+      : undefined;
+  }, [address]);
 
   // TODO @YohanTz: fix useStarkName hook
   const { data: starkName } = useStarkName({
-    address: address ?? "",
+    address: addAddressPadding(address ?? ""),
   });
 
   return { starkName, truncatedAddress };

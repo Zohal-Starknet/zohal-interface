@@ -1,12 +1,12 @@
 "use client";
 import { useAccount, useBalance } from "@starknet-react/core";
+import { TOKENS } from "@zohal/app/_helpers/tokens";
 
-import Fieldset from "../../_ui/fieldset";
 import Form from "../../_ui/form";
-import Input from "../../_ui/input";
 import { useTokenInputs } from "../_hooks/use-token-input";
 import SwapMoreInformations from "./more-informations";
 import SwapActionButton from "./swap-action-button";
+import SwapInput from "./swap-input";
 import TokenSwapButton from "./token-swap-button";
 
 /**
@@ -16,8 +16,6 @@ export default function Swap() {
   const ethBtcRatio = 0.055;
 
   const { address } = useAccount();
-
-  const { data: balance } = useBalance({ address });
 
   const {
     payTokenSymbol,
@@ -29,39 +27,42 @@ export default function Swap() {
     updateReceiveTokenValue,
   } = useTokenInputs({ ratio: ethBtcRatio });
 
+  const { data: payTokenBalance } = useBalance({
+    address,
+    token: TOKENS[payTokenSymbol].address,
+  });
+  const { data: receiveTokenBalance } = useBalance({
+    address,
+    token: TOKENS[receiveTokenSymbol].address,
+  });
+
   const noEnteredAmount =
     payTokenValue.length === 0 && receiveTokenValue.length === 0;
 
-  const insufficientBalance = balance
-    ? parseFloat(balance.formatted) < parseFloat(payTokenValue)
+  const insufficientBalance = payTokenBalance
+    ? parseFloat(payTokenBalance.formatted) < parseFloat(payTokenValue)
     : true;
 
   return (
     <Form>
-      {payTokenSymbol}
-      <Fieldset
-        field={
-          <Input
-            onChange={updatePayTokenValue}
-            placeholder="0.00"
-            value={payTokenValue}
-          />
-        }
+      <SwapInput
+        formattedTokenBalance={payTokenBalance?.formatted}
+        id="paySwapInput"
+        inputValue={payTokenValue}
         label="Pay"
+        onInputChange={updatePayTokenValue}
+        tokenSymbol={payTokenSymbol}
       />
 
       <TokenSwapButton onClick={switchTokens} />
 
-      {receiveTokenSymbol}
-      <Fieldset
-        field={
-          <Input
-            onChange={updateReceiveTokenValue}
-            placeholder="0.00"
-            value={receiveTokenValue}
-          />
-        }
+      <SwapInput
+        formattedTokenBalance={receiveTokenBalance?.formatted}
+        id="receiveSwapInput"
+        inputValue={receiveTokenValue}
         label="Receive"
+        onInputChange={updateReceiveTokenValue}
+        tokenSymbol={receiveTokenSymbol}
       />
 
       <SwapMoreInformations
@@ -74,6 +75,7 @@ export default function Swap() {
         insufficientBalance={insufficientBalance}
         noEnteredAmount={noEnteredAmount}
         payTokenSymbol={payTokenSymbol}
+        payTokenValue={payTokenValue}
       />
     </Form>
   );
