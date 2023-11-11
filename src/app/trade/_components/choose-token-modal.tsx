@@ -54,9 +54,11 @@ export default function ChooseTokenModal(props: ChooseTokenModalProps) {
               filteredTokens.map((filteredToken) => {
                 return (
                   <button
+                    onClick={() =>
+                      onTokenSymbolChange(filteredToken.tokenSymbol)
+                    }
                     className="flex items-center justify-between px-6 py-2 transition-colors hover:bg-[#121317]"
-                    key={tokenSymbol}
-                    onClick={() => onTokenSymbolChange(tokenSymbol)}
+                    key={filteredToken.tokenSymbol}
                   >
                     <div className="flex items-center gap-4">
                       <img
