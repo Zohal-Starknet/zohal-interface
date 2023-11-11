@@ -9,7 +9,7 @@ import TokenSwapButton from "./token-swap-button";
 
 export default function Trade() {
   return (
-    <Form>
+    <Form className="mb-4">
       <Fieldset
         field={
           <Input
