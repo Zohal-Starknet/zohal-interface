@@ -20,6 +20,7 @@ export default function useMarketSwap(props: UseMarketSwapProps) {
     string | undefined
   >("");
   const selectedToken = TOKENS[payTokenSymbol];
+  const [isLoading, setIsLoading] = useState(false);
 
   const calls = [
     {
@@ -39,17 +40,20 @@ export default function useMarketSwap(props: UseMarketSwapProps) {
 
   // TODO @YohanTz: Trigger toast here
   const { writeAsync } = useContractWrite({ calls });
-  const { status } = useWaitForTransaction({
+  const { data } = useWaitForTransaction({
     hash: lastTransactionHash,
+    onAcceptedOnL2: () => {
+      setIsLoading(false);
+    },
     watch: true,
   });
 
   async function swap() {
     const transaction = await writeAsync();
     setLastTransactionHash(transaction.transaction_hash);
+    setIsLoading(true);
   }
+  console.log(isLoading);
 
-  console.log(status);
-
-  return { swap };
+  return { isLoading, swap };
 }

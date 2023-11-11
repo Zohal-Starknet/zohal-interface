@@ -1,3 +1,6 @@
+import { useTransaction } from "@starknet-react/core";
+import { LoadIcon } from "@zohal/app/_ui/icons";
+
 import Button from "../../_ui/button";
 import { useConnectModal } from "../../zohal-modal";
 import useMarketSwap from "../_hooks/use-market-swap";
@@ -21,7 +24,8 @@ export default function SwapActionButton(props: SwapActionButtonProps) {
     payTokenValue,
   } = props;
 
-  const { swap } = useMarketSwap({ payTokenSymbol, payTokenValue });
+  const { isLoading, swap } = useMarketSwap({ payTokenSymbol, payTokenValue });
+  console.log("COMPO", isLoading);
 
   const { openConnectModal } = useConnectModal();
 
@@ -49,6 +53,14 @@ export default function SwapActionButton(props: SwapActionButtonProps) {
     return (
       <Button className={commonSwapActionButtonClassName} disabled>
         Insufficient {payTokenSymbol} balance
+      </Button>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <Button className={commonSwapActionButtonClassName}>
+        <LoadIcon className="animate-spin" label="Loading..." />
       </Button>
     );
   }
