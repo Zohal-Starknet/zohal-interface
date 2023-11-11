@@ -18,7 +18,7 @@ export default function CustomNotFoundPage() {
           </h2>
           <p>The page you are looking for doesn&apos;t exist</p>
         </div>
-        <Button>Back to home</Button>
+        <Button variant="secondary">Back to home</Button>
       </div>
     </div>
   );
