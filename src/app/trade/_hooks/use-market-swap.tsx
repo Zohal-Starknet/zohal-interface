@@ -44,7 +44,6 @@ export default function useMarketSwap(props: UseMarketSwapProps) {
     },
   ];
 
-  // TODO @YohanTz: Trigger toast here
   const { writeAsync } = useContractWrite({ calls });
 
   useWaitForTransaction({
@@ -77,18 +76,13 @@ export default function useMarketSwap(props: UseMarketSwapProps) {
           );
         });
       }
-
-      // TODO: Trigger success toast with link to the transaction on voyager
     },
     onNotReceived: () => {
       setStatus("loading");
     },
-    // onPending: () => {
-    //   setStatus("loading");
-    // },
     onRejected: () => {
       setStatus("rejected");
-      // Trigger error toast with link to the transaction on voyager
+      // TODO @YohanTz: Trigger error toast with link to the transaction on voyager
     },
     watch: true,
   });
