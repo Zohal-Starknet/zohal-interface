@@ -1,4 +1,3 @@
-import { useTransaction } from "@starknet-react/core";
 import { LoadIcon } from "@zohal/app/_ui/icons";
 
 import Button from "../../_ui/button";
