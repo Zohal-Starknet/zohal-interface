@@ -24,6 +24,7 @@
     "next": "13.4.19",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "sonner": "^1.2.0",
     "starknet": "^5.19.5",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7"

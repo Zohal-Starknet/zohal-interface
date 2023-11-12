@@ -1,6 +1,9 @@
 import { useContractWrite, useWaitForTransaction } from "@starknet-react/core";
+import { robotoMono } from "@zohal/app/_helpers/fonts";
 import { TOKENS, type TokenSymbol } from "@zohal/app/_helpers/tokens";
+import clsx from "clsx";
 import { useState } from "react";
+import { toast } from "sonner";
 import { addAddressPadding } from "starknet";
 
 type TransactionStatus = "idle" | "loading" | "rejected";
@@ -47,12 +50,42 @@ export default function useMarketSwap(props: UseMarketSwapProps) {
   useWaitForTransaction({
     hash: lastTransactionHash,
     onAcceptedOnL2: () => {
-      setStatus("idle");
-      // Trigger success toast with link to the transaction on voyager
+      if (status !== "idle") {
+        setStatus("idle");
+        toast.custom((t) => {
+          return (
+            <button
+              className={clsx(
+                "flex flex-col gap-0.5 rounded-md border border-[#363636] bg-[#25272e] p-4",
+                robotoMono.className,
+              )}
+              onClick={() => toast.dismiss(t)}
+            >
+              <span className="text-sm">Swap Transaction successful!</span>
+              <span className="text-left text-xs text-[#BCBCBD]">
+                Your transaction has been accepted on the L2
+              </span>
+              <a
+                className="mt-3 text-sm hover:underline"
+                href={`https://testnet.starkscan.co/tx/${lastTransactionHash}`}
+                // We want to stop even propagation here, so the toast is not closed when we open the starkscan link
+                onClick={(event) => event.stopPropagation()}
+              >
+                View on Starkscan
+              </a>
+            </button>
+          );
+        });
+      }
+
+      // TODO: Trigger success toast with link to the transaction on voyager
     },
     onNotReceived: () => {
       setStatus("loading");
     },
+    // onPending: () => {
+    //   setStatus("loading");
+    // },
     onRejected: () => {
       setStatus("rejected");
       // Trigger error toast with link to the transaction on voyager
