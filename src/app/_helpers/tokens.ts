@@ -1,9 +1,9 @@
-// TODO: Import icons instead of hardcoding string
-
-export const TOKENS: Record<
+type TokenList = Record<
   string,
   { address: `0x${string}`; decimals: number; icon: string; name: string }
-> = {
+>;
+
+export const TOKENS: TokenList = {
   ETH: {
     address:
       "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
