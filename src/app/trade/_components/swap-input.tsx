@@ -4,6 +4,7 @@ import Input from "@zohal/app/_ui/input";
 import ChooseTokenButton from "./choose-token-button";
 
 type SwapInputProps = {
+  /** Formatted balance of the current token */
   formattedTokenBalance?: string;
   /** Id used in htmlFor label and input id */
   id: string;
