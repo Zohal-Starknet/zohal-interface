@@ -3,6 +3,8 @@ import { TOKENS, type TokenSymbol } from "@zohal/app/_helpers/tokens";
 import { useState } from "react";
 import { addAddressPadding } from "starknet";
 
+type TransactionStatus = "idle" | "loading" | "rejected";
+
 type UseMarketSwapProps = {
   /** Symbol of the token that will be swapped */
   payTokenSymbol: TokenSymbol;
@@ -18,9 +20,10 @@ export default function useMarketSwap(props: UseMarketSwapProps) {
   const { payTokenSymbol, payTokenValue } = props;
   const [lastTransactionHash, setLastTransactionHash] = useState<
     string | undefined
-  >("");
+  >(undefined);
   const selectedToken = TOKENS[payTokenSymbol];
-  const [isLoading, setIsLoading] = useState(false);
+  // TODO @YohanTz: Export this transaction logic to its own hook
+  const [status, setStatus] = useState<TransactionStatus>("idle");
 
   const calls = [
     {
@@ -40,10 +43,19 @@ export default function useMarketSwap(props: UseMarketSwapProps) {
 
   // TODO @YohanTz: Trigger toast here
   const { writeAsync } = useContractWrite({ calls });
-  const { data } = useWaitForTransaction({
+
+  useWaitForTransaction({
     hash: lastTransactionHash,
     onAcceptedOnL2: () => {
-      setIsLoading(false);
+      setStatus("idle");
+      // Trigger success toast with link to the transaction on voyager
+    },
+    onNotReceived: () => {
+      setStatus("loading");
+    },
+    onRejected: () => {
+      setStatus("rejected");
+      // Trigger error toast with link to the transaction on voyager
     },
     watch: true,
   });
@@ -51,9 +63,7 @@ export default function useMarketSwap(props: UseMarketSwapProps) {
   async function swap() {
     const transaction = await writeAsync();
     setLastTransactionHash(transaction.transaction_hash);
-    setIsLoading(true);
   }
-  console.log(isLoading);
 
-  return { isLoading, swap };
+  return { status, swap };
 }

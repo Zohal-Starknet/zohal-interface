@@ -23,8 +23,7 @@ export default function SwapActionButton(props: SwapActionButtonProps) {
     payTokenValue,
   } = props;
 
-  const { isLoading, swap } = useMarketSwap({ payTokenSymbol, payTokenValue });
-  console.log("COMPO", isLoading);
+  const { status, swap } = useMarketSwap({ payTokenSymbol, payTokenValue });
 
   const { openConnectModal } = useConnectModal();
 
@@ -56,7 +55,8 @@ export default function SwapActionButton(props: SwapActionButtonProps) {
     );
   }
 
-  if (isLoading) {
+  // TODO @YohanTz: loading directly in the Button component as a prop
+  if (status === "loading") {
     return (
       <Button className={commonSwapActionButtonClassName}>
         <LoadIcon className="animate-spin" label="Loading..." />
