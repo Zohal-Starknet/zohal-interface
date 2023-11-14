@@ -5,9 +5,13 @@ import Input from "@zohal/app/_ui/input";
 import { useMemo, useState } from "react";
 
 type ChooseTokenModalProps = {
+  /** Function called when the modal is opened or closed */
   onOpenChange: (open: boolean) => void;
+  /** Function called when a new token is selected */
   onTokenSymbolChange: (newTokenSymbol: TokenSymbol) => void;
+  /** Is the modal open or not */
   open: boolean;
+  /** Symbol of the token currently selected */
   tokenSymbol: TokenSymbol;
 };
 export default function ChooseTokenModal(props: ChooseTokenModalProps) {

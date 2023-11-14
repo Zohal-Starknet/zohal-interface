@@ -1,5 +1,6 @@
+"use client";
+
 import { TOKENS, type TokenSymbol } from "@zohal/app/_helpers/tokens";
-import Button from "@zohal/app/_ui/button";
 import { ChevronRight } from "@zohal/app/_ui/icons";
 import { useState } from "react";
 
@@ -28,7 +29,7 @@ export default function ChooseTokenButton(props: ChooseTokenButtonProps) {
   return (
     <>
       <button
-        className="flex flex-shrink-0 items-center gap-2 rounded-full border border-[#363636] bg-[#1b1d22] p-[0.3125rem]"
+        className="flex flex-shrink-0 items-center gap-2 rounded-full border border-[#363636] bg-[#1b1d22] p-1"
         onClick={openModal}
       >
         <img alt={`${token.name} icon`} className="h-6 w-6" src={token.icon} />

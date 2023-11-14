@@ -1,9 +1,15 @@
+import { TOKENS } from "@zohal/app/_helpers/tokens";
+
 /* eslint-disable @next/next/no-img-element */
 export default function ChartHeader() {
   return (
     <div className="flex h-[4.75rem] items-center pl-4">
       <div className="flex h-full items-center gap-4 border-r border-[#2A2E37] pr-10">
-        <img alt="ethereum logo" className="w-8" src="/tokens/wbtc.png" />
+        <img
+          alt={`${TOKENS.ETH.name} icon`}
+          className="w-8"
+          src={TOKENS.WBTC.icon}
+        />
         <span className="whitespace-nowrap">WBTC-USD</span>
       </div>
       <div className="flex h-full flex-1 items-center gap-8 overflow-auto">
