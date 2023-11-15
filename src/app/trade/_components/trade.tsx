@@ -1,11 +1,12 @@
 "use client";
+
 import Button from "../../_ui/button";
 import Fieldset from "../../_ui/fieldset";
 import Form from "../../_ui/form";
 import Input from "../../_ui/input";
-import Switch from "../../_ui/switch";
 import PriceInfo from "./price-info";
 import TokenSwapButton from "./token-swap-button";
+import TradeLeverageInput from "./trade-leverage-input";
 
 export default function Trade() {
   return (
@@ -38,42 +39,7 @@ export default function Trade() {
         label="Long/Short"
       />
 
-      <div className="py-6">
-        <div className="flex w-full items-center justify-between pl-1">
-          <label className="text-sm">Leverage</label>
-          <div className="flex items-center gap-1">
-            <label className="text-xs text-[#A5A5A7]">Slider</label>
-            <Switch />
-          </div>
-        </div>
-
-        <div className="mt-3 flex w-full flex-col gap-2">
-          {/* TODO: Input full width */}
-          <div className="flex-auto rounded-md border border-[#363636] bg-[#25272E] p-2">
-            <Input
-              onChange={() => {
-                return;
-              }}
-              placeholder="0.00×"
-              value=""
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-3">
-            <button className="h-9 rounded-lg border border-[#363636] bg-[#1b1d22] text-xs">
-              2×
-            </button>
-            <button className="h-9 rounded-lg border border-[#363636] bg-[#1b1d22] text-xs">
-              5×
-            </button>
-            <button className="h-9 rounded-lg border border-[#363636] bg-[#1b1d22] text-xs">
-              10×
-            </button>
-            <button className="h-9 rounded-lg border border-[#363636] bg-[#1b1d22] text-xs">
-              20×
-            </button>
-          </div>
-        </div>
-      </div>
+      <TradeLeverageInput className="py-6" />
 
       <div className="flex flex-col gap-2 rounded-md border border-[#363636] p-3">
         {priceInfos.map((priceInfo, index) => (
