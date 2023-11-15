@@ -1,4 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
+import Link from "next/link";
+
 import Button from "./_ui/button";
 
 export default function CustomNotFoundPage() {
@@ -18,7 +20,9 @@ export default function CustomNotFoundPage() {
           </h2>
           <p>The page you are looking for doesn&apos;t exist</p>
         </div>
-        <Button variant="secondary">Back to home</Button>
+        <Button asChild variant="secondary">
+          <Link href="/">Back to home</Link>
+        </Button>
       </div>
     </div>
   );
