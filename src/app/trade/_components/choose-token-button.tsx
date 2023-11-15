@@ -28,7 +28,7 @@ export default function ChooseTokenButton(props: ChooseTokenButtonProps) {
   return (
     <>
       <button
-        className="flex flex-shrink-0 items-center gap-2 rounded-full border border-[#363636] bg-[#1b1d22] p-[0.3125rem]"
+        className="flex flex-shrink-0 items-center gap-2 rounded-full border border-[#363636] bg-[#1b1d22] p-1"
         onClick={openModal}
       >
         <img alt={`${token.name} icon`} className="h-6 w-6" src={token.icon} />
@@ -36,11 +36,11 @@ export default function ChooseTokenButton(props: ChooseTokenButtonProps) {
         <ChevronRight className="rotate-90" label="chevron" />
       </button>
       <ChooseTokenModal
+        onOpenChange={setOpen}
         onTokenSymbolChange={(newTokenSymbol) => {
           onTokenSymbolChange(newTokenSymbol);
           closeModal();
         }}
-        onOpenChange={setOpen}
         open={open}
         tokenSymbol={tokenSymbol}
       />
