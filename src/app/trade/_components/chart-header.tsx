@@ -6,7 +6,7 @@ export default function ChartHeader() {
     <div className="flex h-[4.75rem] items-center pl-4">
       <div className="flex h-full items-center gap-4 border-r border-[#2A2E37] pr-10">
         <img
-          alt={`${TOKENS.ETH.name} icon`}
+          alt={`${TOKENS.WBTC.name} icon`}
           className="w-8"
           src={TOKENS.WBTC.icon}
         />
