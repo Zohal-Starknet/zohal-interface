@@ -1,11 +1,12 @@
 "use client";
 
 import { useBlock, useNetwork } from "@starknet-react/core";
+import { BlockTag } from "starknet";
 
 const testnetBlockUrl = "https://goerli.voyager.online/block";
 
 export default function FooterBlockNumber() {
-  const { data: block } = useBlock({ refetchInterval: 3000 });
+  const { data: block } = useBlock({ blockIdentifier: BlockTag.latest });
 
   const { chain } = useNetwork();
 

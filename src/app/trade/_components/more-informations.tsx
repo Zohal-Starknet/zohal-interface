@@ -1,4 +1,5 @@
 "use client";
+
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { type TokenSymbol } from "@zohal/app/_helpers/tokens";
 import { ChevronRight } from "@zohal/app/_ui/icons";
@@ -36,10 +37,10 @@ export default function SwapMoreInformations(props: SwapMoreInformationsProps) {
 
   return (
     <Collapsible.Root
+      className="mt-5 rounded-md border border-[#363636] p-2"
       onOpenChange={(openValue) => {
         setOpen(openValue);
       }}
-      className="mt-5 rounded-md border border-[#363636] p-2"
     >
       <Collapsible.CollapsibleTrigger className="w-full">
         <div className="flex items-center justify-between">
