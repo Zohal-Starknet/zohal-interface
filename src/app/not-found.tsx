@@ -2,6 +2,7 @@
 import Link from "next/link";
 
 import Button from "./_ui/button";
+import { getTradePath } from "./_helpers/routes";
 
 export default function CustomNotFoundPage() {
   return (
@@ -21,7 +22,7 @@ export default function CustomNotFoundPage() {
           <p>The page you are looking for doesn&apos;t exist</p>
         </div>
         <Button asChild variant="secondary">
-          <Link href="/">Back to home</Link>
+          <Link href={getTradePath()}>Back to home</Link>
         </Button>
       </div>
     </div>
