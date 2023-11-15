@@ -80,9 +80,12 @@ export default function useMarketSwap(props: UseMarketSwapProps) {
     onNotReceived: () => {
       setStatus("loading");
     },
+    onPending: () => {
+      setStatus("loading")
+    },
     onRejected: () => {
       setStatus("rejected");
-      // TODO @YohanTz: Trigger error toast with link to the transaction on voyager
+      // TODO @YohanTz: Trigger error toast with link to the transaction on starkscan
     },
     watch: true,
   });
