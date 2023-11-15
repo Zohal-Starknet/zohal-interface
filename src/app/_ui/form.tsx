@@ -13,11 +13,11 @@ export default function Form(props: PropsWithChildren<FormProps>) {
 
   return (
     <form
+      className={clsx("flex h-full flex-col gap-1.5 pt-4", className)}
       onSubmit={(event) => {
         event.preventDefault();
         onSubmit?.();
       }}
-      className={clsx("flex h-full flex-col gap-1.5 pt-4", className)}
     >
       {children}
     </form>
