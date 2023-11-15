@@ -1,3 +1,4 @@
+import { TOKENS } from "@zohal/app/_helpers/tokens";
 import clsx from "clsx";
 
 /* eslint-disable @next/next/no-img-element */
@@ -26,9 +27,9 @@ export default function Position() {
               <td className="flex gap-4 py-4">
                 <div className="flex-shrink-0 rounded-full border border-neutral-600 p-1">
                   <img
-                    alt={`${data.token}`}
+                    alt={`${data.token.name} icon`}
                     className="w-8 rounded-full"
-                    src={`/tokens/${data.token}.png`}
+                    src={data.token.icon}
                   />
                 </div>
                 <div>
@@ -96,7 +97,7 @@ const tableData = [
     position: "ETH-USD",
     positionType: "short",
     size: "$48.35",
-    token: "ethereum",
+    token: TOKENS.ETH,
   },
   {
     collateral: { dollar: "$18.35", token: "18 USDC" },
@@ -108,7 +109,7 @@ const tableData = [
     position: "BTC-USD",
     positionType: "long",
     size: "$18.35",
-    token: "bitcoin",
+    token: TOKENS.WBTC,
   },
   {
     collateral: { dollar: "$48.35", token: "48 USDC" },
@@ -120,6 +121,6 @@ const tableData = [
     position: "ETH-USD",
     positionType: "short",
     size: "$48.35",
-    token: "ethereum",
+    token: TOKENS.ETH,
   },
 ];
