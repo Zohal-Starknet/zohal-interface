@@ -23,37 +23,6 @@ type TransactionToastProps = {
 };
 
 /**
- * TODO @YohanTz: Export to the design system
- * And should only be close with a cross appearing on hover of the toast
- */
-function TransactionToast(props: TransactionToastProps) {
-  const { lastTransactionHash, onClose } = props;
-
-  return (
-    <button
-      className={clsx(
-        "flex flex-col gap-0.5 rounded-md border border-[#363636] bg-[#25272e] p-4",
-        robotoMono.className,
-      )}
-      onClick={onClose}
-    >
-      <span className="text-sm">Swap Transaction successful!</span>
-      <span className="text-left text-xs text-[#BCBCBD]">
-        Your transaction has been accepted on the L2
-      </span>
-      <a
-        className="mt-3 text-sm hover:underline"
-        href={`https://testnet.starkscan.co/tx/${lastTransactionHash}`}
-        // We want to stop even propagation here, so the toast is not closed when we open the starkscan link
-        onClick={(event) => event.stopPropagation()}
-      >
-        View on Starkscan
-      </a>
-    </button>
-  );
-}
-
-/**
  * Hook use to approve necessary tokens
  * TODO @YohanTz: Add swap to the multicall once contracts deployed
  */
@@ -122,4 +91,35 @@ export default function useMarketSwap(props: UseMarketSwapProps) {
   }
 
   return { status, swap };
+}
+
+/**
+ * TODO @YohanTz: Export to the design system
+ * And should only be close with a cross appearing on hover of the toast
+ */
+function TransactionToast(props: TransactionToastProps) {
+  const { lastTransactionHash, onClose } = props;
+
+  return (
+    <button
+      className={clsx(
+        "flex flex-col gap-0.5 rounded-md border border-[#363636] bg-[#25272e] p-4",
+        robotoMono.className,
+      )}
+      onClick={onClose}
+    >
+      <span className="text-sm">Swap Transaction successful!</span>
+      <span className="text-left text-xs text-[#BCBCBD]">
+        Your transaction has been accepted on the L2
+      </span>
+      <a
+        className="mt-3 text-sm hover:underline"
+        href={`https://testnet.starkscan.co/tx/${lastTransactionHash}`}
+        // We want to stop even propagation here, so the toast is not closed when we open the starkscan link
+        onClick={(event) => event.stopPropagation()}
+      >
+        View on Starkscan
+      </a>
+    </button>
+  );
 }
