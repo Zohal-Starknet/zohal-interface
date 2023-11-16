@@ -1,6 +1,5 @@
-"use client";
-
 import { TOKENS, type TokenSymbol } from "@zohal/app/_helpers/tokens";
+import Button from "@zohal/app/_ui/button";
 import { ChevronRight } from "@zohal/app/_ui/icons";
 import { useState } from "react";
 
@@ -37,11 +36,11 @@ export default function ChooseTokenButton(props: ChooseTokenButtonProps) {
         <ChevronRight className="rotate-90" label="chevron" />
       </button>
       <ChooseTokenModal
+        onOpenChange={setOpen}
         onTokenSymbolChange={(newTokenSymbol) => {
           onTokenSymbolChange(newTokenSymbol);
           closeModal();
         }}
-        onOpenChange={setOpen}
         open={open}
         tokenSymbol={tokenSymbol}
       />

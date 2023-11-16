@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { robotoMono } from "@zohal/app/_helpers/fonts";
+import { Toaster } from "sonner";
 
 import Header from "./_components/header";
 import "./globals.css";
@@ -24,6 +25,7 @@ export default function RootLayout({
           <Providers>
             <Header />
             {children}
+            <Toaster position="bottom-right" />
           </Providers>
         </div>
       </body>

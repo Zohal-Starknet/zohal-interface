@@ -1,4 +1,5 @@
 "use client";
+
 import Button from "../../_ui/button";
 import Fieldset from "../../_ui/fieldset";
 import Form from "../../_ui/form";
@@ -13,10 +14,10 @@ export default function Trade() {
       <Fieldset
         field={
           <Input
+            className="bg-transparent text-lg"
             onChange={() => {
               return;
             }}
-            className="bg-transparent text-lg"
             placeholder="0.00"
             value=""
           />
@@ -29,10 +30,10 @@ export default function Trade() {
       <Fieldset
         field={
           <Input
+            className="bg-transparent text-lg"
             onChange={() => {
               return;
             }}
-            className="bg-transparent text-lg"
             placeholder="0.00"
             value=""
           />
@@ -53,10 +54,10 @@ export default function Trade() {
           {/* TODO: Input full width */}
           <div className="flex-auto rounded-md border border-[#363636] bg-[#25272E] p-2">
             <Input
+              className="bg-transparent text-lg"
               onChange={() => {
                 return;
               }}
-              className="bg-transparent text-lg"
               placeholder="0.00×"
               value=""
             />
