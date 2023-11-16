@@ -15,13 +15,6 @@ type UseMarketSwapProps = {
   payTokenValue: string;
 };
 
-type TransactionToastProps = {
-  /** Transaction hash of the last transaction executed */
-  lastTransactionHash?: string;
-  /** Function to be called when closing the Toast */
-  onClose: () => void;
-};
-
 /**
  * Hook use to approve necessary tokens
  * TODO @YohanTz: Add swap to the multicall once contracts deployed
@@ -92,6 +85,13 @@ export default function useMarketSwap(props: UseMarketSwapProps) {
 
   return { status, swap };
 }
+
+type TransactionToastProps = {
+  /** Transaction hash of the last transaction executed */
+  lastTransactionHash?: string;
+  /** Function to be called when closing the Toast */
+  onClose: () => void;
+};
 
 /**
  * TODO @YohanTz: Export to the design system
