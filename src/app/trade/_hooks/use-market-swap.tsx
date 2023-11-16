@@ -15,6 +15,44 @@ type UseMarketSwapProps = {
   payTokenValue: string;
 };
 
+type TransactionToastProps = {
+  /** Transaction hash of the last transaction executed */
+  lastTransactionHash?: string;
+  /** Function to be called when closing the Toast */
+  onClose: () => void;
+};
+
+/**
+ * TODO @YohanTz: Export to the design system
+ * And should only be close with a cross appearing on hover of the toast
+ */
+function TransactionToast(props: TransactionToastProps) {
+  const { lastTransactionHash, onClose } = props;
+
+  return (
+    <button
+      className={clsx(
+        "flex flex-col gap-0.5 rounded-md border border-[#363636] bg-[#25272e] p-4",
+        robotoMono.className,
+      )}
+      onClick={onClose}
+    >
+      <span className="text-sm">Swap Transaction successful!</span>
+      <span className="text-left text-xs text-[#BCBCBD]">
+        Your transaction has been accepted on the L2
+      </span>
+      <a
+        className="mt-3 text-sm hover:underline"
+        href={`https://testnet.starkscan.co/tx/${lastTransactionHash}`}
+        // We want to stop even propagation here, so the toast is not closed when we open the starkscan link
+        onClick={(event) => event.stopPropagation()}
+      >
+        View on Starkscan
+      </a>
+    </button>
+  );
+}
+
 /**
  * Hook use to approve necessary tokens
  * TODO @YohanTz: Add swap to the multicall once contracts deployed
@@ -25,7 +63,7 @@ export default function useMarketSwap(props: UseMarketSwapProps) {
     string | undefined
   >(undefined);
   const selectedToken = TOKENS[payTokenSymbol];
-  // TODO @YohanTz: Export this transaction logic to its own hook
+  // TODO @YohanTz: Export this transaction logic to its own hook (status, toast etc)
   const [status, setStatus] = useState<TransactionStatus>("idle");
 
   const calls = [
@@ -36,6 +74,7 @@ export default function useMarketSwap(props: UseMarketSwapProps) {
           "0x058B15b574e1bc3c423d300Fb120483CD238Dd523eF04cc115665FE88255F46E",
         ),
         // amount
+        // TODO @YohanTz: Use BigNumber
         parseFloat(payTokenValue) * 10 ** selectedToken.decimals,
         0,
       ],
@@ -52,27 +91,14 @@ export default function useMarketSwap(props: UseMarketSwapProps) {
       if (status !== "idle") {
         setStatus("idle");
         toast.custom((t) => {
+          function onClose() {
+            toast.dismiss(t);
+          }
           return (
-            <button
-              className={clsx(
-                "flex flex-col gap-0.5 rounded-md border border-[#363636] bg-[#25272e] p-4",
-                robotoMono.className,
-              )}
-              onClick={() => toast.dismiss(t)}
-            >
-              <span className="text-sm">Swap Transaction successful!</span>
-              <span className="text-left text-xs text-[#BCBCBD]">
-                Your transaction has been accepted on the L2
-              </span>
-              <a
-                className="mt-3 text-sm hover:underline"
-                href={`https://testnet.starkscan.co/tx/${lastTransactionHash}`}
-                // We want to stop even propagation here, so the toast is not closed when we open the starkscan link
-                onClick={(event) => event.stopPropagation()}
-              >
-                View on Starkscan
-              </a>
-            </button>
+            <TransactionToast
+              lastTransactionHash={lastTransactionHash}
+              onClose={onClose}
+            />
           );
         });
       }
@@ -81,7 +107,7 @@ export default function useMarketSwap(props: UseMarketSwapProps) {
       setStatus("loading");
     },
     onPending: () => {
-      setStatus("loading")
+      setStatus("loading");
     },
     onRejected: () => {
       setStatus("rejected");
