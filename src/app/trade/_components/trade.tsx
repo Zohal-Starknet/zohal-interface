@@ -14,6 +14,7 @@ export default function Trade() {
       <Fieldset
         field={
           <Input
+            className="bg-transparent text-lg"
             onChange={() => {
               return;
             }}
@@ -29,6 +30,7 @@ export default function Trade() {
       <Fieldset
         field={
           <Input
+            className="bg-transparent text-lg"
             onChange={() => {
               return;
             }}

@@ -14,10 +14,7 @@ export default function Input(props: Props) {
   const { className, id, onChange, placeholder, value } = props;
   return (
     <input
-      className={clsx(
-        "appearance-none bg-transparent text-lg outline-none",
-        className,
-      )}
+      className={clsx("appearance-none text-lg outline-none", className)}
       id={id}
       inputMode="decimal"
       onChange={(event) => onChange(event.target.value)}
