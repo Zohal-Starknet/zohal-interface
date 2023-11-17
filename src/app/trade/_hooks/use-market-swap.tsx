@@ -49,6 +49,7 @@ export default function useMarketSwap(props: UseMarketSwapProps) {
 
   useWaitForTransaction({
     hash: lastTransactionHash,
+    // TODO @YohanTz: Enable once ready again
     // onAcceptedOnL2: () => {
     //   if (status !== "idle") {
     //     setStatus("idle");
