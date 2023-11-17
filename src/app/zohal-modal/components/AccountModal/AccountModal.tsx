@@ -1,4 +1,4 @@
-import { useConnectors } from "@starknet-react/core";
+import { useDisconnect } from "@starknet-react/core";
 import {
   Dialog,
   DialogContent,
@@ -18,7 +18,7 @@ type AccountModalProps = {
 };
 export function AccountModal(props: AccountModalProps) {
   const { onClose, open } = props;
-  const { disconnect } = useConnectors();
+  const { disconnect } = useDisconnect();
 
   const { starkName, truncatedAddress } = useDisplayName();
   const displayBalance = useDisplayBalance();

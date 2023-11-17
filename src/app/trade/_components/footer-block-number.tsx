@@ -1,11 +1,13 @@
 "use client";
 
+import { goerli } from "@starknet-react/chains";
 import { useBlock, useNetwork } from "@starknet-react/core";
 import { BlockTag } from "starknet";
 
 const testnetBlockUrl = "https://goerli.voyager.online/block";
 
 export default function FooterBlockNumber() {
+  // TODO @YohanTz: Check if this still works
   const { data: block } = useBlock({ blockIdentifier: BlockTag.latest });
 
   const { chain } = useNetwork();
@@ -20,7 +22,7 @@ export default function FooterBlockNumber() {
    * By configuring the StarknetConfig provider ?
    */
 
-  if (chain?.name !== "Starknet Görli") {
+  if (chain?.id !== goerli.id) {
     return (
       <div className={badgeContainerClassName}>
         <div className="h-2 w-2 rounded-full bg-[#FF5354]" />

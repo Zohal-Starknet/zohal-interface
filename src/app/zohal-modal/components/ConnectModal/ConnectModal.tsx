@@ -1,4 +1,4 @@
-import { useAccount, useConnectors } from "@starknet-react/core";
+import { useAccount, useConnect } from "@starknet-react/core";
 import { connector_id_to_name } from "@zohal/app/_helpers/connectors";
 import {
   Dialog,
@@ -19,7 +19,7 @@ type ConnectModalProps = {
 export function ConnectModal(props: ConnectModalProps) {
   const { onClose, open } = props;
   const { address } = useAccount();
-  const { connect, connectors } = useConnectors();
+  const { connect, connectors } = useConnect();
 
   // TODO @YohanTz: rely only on onDisconnect and onConnect in ModalContext.tsx
   useEffect(() => {
@@ -45,7 +45,7 @@ export function ConnectModal(props: ConnectModalProps) {
                 <Button
                   className="w-full"
                   disabled={!connector.available}
-                  onClick={() => connect(connector)}
+                  onClick={() => connect({ connector })}
                   variant="secondary"
                 >
                   {connector_id_to_name[connector.id]}
