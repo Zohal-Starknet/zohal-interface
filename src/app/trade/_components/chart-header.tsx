@@ -12,7 +12,7 @@ export default function ChartHeader() {
         />
         <span className="whitespace-nowrap">WBTC-USD</span>
       </div>
-      <div className="flex h-full flex-1 items-center gap-8 overflow-auto">
+      <div className="flex h-full flex-1 items-center space-x-4 xl:space-x-2 2xl:space-x-8 overflow-auto">
         <div className="flex items-center gap-4 pl-5">
           <div className="flex flex-col">
             <span className="text-white">$1,544.27</span>
