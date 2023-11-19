@@ -25,7 +25,7 @@ export default function Position() {
           return (
             <tr className="border-b border-neutral-800 text-sm" key={index}>
               <td className="flex gap-4 py-4">
-                <div className="flex-shrink-0 rounded-full border border-neutral-600 p-1">
+                <div className="flex-shrink-0 rounded-full h-fit border border-neutral-600 p-1">
                   <img
                     alt={`${data.token.name} icon`}
                     className="w-8 rounded-full"
