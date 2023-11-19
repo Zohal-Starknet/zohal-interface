@@ -23,7 +23,7 @@ export default function PositionPanel(props: PositionPanelProps) {
   const { className } = props;
 
   return (
-    <Panel className={clsx("px-8 py-4 lg:h-72 lg:overflow-y-auto", className)}>
+    <Panel className={clsx("py-4 lg:h-72 2xl:h-96 3xl:h-[450px] lg:overflow-y-auto", className)}>
       <Tabs ariaLabel="Manage position" items={tabItems} />
     </Panel>
   );

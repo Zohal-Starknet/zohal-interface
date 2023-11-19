@@ -1,3 +1,4 @@
+import { EllipsisVerticalIcon } from "@heroicons/react/24/solid"
 import { TOKENS } from "@zohal/app/_helpers/tokens";
 import clsx from "clsx";
 
@@ -8,14 +9,14 @@ export default function Position() {
   return (
     <table className="mt-6 w-full">
       <thead className="border-b border-neutral-800 text-left">
-        <tr className="text-[#bcbcbd]">
-          <th className={tableHeaderCommonStyles}>Position</th>
-          <th className={tableHeaderCommonStyles}>Net Value</th>
-          <th className={tableHeaderCommonStyles}>Size</th>
-          <th className={tableHeaderCommonStyles}>Collateral</th>
-          <th className={tableHeaderCommonStyles}>Entry Price</th>
-          <th className={tableHeaderCommonStyles}>Market Price</th>
-          <th className={tableHeaderCommonStyles}>Liquidation Price</th>
+        <tr className="text-[#bcbcbd] flex space-x-2.5">
+          <th className={clsx(tableHeaderCommonStyles, "w-64")}>Position</th>
+          <th className={clsx(tableHeaderCommonStyles, "hidden sm:block w-48")}>Net Value</th>
+          <th className={clsx(tableHeaderCommonStyles, "hidden md:block w-24 lg:hidden")}>Size</th>
+          <th className={clsx(tableHeaderCommonStyles, "hidden xl:block w-24")}>Collateral</th>
+          <th className={clsx(tableHeaderCommonStyles, "hidden xl:block")}>Entry Price</th>
+          <th className={clsx(tableHeaderCommonStyles, "hidden xl:block")}>Market Price</th>
+          <th className={clsx(tableHeaderCommonStyles, "hidden xl:block")}>Liquidation Price</th>
         </tr>
       </thead>
       <tbody>
@@ -23,8 +24,8 @@ export default function Position() {
           const isLongPosition = data.positionType === "long";
 
           return (
-            <tr className="border-b border-neutral-800 text-sm" key={index}>
-              <td className="flex gap-4 py-4">
+            <tr className="border-b border-neutral-800 text-sm flex items-center space-x-2.5" key={index}>
+              <td className="flex gap-4 py-4 items-center w-64">
                 <div className="flex-shrink-0 rounded-full h-fit border border-neutral-600 p-1">
                   <img
                     alt={`${data.token.name} icon`}
@@ -48,7 +49,7 @@ export default function Position() {
                   </span>
                 </div>
               </td>
-              <td className="py-4">
+              <td className="py-4 hidden sm:block w-48">
                 {data.netValue.price}
                 <br />
                 <span
@@ -60,21 +61,24 @@ export default function Position() {
                   {data.netValue.purcentage}
                 </span>
               </td>
-              <td className="pr-6">{data.size}</td>
-              <td>
+              <td className="hidden md:block w-24 lg:hidden xl:w-24">{data.size}</td>
+              <td className="hidden w-24 xl:block">
                 {data.collateral.dollar}
                 <br />
                 <span className="text-sm text-[#bcbcbd]">
                   {data.collateral.token}
                 </span>
               </td>
-              <td>{data.entryPrice}</td>
-              <td>{data.markPrice}</td>
-              <td>{data.liquidationPrice}</td>
-              <td className="text-right">
-                <button className="rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2">
-                  Close
-                </button>
+              <td className="hidden xl:block w-28">{data.entryPrice}</td>
+              <td className="hidden xl:block w-28">{data.markPrice}</td>
+              <td className="hidden xl:block w-24">{data.liquidationPrice}</td>
+              <td className="flex-1 flex justify-end">
+                <div className="flex items-center w-fit space-x-1">
+                  <button className="rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2">
+                    Close
+                  </button>
+                  <button className="xl:hidden"><EllipsisVerticalIcon className="h-8 w-6 text-white" /></button>
+                </div>
               </td>
             </tr>
           );
