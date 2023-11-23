@@ -21,8 +21,7 @@ const leverageInputs = [
 export default function TradeLeverageInput(props: TradeLeverageInputProps) {
   const { className } = props;
 
-  const [leverage, setLeverage] = useState("");
-  const [switchToggled, setSwitchToggled] = useState(false);
+  const [leverage, setLeverage] = useState("2");
 
   function onLeverageChange(leverageInput: string) {
     // TODO @YohanTz: Pretty sure that there is a mask library to handle × at the end of the input
@@ -38,26 +37,21 @@ export default function TradeLeverageInput(props: TradeLeverageInputProps) {
       <div className="flex w-full items-center justify-between pl-1">
         <label className="text-sm">Leverage</label>
         <div className="flex items-center gap-1">
-          <label className="text-xs text-[#A5A5A7]">Slider</label>
-          <Switch checked={switchToggled} onCheckedChange={setSwitchToggled} />
+          {/* <label className="text-xs text-[#A5A5A7]">Slider</label>
+          <Switch checked={switchToggled} onCheckedChange={setSwitchToggled} /> */}
         </div>
       </div>
 
-      {switchToggled ? (
-        <div className="mt-3">
+      <div className="mt-2 flex w-full flex-col gap-3">
+        <div className="flex items-center gap-4">
           <Slider
             value={[parseFloat(leverage)]}
             onValueChange={(value) => setLeverage(value.toString())}
             max={50}
             min={1.1}
             step={0.1}
-            className={cn("w-[60%]", className)}
-            {...props}
           />
-        </div>
-      ) : (
-        <div className="mt-3 flex w-full gap-2">
-          <div className="h-10 flex-auto items-center rounded-md border border-[#363636] bg-[#25272E]">
+          <div className="h-10 w-20 flex-auto items-center rounded-md border border-[#363636] bg-[#25272E]">
             <Input
               className="h-full w-full bg-transparent px-2 text-sm"
               onChange={onLeverageChange}
@@ -65,21 +59,21 @@ export default function TradeLeverageInput(props: TradeLeverageInputProps) {
               value={leverage}
             />
           </div>
-          <div className="grid w-full grid-cols-4 items-center gap-3">
-            {leverageInputs.map((leverageInput) => {
-              return (
-                <button
-                  className="h-10 flex-shrink-0 rounded-lg border border-[#363636] bg-[#1b1d22] px-2 text-xs"
-                  key={leverageInput.name}
-                  onClick={() => setLeverage(leverageInput.value.toString())}
-                >
-                  {leverageInput.name}
-                </button>
-              );
-            })}
-          </div>
         </div>
-      )}
+        <div className="grid w-full grid-cols-4 items-center gap-3">
+          {leverageInputs.map((leverageInput) => {
+            return (
+              <button
+                className="h-10 flex-shrink-0 rounded-lg border border-[#363636] bg-[#1b1d22] px-2 text-xs"
+                key={leverageInput.name}
+                onClick={() => setLeverage(leverageInput.value.toString())}
+              >
+                {leverageInput.name}
+              </button>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
