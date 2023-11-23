@@ -1,6 +1,8 @@
 "use client";
 
+import { cn } from "@zohal/app/_lib/utils";
 import Input from "@zohal/app/_ui/input";
+import { Slider } from "@zohal/app/_ui/slider";
 import Switch from "@zohal/app/_ui/switch";
 import { useState } from "react";
 
@@ -42,7 +44,17 @@ export default function TradeLeverageInput(props: TradeLeverageInputProps) {
       </div>
 
       {switchToggled ? (
-        <div>SLIDER</div>
+        <div className="mt-3">
+          <Slider
+            value={[parseFloat(leverage)]}
+            onValueChange={(value) => setLeverage(value.toString())}
+            max={50}
+            min={1.1}
+            step={0.1}
+            className={cn("w-[60%]", className)}
+            {...props}
+          />
+        </div>
       ) : (
         <div className="mt-3 flex w-full gap-2">
           <div className="h-10 flex-auto items-center rounded-md border border-[#363636] bg-[#25272E]">
