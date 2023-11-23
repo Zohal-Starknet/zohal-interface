@@ -34,13 +34,7 @@ export default function TradeLeverageInput(props: TradeLeverageInputProps) {
 
   return (
     <div className={className}>
-      <div className="flex w-full items-center justify-between pl-1">
-        <label className="text-sm">Leverage</label>
-        <div className="flex items-center gap-1">
-          {/* <label className="text-xs text-[#A5A5A7]">Slider</label>
-          <Switch checked={switchToggled} onCheckedChange={setSwitchToggled} /> */}
-        </div>
-      </div>
+      <label className="text-sm">Leverage</label>
 
       <div className="mt-2 flex w-full flex-col gap-3">
         <div className="flex items-center gap-4">
