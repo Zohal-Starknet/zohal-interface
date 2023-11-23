@@ -59,7 +59,7 @@ export default function TradeLeverageInput(props: TradeLeverageInputProps) {
         <div className="mt-3 flex w-full gap-2">
           <div className="h-10 flex-auto items-center rounded-md border border-[#363636] bg-[#25272E]">
             <Input
-              className="h-full w-full px-2 text-sm"
+              className="h-full w-full bg-transparent px-2 text-sm"
               onChange={onLeverageChange}
               placeholder="0.00×"
               value={leverage}
