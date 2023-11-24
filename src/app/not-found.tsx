@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 
-import Button from "./_ui/button";
 import { getTradePath } from "./_helpers/routes";
+import Button from "./_ui/button";
 
 export default function CustomNotFoundPage() {
   return (
