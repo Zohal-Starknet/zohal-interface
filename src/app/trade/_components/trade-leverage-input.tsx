@@ -1,9 +1,7 @@
 "use client";
 
-import { cn } from "@zohal/app/_lib/utils";
 import Input from "@zohal/app/_ui/input";
 import { Slider } from "@zohal/app/_ui/slider";
-import Switch from "@zohal/app/_ui/switch";
 import { useState } from "react";
 
 type TradeLeverageInputProps = {
@@ -25,11 +23,7 @@ export default function TradeLeverageInput(props: TradeLeverageInputProps) {
 
   function onLeverageChange(leverageInput: string) {
     // TODO @YohanTz: Pretty sure that there is a mask library to handle × at the end of the input
-    setLeverage(
-      leverageInput
-        ? Math.min(parseFloat(leverageInput), 50).toString()
-        : leverageInput,
-    );
+    setLeverage(leverageInput.toString());
   }
 
   return (
@@ -39,11 +33,11 @@ export default function TradeLeverageInput(props: TradeLeverageInputProps) {
       <div className="mt-2 flex w-full flex-col gap-3">
         <div className="flex items-center gap-4">
           <Slider
-            value={[parseFloat(leverage)]}
-            onValueChange={(value) => setLeverage(value.toString())}
             max={50}
             min={1.1}
+            onValueChange={(value) => setLeverage(value.toString())}
             step={0.1}
+            value={[parseFloat(leverage)]}
           />
           <div className="h-10 w-20 flex-auto items-center rounded-md border border-[#363636] bg-[#25272E]">
             <Input
