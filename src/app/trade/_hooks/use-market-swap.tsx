@@ -2,11 +2,11 @@ import { useContractWrite, useWaitForTransaction } from "@starknet-react/core";
 import { robotoMono } from "@zohal/app/_helpers/fonts";
 import { TOKENS, type TokenSymbol } from "@zohal/app/_helpers/tokens";
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect } from "react";
 import { toast } from "sonner";
 import { addAddressPadding } from "starknet";
 
-type TransactionStatus = "idle" | "loading" | "rejected";
+type TransactionStatus = "accepted" | "idle" | "loading" | "rejected";
 
 type UseMarketSwapProps = {
   /** Symbol of the token that will be swapped */
@@ -21,12 +21,8 @@ type UseMarketSwapProps = {
  */
 export default function useMarketSwap(props: UseMarketSwapProps) {
   const { payTokenSymbol, payTokenValue } = props;
-  const [lastTransactionHash, setLastTransactionHash] = useState<
-    string | undefined
-  >(undefined);
   const selectedToken = TOKENS[payTokenSymbol];
   // TODO @YohanTz: Export this transaction logic to its own hook (status, toast etc)
-  const [status, setStatus] = useState<TransactionStatus>("idle");
 
   const calls = [
     {
@@ -35,8 +31,8 @@ export default function useMarketSwap(props: UseMarketSwapProps) {
         addAddressPadding(
           "0x058B15b574e1bc3c423d300Fb120483CD238Dd523eF04cc115665FE88255F46E",
         ),
-        // amount
         // TODO @YohanTz: Use BigNumber
+        // amount
         parseFloat(payTokenValue) * 10 ** selectedToken.decimals,
         0,
       ],
@@ -45,46 +41,46 @@ export default function useMarketSwap(props: UseMarketSwapProps) {
     },
   ];
 
-  const { writeAsync } = useContractWrite({ calls });
+  const { data, writeAsync } = useContractWrite({ calls });
 
-  useWaitForTransaction({
-    hash: lastTransactionHash,
-    // TODO @YohanTz: Enable once ready again
-    // onAcceptedOnL2: () => {
-    //   if (status !== "idle") {
-    //     setStatus("idle");
-    //     toast.custom((t) => {
-    //       function onClose() {
-    //         toast.dismiss(t);
-    //       }
-    //       return (
-    //         <TransactionToast
-    //           lastTransactionHash={lastTransactionHash}
-    //           onClose={onClose}
-    //         />
-    //       );
-    //     });
-    //   }
-    // },
-    // onNotReceived: () => {
-    //   setStatus("loading");
-    // },
-    // onPending: () => {
-    //   setStatus("loading");
-    // },
-    // onRejected: () => {
-    //   setStatus("rejected");
-    //   // TODO @YohanTz: Trigger error toast with link to the transaction on starkscan
-    // },
+  const { isError, isLoading, isSuccess } = useWaitForTransaction({
+    hash: data?.transaction_hash,
     watch: true,
   });
 
-  async function swap() {
-    const transaction = await writeAsync();
-    setLastTransactionHash(transaction.transaction_hash);
-  }
+  const status: TransactionStatus = isLoading
+    ? "loading"
+    : isSuccess
+    ? "accepted"
+    : isError
+    ? "rejected"
+    : "idle";
 
-  return { status, swap };
+  useEffect(() => {
+    // status accepted means the last transaction has been accepted on L2
+    if (status === "accepted") {
+      // Trigger toast
+      toast.custom((t) => {
+        function onClose() {
+          toast.dismiss(t);
+        }
+
+        return (
+          <TransactionToast
+            lastTransactionHash={data?.transaction_hash}
+            onClose={onClose}
+          />
+        );
+      });
+      return;
+    }
+
+    if (status === "rejected") {
+      // TODO @YohanTz: Trigger rejected toast
+    }
+  }, [data?.transaction_hash, status]);
+
+  return { status, swap: writeAsync };
 }
 
 type TransactionToastProps = {
@@ -96,7 +92,7 @@ type TransactionToastProps = {
 
 /**
  * TODO @YohanTz: Export to the design system
- * And should only be close with a cross appearing on hover of the toast
+ * And should only be closed with a cross appearing on hover of the toast
  */
 function TransactionToast(props: TransactionToastProps) {
   const { lastTransactionHash, onClose } = props;
@@ -111,7 +107,7 @@ function TransactionToast(props: TransactionToastProps) {
     >
       <span className="text-sm">Swap Transaction successful!</span>
       <span className="text-left text-xs text-[#BCBCBD]">
-        Your transaction has been accepted on the L2
+        Your transaction has been accepted on L2
       </span>
       <a
         className="mt-3 text-sm hover:underline"
