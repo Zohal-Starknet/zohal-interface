@@ -6,7 +6,12 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 import { addAddressPadding } from "starknet";
 
-type TransactionStatus = "accepted" | "idle" | "loading" | "rejected";
+type TransactionStatus =
+  | "accepted"
+  | "idle"
+  | "loading"
+  | "rejected"
+  | "submitting";
 
 type UseMarketSwapProps = {
   /** Symbol of the token that will be swapped */
@@ -43,17 +48,17 @@ export default function useMarketSwap(props: UseMarketSwapProps) {
 
   const { data, writeAsync } = useContractWrite({ calls });
 
-  const { isError, isLoading, isSuccess } = useWaitForTransaction({
+  const { data: receipt, isLoading } = useWaitForTransaction({
     hash: data?.transaction_hash,
     watch: true,
   });
 
   const status: TransactionStatus = isLoading
     ? "loading"
-    : isSuccess
-    ? "accepted"
-    : isError
+    : receipt !== undefined && receipt.status === "REJECTED"
     ? "rejected"
+    : receipt !== undefined
+    ? "accepted"
     : "idle";
 
   useEffect(() => {
