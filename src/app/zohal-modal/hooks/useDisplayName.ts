@@ -16,5 +16,5 @@ export function useDisplayName() {
     address: addAddressPadding(address ?? ""),
   });
 
-  return { starkName, truncatedAddress };
+  return { fullAddress: address, starkName, truncatedAddress };
 }

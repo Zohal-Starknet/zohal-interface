@@ -128,3 +128,52 @@ export function ExternalLinkIcon(props: IconProps) {
     </Root>
   );
 }
+
+export function CopyIcon(props: IconProps) {
+  const { label, ...otherProps } = props;
+
+  return (
+    <Root label={label}>
+      <svg
+        height="24"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+        {...otherProps}
+      >
+        <g
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+        >
+          <path d="M8 10a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2z" />
+          <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" />
+        </g>
+      </svg>
+    </Root>
+  );
+}
+
+export function DisconnectIcon(props: IconProps) {
+  const { label, ...otherProps } = props;
+
+  return (
+    <Root label={label}>
+      <svg
+        fill="none"
+        height="24"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        viewBox="0 0 14 14"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+        {...otherProps}
+      >
+        <path d="M9.5 10.5v2a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1v-11a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v2M6.5 7h7m-2-2l2 2l-2 2" />
+      </svg>
+    </Root>
+  );
+}
