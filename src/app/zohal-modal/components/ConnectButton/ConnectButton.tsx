@@ -32,6 +32,7 @@ export function ConnectButton() {
                 className="flex h-10 items-center rounded-xl bg-[#1d1f23] p-0.5"
                 onClick={openAccountModal}
               >
+                {/* TODO @YohanTz: Display Skeleton ? */}
                 {displayBalance !== undefined && (
                   <span className="hidden whitespace-nowrap px-2 text-sm text-neutral-300 sm:block">
                     {displayBalance}
