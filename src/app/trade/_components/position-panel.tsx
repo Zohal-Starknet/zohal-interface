@@ -11,7 +11,7 @@ type PositionPanelProps = {
 export default function PositionPanel(props: PositionPanelProps) {
   const tabItems: [TabItemType, TabItemType, TabItemType, TabItemType] = [
     {
-      content: <Position />,
+      content: <Position className="p-4" />,
       label: "Positions",
       value: "trade",
     },
@@ -23,7 +23,7 @@ export default function PositionPanel(props: PositionPanelProps) {
   const { className } = props;
 
   return (
-    <Panel className={clsx("px-8 py-4 lg:h-72 lg:overflow-y-auto", className)}>
+    <Panel className={clsx("lg:h-80 lg:overflow-y-auto", className)}>
       <Tabs ariaLabel="Manage position" items={tabItems} />
     </Panel>
   );

@@ -2,6 +2,8 @@
 import * as RadixTabs from "@radix-ui/react-tabs";
 import { type ReactNode } from "react";
 
+import Divider from "./divider";
+
 export type TabItemType = {
   /** Component that is the content of the Tab */
   content: ReactNode;
@@ -31,12 +33,16 @@ export default function Tabs(props: TabsProps) {
       className="flex w-full flex-col"
       defaultValue={defaultValue ?? items[0].value}
     >
-      <RadixTabs.List aria-label={ariaLabel}>
+      <RadixTabs.List
+        aria-label={ariaLabel}
+        className="flex h-[4.75rem] shrink-0 gap-2 px-4"
+      >
         {items.map((item) => {
           const { label, value } = item;
           return <TabItem key={value} label={label} value={value} />;
         })}
       </RadixTabs.List>
+      <Divider />
       {items.map((item) => {
         const { content, value } = item;
         return (
@@ -54,7 +60,7 @@ function TabItem(props: Pick<TabItemType, "label" | "value">) {
 
   return (
     <RadixTabs.Trigger
-      className="flex-auto border-b-2 border-transparent p-2 text-neutral-400 data-[state=active]:border-white data-[state=active]:text-white"
+      className="flex-auto flex-grow-0 border-b-2 border-transparent p-2 text-neutral-400 transition-colors data-[state=active]:border-white data-[state=active]:text-white hover:data-[state=inactive]:hover:border-neutral-600"
       value={value}
     >
       {label}
