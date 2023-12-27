@@ -21,9 +21,9 @@ export const buttonVariants = cva(
 
       variant: {
         danger:
-          "dark:hover:btn-danger dark:white bg-btn-danger text-white hover:bg-btn-danger dark:bg-btn-danger dark:text-white",
+          "dark:white bg-btn-danger text-white hover:bg-btn-danger dark:bg-btn-danger dark:text-white dark:hover:bg-btn-danger/90",
         default:
-          "bg-btn-primary text-white hover:bg-btn-primary dark:bg-btn-primary dark:text-white dark:hover:bg-btn-primary",
+          "bg-btn-primary text-white hover:bg-btn-primary dark:bg-btn-primary dark:text-white dark:hover:bg-btn-primary/90",
         ghost:
           "hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50",
         link: "text-slate-900 underline-offset-4 hover:underline dark:text-slate-50",
@@ -32,7 +32,7 @@ export const buttonVariants = cva(
         secondary:
           "bg-[#1d1f23] text-white hover:bg-[#1d1f23] dark:bg-[#1d1f23] dark:text-white dark:hover:bg-[#1d1f23]",
         success:
-          "bg-btn-success text-white hover:bg-btn-success dark:bg-btn-success dark:text-white dark:hover:bg-btn-success",
+          "bg-btn-success text-white hover:bg-btn-success dark:bg-btn-success dark:text-white dark:hover:bg-btn-success/90",
       },
     },
   },

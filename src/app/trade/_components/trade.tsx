@@ -8,9 +8,16 @@ import PriceInfo from "./price-info";
 import TokenSwapButton from "./token-swap-button";
 import TradeLeverageInput from "./trade-leverage-input";
 
-export default function Trade() {
+type TradeProps = {
+  /* className of the trade container */
+  className: string;
+};
+
+export default function Trade(props: TradeProps) {
+  const { className } = props;
+
   return (
-    <Form className="mb-4">
+    <Form className={className}>
       <Fieldset
         field={
           <Input

@@ -14,6 +14,7 @@ export default function Input(props: Props) {
   const { className, id, onChange, placeholder, value } = props;
   return (
     <input
+      autoComplete="off"
       className={clsx("appearance-none text-lg outline-none", className)}
       id={id}
       inputMode="decimal"
