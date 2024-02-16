@@ -9,10 +9,17 @@ import SwapActionButton from "./swap-action-button";
 import SwapInput from "./swap-input";
 import TokenSwapButton from "./token-swap-button";
 
+type SwapProps = {
+  /* className of the swap container */
+  className: string;
+};
+
 /**
  * TODO @YohanTz - Use big numbers for calculations
  */
-export default function Swap() {
+export default function Swap(props: SwapProps) {
+  const { className } = props;
+
   const ethBtcRatio = 0.055;
 
   const { address } = useAccount();
@@ -44,7 +51,7 @@ export default function Swap() {
     : true;
 
   return (
-    <Form>
+    <Form className={className}>
       <SwapInput
         formattedTokenBalance={payTokenBalance?.formatted}
         id="paySwapInput"
