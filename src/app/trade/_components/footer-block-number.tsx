@@ -1,14 +1,15 @@
 "use client";
 
-import { useBlock, useNetwork } from "@starknet-react/core";
+import { useAccount, useBlock, useNetwork } from "@starknet-react/core";
 import { BlockTag } from "starknet";
 
 const testnetBlockUrl = "https://goerli.voyager.online/block";
 
 export default function FooterBlockNumber() {
-  const { data: block } = useBlock({ blockIdentifier: BlockTag.latest });
-
+  const { chainId: walletChainId } = useAccount();
   const { chain } = useNetwork();
+
+  const { data: block } = useBlock({ blockIdentifier: BlockTag.latest });
 
   // TODO @YohanTz: Show Skeleton
   if (block === undefined) {
@@ -20,7 +21,7 @@ export default function FooterBlockNumber() {
    * By configuring the StarknetConfig provider ?
    */
 
-  if (chain?.name !== "Starknet Görli") {
+  if (walletChainId !== chain.id && walletChainId !== undefined) {
     return (
       <div className={badgeContainerClassName}>
         <div className="h-2 w-2 rounded-full bg-[#FF5354]" />
