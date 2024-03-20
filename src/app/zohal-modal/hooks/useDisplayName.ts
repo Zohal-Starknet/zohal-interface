@@ -15,5 +15,5 @@ export function useDisplayName() {
     address,
   });
 
-  return { starkName, truncatedAddress };
+  return { address, starkName, truncatedAddress };
 }
