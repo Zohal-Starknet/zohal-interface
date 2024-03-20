@@ -49,32 +49,32 @@ export default function useMarketSwap(props: UseMarketSwapProps) {
 
   useWaitForTransaction({
     hash: lastTransactionHash,
-    onAcceptedOnL2: () => {
-      if (status !== "idle") {
-        setStatus("idle");
-        toast.custom((t) => {
-          function onClose() {
-            toast.dismiss(t);
-          }
-          return (
-            <TransactionToast
-              lastTransactionHash={lastTransactionHash}
-              onClose={onClose}
-            />
-          );
-        });
-      }
-    },
-    onNotReceived: () => {
-      setStatus("loading");
-    },
-    onPending: () => {
-      setStatus("loading");
-    },
-    onRejected: () => {
-      setStatus("rejected");
-      // TODO @YohanTz: Trigger error toast with link to the transaction on starkscan
-    },
+    // onAcceptedOnL2: () => {
+    //   if (status !== "idle") {
+    //     setStatus("idle");
+    //     toast.custom((t) => {
+    //       function onClose() {
+    //         toast.dismiss(t);
+    //       }
+    //       return (
+    //         <TransactionToast
+    //           lastTransactionHash={lastTransactionHash}
+    //           onClose={onClose}
+    //         />
+    //       );
+    //     });
+    //   }
+    // },
+    // onNotReceived: () => {
+    //   setStatus("loading");
+    // },
+    // onPending: () => {
+    //   setStatus("loading");
+    // },
+    // onRejected: () => {
+    //   setStatus("rejected");
+    //   // TODO @YohanTz: Trigger error toast with link to the transaction on starkscan
+    // },
     watch: true,
   });
 

@@ -26,9 +26,12 @@ dependencies:
   '@radix-ui/react-tabs':
     specifier: ^1.0.4
     version: 1.0.4(@types/react-dom@18.2.22)(@types/react@18.2.66)(react-dom@18.2.0)(react@18.2.0)
+  '@starknet-react/chains':
+    specifier: ^0.1.6
+    version: 0.1.7
   '@starknet-react/core':
-    specifier: ^1.0.4
-    version: 1.0.4(get-starknet-core@3.2.0)(react-dom@18.2.0)(react@18.2.0)(starknet@5.19.5)
+    specifier: ^2.2.4
+    version: 2.5.0(get-starknet-core@3.2.0)(react@18.2.0)(starknet@5.29.0)
   class-variance-authority:
     specifier: ^0.7.0
     version: 0.7.0
@@ -37,7 +40,7 @@ dependencies:
     version: 2.0.0
   get-starknet-core:
     specifier: ^3.2.0
-    version: 3.2.0(starknet@5.19.5)
+    version: 3.2.0(starknet@5.29.0)
   lightweight-charts:
     specifier: ^4.0.1
     version: 4.0.1
@@ -54,8 +57,8 @@ dependencies:
     specifier: ^1.2.0
     version: 1.2.2(react-dom@18.2.0)(react@18.2.0)
   starknet:
-    specifier: ^5.19.5
-    version: 5.19.5
+    specifier: ^5.25.5
+    version: 5.29.0
   tailwind-merge:
     specifier: ^2.0.0
     version: 2.0.0
@@ -866,14 +869,14 @@ packages:
     dev: false
     optional: true
 
-  /@noble/curves@1.2.0:
-    resolution: {integrity: sha512-oYclrNgRaM9SsBUBVbb8M6DTV7ZHRTKugureoYEncY5c65HOmRzvSiTE3y5CYaPYJA/GVkrhXEoF0M3Ya9PMnw==}
+  /@noble/curves@1.3.0:
+    resolution: {integrity: sha512-t01iSXPuN+Eqzb4eBX0S5oubSqXbK/xXa1Ne18Hj8f9pStxztHCE2gfboSp/dZRLSqfuLpRK2nDXDK+W9puocA==}
     dependencies:
-      '@noble/hashes': 1.3.2
+      '@noble/hashes': 1.3.3
     dev: false
 
-  /@noble/hashes@1.3.2:
-    resolution: {integrity: sha512-MVC8EAQp7MvEcm30KWENFjgR+Mkmf+D189XJTkFIlwohU5hcBbn1ZkKq7KVTi2Hme3PMGF390DaL52beVrIihQ==}
+  /@noble/hashes@1.3.3:
+    resolution: {integrity: sha512-V7/fPHgl+jsVPXqqeOzT8egNj2iBIVt+ECeMMG8TdcnTikP3oaBtUVqpT/gYCR68aEBJSF+XbYUxStjbFMqIIA==}
     engines: {node: '>= 16'}
     dev: false
 
@@ -1487,11 +1490,15 @@ packages:
     resolution: {integrity: sha512-0xd7qez0AQ+MbHatZTlI1gu5vkG8r7MYRUJAHPAHJBmGLs16zpkrpAVLvjQKQOqaXPDUBwOiJzNc00znHSCVBw==}
     dev: true
 
-  /@scure/starknet@0.3.0:
-    resolution: {integrity: sha512-Ma66yZlwa5z00qI5alSxdWtIpky5LBhy22acVFdoC5kwwbd9uDyMWEYzWHdNyKmQg9t5Y2UOXzINMeb3yez+Gw==}
+  /@scure/base@1.1.5:
+    resolution: {integrity: sha512-Brj9FiG2W1MRQSTB212YVPRrcbjkv48FoZi/u4l/zds/ieRrqsh7aUf6CLwkAq61oKXr/ZlTzlY66gLIj3TFTQ==}
+    dev: false
+
+  /@scure/starknet@1.0.0:
+    resolution: {integrity: sha512-o5J57zY0f+2IL/mq8+AYJJ4Xpc1fOtDhr+mFQKbHnYFmm3WQrC+8zj2HEgxak1a+x86mhmBC1Kq305KUpVf0wg==}
     dependencies:
-      '@noble/curves': 1.2.0
-      '@noble/hashes': 1.3.2
+      '@noble/curves': 1.3.0
+      '@noble/hashes': 1.3.3
     dev: false
 
   /@sinclair/typebox@0.27.8:
@@ -1510,22 +1517,25 @@ packages:
       '@sinonjs/commons': 3.0.0
     dev: true
 
-  /@starknet-react/core@1.0.4(get-starknet-core@3.2.0)(react-dom@18.2.0)(react@18.2.0)(starknet@5.19.5):
-    resolution: {integrity: sha512-TQiRnb0moqim6+HqioGGzd3FgjPVJFMdMH8Q5AQlJ7oEUNprKkFyHlVGJJlcwvdRaCPD5BQuD2WUL2rQfgMRuw==}
+  /@starknet-react/chains@0.1.7:
+    resolution: {integrity: sha512-UNh97I1SvuJKaAhKOmpEk8JcWuZWMlPG/ba2HcvFYL9x/47BKndJ+Da9V+iJFtkHUjreVnajT1snsaz1XMG+UQ==}
+    dev: false
+
+  /@starknet-react/core@2.5.0(get-starknet-core@3.2.0)(react@18.2.0)(starknet@5.29.0):
+    resolution: {integrity: sha512-nH5Vf0oAeqn0+rerUpaAzgbd9z+sBKYZNk6pgFX2s1BNCuRGXyJDoVkQoouVeGKdJO2M8jyMDUVWQn9rE1dDqw==}
     peerDependencies:
-      get-starknet-core: ^3.0.1
-      react: ^17.0 || ^18.0
-      starknet: ^5.0.0
+      get-starknet-core: ^3.2.0
+      react: ^18.0
+      starknet: ^5.25.0
     dependencies:
-      '@tanstack/react-query': 4.35.0(react-dom@18.2.0)(react@18.2.0)
-      get-starknet-core: 3.2.0(starknet@5.19.5)
+      '@starknet-react/chains': 0.1.7
+      '@tanstack/react-query': 5.28.4(react@18.2.0)
+      eventemitter3: 5.0.1
+      get-starknet-core: 3.2.0(starknet@5.29.0)
       immutable: 4.3.4
       react: 18.2.0
-      starknet: 5.19.5
-      zod: 3.21.4
-    transitivePeerDependencies:
-      - react-dom
-      - react-native
+      starknet: 5.29.0
+      zod: 3.22.4
     dev: false
 
   /@swc/helpers@0.5.1:
@@ -1534,26 +1544,17 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@tanstack/query-core@4.35.0:
-    resolution: {integrity: sha512-4GMcKQuLZQi6RFBiBZNsLhl+hQGYScRZ5ZoVq8QAzfqz9M7vcGin/2YdSESwl7WaV+Qzsb5CZOAbMBes4lNTnA==}
+  /@tanstack/query-core@5.28.4:
+    resolution: {integrity: sha512-uQZqOFqLWUvXNIQZ63XdKzg22NtHzgCBUfDmjDHi3BoF+nUYeBNvMi/xFPtFrMhqRzG2Ir4mYaGsWZzmiEjXpA==}
     dev: false
 
-  /@tanstack/react-query@4.35.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-LLYDNnM9ewYHgjm2rzhk4KG/puN2rdoqCUD+N9+V7SwlsYwJk5ypX58rpkoZAhFyZ+KmFUJ7Iv2lIEOoUqydIg==}
+  /@tanstack/react-query@5.28.4(react@18.2.0):
+    resolution: {integrity: sha512-BErcoB/QQG6YwLSUKnaGxF+lSc270RH2w3kMBpG0i4YzDCsFs2pdxPX1WVknQvFk9bNgukMb158hc2Zb4SdwSA==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-native: '*'
-    peerDependenciesMeta:
-      react-dom:
-        optional: true
-      react-native:
-        optional: true
+      react: ^18.0.0
     dependencies:
-      '@tanstack/query-core': 4.35.0
+      '@tanstack/query-core': 5.28.4
       react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
   /@testing-library/dom@9.3.3:
@@ -1998,6 +1999,16 @@ packages:
       yargs: 17.7.2
     dev: false
 
+  /abi-wan-kanabi@2.2.1:
+    resolution: {integrity: sha512-W3RNuu2tG10W4AY63uq89JX/MsZSOxvpmsitQ3pbdVn3e8RxXR2oegN0QmGpgfyT0KlPdreydHsqq/u+2Pt2PQ==}
+    hasBin: true
+    dependencies:
+      ansicolors: 0.3.2
+      cardinal: 2.1.1
+      fs-extra: 10.1.0
+      yargs: 17.7.2
+    dev: false
+
   /acorn-globals@7.0.1:
     resolution: {integrity: sha512-umOSDSDrfHbTNPuNpC2NSnnA3LUrqpevPb4T9jRx4MagXNS0rs+gwiTcAvqCRmsD6utzsrzNt+ebm00SNWiC3Q==}
     dependencies:
@@ -2069,6 +2080,10 @@ packages:
     resolution: {integrity: sha512-Cxwpt2SfTzTtXcfOlzGEee8O+c+MmUgGrNiBcXnuWxuFJHe6a5Hz7qwhwe5OgaSYI0IJvkLqWX1ASG+cJOkEiA==}
     engines: {node: '>=10'}
     dev: true
+
+  /ansicolors@0.3.2:
+    resolution: {integrity: sha512-QXu7BPrP29VllRxH8GwB7x5iX5qWKAAMLqKQGWTeLWVlNHNOpVMJ91dsxQAIWXpjuW5wqvxu3Jd/nRjrJ+0pqg==}
+    dev: false
 
   /any-promise@1.3.0:
     resolution: {integrity: sha512-7UvmKalWRt1wgjL1RrGxoSJW/0QZFIegpeGvZG9kjp8vrRu55XTHbwnqq2GpXm9uLbcuhxm3IqX9OB4MZR1b2A==}
@@ -2398,6 +2413,14 @@ packages:
 
   /caniuse-lite@1.0.30001561:
     resolution: {integrity: sha512-NTt0DNoKe958Q0BE0j0c1V9jbUzhBxHIEJy7asmGrpE0yG63KTV7PLHPnK2E1O9RsQrQ081I3NLuXGS6zht3cw==}
+
+  /cardinal@2.1.1:
+    resolution: {integrity: sha512-JSr5eOgoEymtYHBjNWyjrMqet9Am2miJhlfKNdqLp6zoeAh0KN5dRAcxlecj5mAJrmQomgiOBj35xHLrFjqBpw==}
+    hasBin: true
+    dependencies:
+      ansicolors: 0.3.2
+      redeyed: 2.1.1
+    dev: false
 
   /chalk@2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}
@@ -3187,7 +3210,6 @@ packages:
     resolution: {integrity: sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==}
     engines: {node: '>=4'}
     hasBin: true
-    dev: true
 
   /esquery@1.5.0:
     resolution: {integrity: sha512-YQLXUplAwJgCydQ78IMJywZCceoqk1oH01OERdSAJc/7U2AylwjhSCLDEtqwg811idIS/9fIU5GjG73IgjKMVg==}
@@ -3212,6 +3234,10 @@ packages:
     resolution: {integrity: sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /eventemitter3@5.0.1:
+    resolution: {integrity: sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==}
+    dev: false
 
   /execa@5.1.1:
     resolution: {integrity: sha512-8uSpZZocAZRBAPIEINJj3Lo9HyGitllczc27Eh5YYojjMFMn8yHMDMaUHE2Jqfq05D/wucwI4JGURyXt1vchyg==}
@@ -3405,12 +3431,12 @@ packages:
     engines: {node: '>=8.0.0'}
     dev: true
 
-  /get-starknet-core@3.2.0(starknet@5.19.5):
+  /get-starknet-core@3.2.0(starknet@5.29.0):
     resolution: {integrity: sha512-SZhxtLlKoPKLZ2H3l9WIU7CiNmkL3qLWGksALmvZdAXa/9PykYfLtvIB5B8A2UZMpf2ojTZlWLfuo1KhgmVobA==}
     peerDependencies:
       starknet: ^5.18.0
     dependencies:
-      starknet: 5.19.5
+      starknet: 5.29.0
     dev: false
 
   /get-stream@6.0.1:
@@ -5237,6 +5263,12 @@ packages:
     dependencies:
       picomatch: 2.3.1
 
+  /redeyed@2.1.1:
+    resolution: {integrity: sha512-FNpGGo1DycYAdnrKFxCMmKYgo/mILAqtRYbkdQD8Ep/Hk2PQ5+aEAEx+IU713RTDmuBaH0c8P5ZozurNu5ObRQ==}
+    dependencies:
+      esprima: 4.0.1
+    dev: false
+
   /reflect.getprototypeof@1.0.4:
     resolution: {integrity: sha512-ECkTw8TmJwW60lOTR+ZkODISW6RQ8+2CL3COqtiJKLd6MmB45hN51HprHFziKLGkAuTGQhBb91V8cy+KHlaCjw==}
     engines: {node: '>= 0.4'}
@@ -5466,12 +5498,14 @@ packages:
       escape-string-regexp: 2.0.0
     dev: true
 
-  /starknet@5.19.5:
-    resolution: {integrity: sha512-S7V4ifyYd+ApsIwYTd7YA5U2Px+NZkCsQPnmgY/wkc5LLFKhYMNpzHQ5nIA15p70AwtSXCcsEBnHNRBOuci13Q==}
+  /starknet@5.29.0:
+    resolution: {integrity: sha512-eEcd6uiYIwGvl8MtHOsXGBhREqjJk84M/qUkvPLQ3n/JAMkbKBGnygDlh+HAsvXJsGlMQfwrcVlm6KpDoPha7w==}
     dependencies:
-      '@noble/curves': 1.2.0
-      '@scure/starknet': 0.3.0
-      abi-wan-kanabi: 1.0.3
+      '@noble/curves': 1.3.0
+      '@scure/base': 1.1.5
+      '@scure/starknet': 1.0.0
+      abi-wan-kanabi-v1: /abi-wan-kanabi@1.0.3
+      abi-wan-kanabi-v2: /abi-wan-kanabi@2.2.1
       isomorphic-fetch: 3.0.0
       lossless-json: 2.0.11
       pako: 2.1.0
@@ -5951,14 +5985,6 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /use-sync-external-store@1.2.0(react@18.2.0):
-    resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      react: 18.2.0
-    dev: false
-
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
@@ -6167,4 +6193,8 @@ packages:
 
   /zod@3.21.4:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
+    dev: false
+
+  /zod@3.22.4:
+    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
