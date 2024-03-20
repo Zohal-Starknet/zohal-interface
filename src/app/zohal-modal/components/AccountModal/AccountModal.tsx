@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useConnectors } from "@starknet-react/core";
+import { useDisconnect } from "@starknet-react/core";
 import { connector_id_to_img } from "@zohal/app/_helpers/connectors";
 import {
   Dialog,
@@ -24,9 +24,9 @@ type AccountModalProps = {
 
 export function AccountModal(props: AccountModalProps) {
   const { connectorId, onClose, open } = props;
-  const { disconnect } = useConnectors();
+  const { disconnect } = useDisconnect();
 
-  const { fullAddress, starkName, truncatedAddress } = useDisplayName();
+  const { address, starkName, truncatedAddress } = useDisplayName();
 
   const displayName = starkName ?? truncatedAddress;
 
@@ -52,15 +52,13 @@ export function AccountModal(props: AccountModalProps) {
         <div className="flex flex-col gap-4 rounded-md border border-neutral-800 p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <img
-                alt={connectorId}
-                className="h-5 w-5"
-                src={
-                  connectorId !== undefined
-                    ? connector_id_to_img[connectorId]
-                    : "/logo.svg"
-                }
-              />
+              {connectorId !== undefined && (
+                <img
+                  alt={connectorId}
+                  className="h-5 w-5"
+                  src={connector_id_to_img[connectorId]}
+                />
+              )}
               <p className="text-center text-lg">{displayName}</p>
             </div>
             <Button
@@ -74,14 +72,14 @@ export function AccountModal(props: AccountModalProps) {
           </div>
           <div className="flex items-center gap-2">
             <Button
-              className="inline-flex w-1/2 gap-1 text-xs transition hover:scale-105"
+              className="inline-flex w-1/2 gap-1 text-sm transition hover:opacity-70"
               onClick={async () => {
-                if (fullAddress === undefined) {
+                if (address === undefined) {
                   return;
                 }
 
                 // TODO : Add Toasts for Success and Failure cases
-                await navigator.clipboard.writeText(fullAddress);
+                await navigator.clipboard.writeText(address);
               }}
               size="lg"
               variant="secondary"
@@ -93,20 +91,20 @@ export function AccountModal(props: AccountModalProps) {
             </Button>
             <Button
               asChild
-              className="inline-flex w-1/2 text-xs transition hover:scale-105"
+              className="inline-flex w-1/2 text-sm transition hover:opacity-70"
               size="lg"
               variant="secondary"
             >
               <Link
                 href={`https://starkscan.co/${
-                  fullAddress !== undefined ? `/contract/${fullAddress}` : ""
+                  address !== undefined ? `/contract/${address}` : ""
                 }`}
                 rel="noopener noreferrer"
                 target="_blank"
               >
                 <span className="flex gap-1">
                   <ExternalLinkIcon className="h-4 w-4" label="External" />
-                  See on the explorer
+                  See on explorer
                 </span>
               </Link>
             </Button>
