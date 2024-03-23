@@ -13,3 +13,7 @@ export function getPortfolioPath() {
 export function getRewardsPath() {
   return "/rewards";
 }
+
+export function getEarnPath() {
+  return "/earn";
+}

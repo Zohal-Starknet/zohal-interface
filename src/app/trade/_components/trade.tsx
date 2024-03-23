@@ -1,5 +1,7 @@
 "use client";
 
+import { type PropsWithClassName } from "@zohal/app/_lib/utils";
+
 import Button from "../../_ui/button";
 import Fieldset from "../../_ui/fieldset";
 import Form from "../../_ui/form";
@@ -8,14 +10,7 @@ import PriceInfo from "./price-info";
 import TokenSwapButton from "./token-swap-button";
 import TradeLeverageInput from "./trade-leverage-input";
 
-type TradeProps = {
-  /* className of the trade container */
-  className: string;
-};
-
-export default function Trade(props: TradeProps) {
-  const { className } = props;
-
+export default function Trade({ className }: PropsWithClassName) {
   return (
     <Form className={className}>
       <Fieldset
