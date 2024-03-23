@@ -1,4 +1,4 @@
-import { TOKENS } from "@zohal/app/_helpers/tokens";
+import { Tokens } from "@zohal/app/_helpers/tokens";
 import { type PropsWithClassName } from "@zohal/app/_lib/utils";
 import clsx from "clsx";
 
@@ -100,7 +100,7 @@ const tableData = [
     position: "ETH-USD",
     positionType: "short",
     size: "$48.35",
-    token: TOKENS.ETH,
+    token: Tokens.ETH,
   },
   {
     collateral: { dollar: "$18.35", token: "18 USDC" },
@@ -112,7 +112,7 @@ const tableData = [
     position: "BTC-USD",
     positionType: "long",
     size: "$18.35",
-    token: TOKENS.WBTC,
+    token: Tokens.WBTC,
   },
   {
     collateral: { dollar: "$48.35", token: "48 USDC" },
@@ -124,6 +124,6 @@ const tableData = [
     position: "ETH-USD",
     positionType: "short",
     size: "$48.35",
-    token: TOKENS.ETH,
+    token: Tokens.ETH,
   },
 ];

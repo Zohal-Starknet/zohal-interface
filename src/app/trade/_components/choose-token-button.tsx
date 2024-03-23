@@ -1,4 +1,4 @@
-import { TOKENS, type TokenSymbol } from "@zohal/app/_helpers/tokens";
+import { Tokens, type TokenSymbol } from "@zohal/app/_helpers/tokens";
 import { ChevronRight } from "@zohal/app/_ui/icons";
 import { useState } from "react";
 
@@ -14,7 +14,7 @@ export default function ChooseTokenButton(props: ChooseTokenButtonProps) {
 
   const [open, setOpen] = useState(false);
 
-  const token = TOKENS[tokenSymbol];
+  const token = Tokens[tokenSymbol];
 
   function openModal() {
     setOpen(true);

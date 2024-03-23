@@ -14,6 +14,10 @@ export function getRewardsPath() {
   return "/rewards";
 }
 
-export function getEarnPath() {
-  return "/earn";
+export function getPoolsPath() {
+  return "/pool";
+}
+
+export function getPoolPath(market: string) {
+  return `/pool/${market}`;
 }

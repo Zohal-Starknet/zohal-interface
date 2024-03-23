@@ -1,4 +1,4 @@
-import { TOKENS, type TokenSymbol } from "@zohal/app/_helpers/tokens";
+import { Tokens, type TokenSymbol } from "@zohal/app/_helpers/tokens";
 import { Dialog, DialogContent, DialogHeader } from "@zohal/app/_ui/Modal";
 import Divider from "@zohal/app/_ui/divider";
 import Input from "@zohal/app/_ui/input";
@@ -19,7 +19,7 @@ export default function ChooseTokenModal(props: ChooseTokenModalProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredTokens = useMemo(() => {
-    return Object.entries(TOKENS).flatMap(([tokenSymbol, tokenInfo]) => {
+    return Object.entries(Tokens).flatMap(([tokenSymbol, tokenInfo]) => {
       const lowerCaseQuery = searchQuery.toLowerCase();
 
       const shouldIncludeToken =
