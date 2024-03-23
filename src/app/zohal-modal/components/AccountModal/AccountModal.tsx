@@ -102,7 +102,7 @@ export function AccountModal(props: AccountModalProps) {
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                <span className="flex gap-1">
+                <span className="flex items-center gap-1">
                   <ExternalLinkIcon className="h-4 w-4" label="External" />
                   See on explorer
                 </span>

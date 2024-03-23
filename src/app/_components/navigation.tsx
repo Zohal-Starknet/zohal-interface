@@ -1,5 +1,6 @@
 import {
   getDashboardPath,
+  getEarnPath,
   getPortfolioPath,
   getRewardsPath,
   getTradePath,
@@ -10,8 +11,9 @@ export default function Navigation() {
   return (
     <nav className="hidden lg:block">
       <ul className="flex gap-2">
-        <NavigationItem label="Portfolio" pathname={getPortfolioPath()} />
         <NavigationItem label="Trade" pathname={getTradePath()} />
+        <NavigationItem label="Earn" pathname={getEarnPath()} />
+        <NavigationItem label="Portfolio" pathname={getPortfolioPath()} />
         <NavigationItem label="Dashboard" pathname={getDashboardPath()} />
         <NavigationItem label="Rewards" pathname={getRewardsPath()} />
         <NavigationItem

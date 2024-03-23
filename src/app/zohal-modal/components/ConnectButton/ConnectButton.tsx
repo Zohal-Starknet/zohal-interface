@@ -53,7 +53,7 @@ export function ConnectButton() {
             )}
             {address === undefined && (
               <button
-                className="flex h-10 items-center rounded-xl bg-[#1d1f23] px-4"
+                className="flex h-10 items-center rounded-xl bg-[#1d1f23] px-4 transition-colors hover:bg-neutral-800"
                 onClick={openConnectModal}
               >
                 Connect wallet

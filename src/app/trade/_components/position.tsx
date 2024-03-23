@@ -1,14 +1,9 @@
 import { TOKENS } from "@zohal/app/_helpers/tokens";
+import { type PropsWithClassName } from "@zohal/app/_lib/utils";
 import clsx from "clsx";
 
-type PositionProps = {
-  /* className of the swap container */
-  className: string;
-};
-
 /* eslint-disable @next/next/no-img-element */
-export default function Position(props: PositionProps) {
-  const { className } = props;
+export default function Position({ className }: PropsWithClassName) {
   // TODO @YohanTz: Add ? icon to explain each of the table header
 
   return (

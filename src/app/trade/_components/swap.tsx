@@ -1,6 +1,7 @@
 "use client";
 import { useAccount, useBalance } from "@starknet-react/core";
 import { TOKENS } from "@zohal/app/_helpers/tokens";
+import { type PropsWithClassName } from "@zohal/app/_lib/utils";
 
 import Form from "../../_ui/form";
 import { useTokenInputs } from "../_hooks/use-token-input";
@@ -9,17 +10,10 @@ import SwapActionButton from "./swap-action-button";
 import SwapInput from "./swap-input";
 import TokenSwapButton from "./token-swap-button";
 
-type SwapProps = {
-  /* className of the swap container */
-  className: string;
-};
-
 /**
  * TODO @YohanTz - Use big numbers for calculations
  */
-export default function Swap(props: SwapProps) {
-  const { className } = props;
-
+export default function Swap({ className }: PropsWithClassName) {
   const ethBtcRatio = 0.055;
 
   const { address } = useAccount();
