@@ -1,4 +1,4 @@
-import { TOKENS } from "@zohal/app/_helpers/tokens";
+import { Tokens } from "@zohal/app/_helpers/tokens";
 
 /* eslint-disable @next/next/no-img-element */
 export default function ChartHeader() {
@@ -6,9 +6,9 @@ export default function ChartHeader() {
     <div className="flex h-[4.75rem] items-center pl-4">
       <div className="flex h-full items-center gap-4 border-r border-[#2A2E37] pr-10">
         <img
-          alt={`${TOKENS.WBTC.name} icon`}
+          alt={`${Tokens.WBTC.name} icon`}
           className="w-8"
-          src={TOKENS.WBTC.icon}
+          src={Tokens.WBTC.icon}
         />
         <span className="whitespace-nowrap">WBTC-USD</span>
       </div>
