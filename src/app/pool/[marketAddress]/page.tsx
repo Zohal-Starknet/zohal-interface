@@ -9,7 +9,6 @@ interface MarketPageProps {
 export default function MarketsPage({
   params: { marketAddress },
 }: MarketPageProps) {
-  console.log(Markets, marketAddress);
   if (Markets[marketAddress] === undefined) {
     notFound();
   }
