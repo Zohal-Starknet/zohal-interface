@@ -2,6 +2,7 @@
 import { useAccount, useBalance } from "@starknet-react/core";
 import { Tokens } from "@zohal/app/_helpers/tokens";
 import { type PropsWithClassName } from "@zohal/app/_lib/utils";
+import { CairoCustomEnum, uint256 } from "starknet";
 
 import Form from "../../_ui/form";
 import { useTokenInputs } from "../_hooks/use-token-input";
@@ -16,7 +17,7 @@ import TokenSwapButton from "./token-swap-button";
 export default function Swap({ className }: PropsWithClassName) {
   const ethBtcRatio = 0.055;
 
-  const { address } = useAccount();
+  const { account, address } = useAccount();
 
   const {
     payTokenSymbol,
