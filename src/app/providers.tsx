@@ -1,6 +1,6 @@
 "use client";
 
-import { devnet } from "@starknet-react/chains";
+import { sepolia } from "@starknet-react/chains";
 import {
   InjectedConnector,
   StarknetConfig,
@@ -25,7 +25,7 @@ export default function Providers(props: PropsWithChildren) {
   return (
     <StarknetConfig
       autoConnect
-      chains={[devnet]}
+      chains={[sepolia]}
       connectors={connectors}
       provider={publicProvider()}
     >

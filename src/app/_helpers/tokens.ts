@@ -11,6 +11,13 @@ export const Tokens: TokenList = {
     icon: "/tokens/ethereum.png",
     name: "Ethereum",
   },
+  USDC: {
+    address:
+      "0x27a66eeb60add123efc97fc1a582a5796e0c9df95e4ddffa93988cfabf2af78",
+    decimals: 18,
+    icon: "/tokens/usdc.png",
+    name: "USD",
+  },
   WBTC: {
     address:
       "0x012d537dc323c439dc65c976fad242d5610d27cfb5f31689a0a319b8be7f3d56",

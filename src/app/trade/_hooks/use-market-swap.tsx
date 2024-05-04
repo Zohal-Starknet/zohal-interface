@@ -1,6 +1,6 @@
 import { useContractWrite, useWaitForTransaction } from "@starknet-react/core";
 import { robotoMono } from "@zohal/app/_helpers/fonts";
-import { Tokens, type TokenSymbol } from "@zohal/app/_helpers/tokens";
+import { type TokenSymbol, Tokens } from "@zohal/app/_helpers/tokens";
 import clsx from "clsx";
 import { useState } from "react";
 import { toast } from "sonner";
