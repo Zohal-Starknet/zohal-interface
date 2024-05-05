@@ -16,11 +16,11 @@ const MARKET_TOKEN_CONTRACT_ADDRESS =
 const ORDER_VAULT_CONTRACT_ADDRESS =
   "0x26dbfc5e776cd2ff1b9daa04bf5048dabae59feba13dc97a4508b3fdf862440";
 
-export default function useMarketSwapp() {
+export default function useMarketLong() {
   const { account, address } = useAccount();
   const { provider } = useProvider();
 
-  function swap() {
+  function long() {
     if (account === undefined || address === undefined) {
       return;
     }
@@ -32,7 +32,7 @@ export default function useMarketSwapp() {
     );
     const transferCall = tokenContract.populate("transfer", [
       ORDER_VAULT_CONTRACT_ADDRESS,
-      uint256.bnToUint256(BigInt("1000000000000000000")),
+      uint256.bnToUint256(BigInt("2000000000000000000")),
     ]);
 
     const orderHandlerContract = new Contract(
@@ -42,24 +42,24 @@ export default function useMarketSwapp() {
     );
 
     const createOrderParams = {
-      acceptable_price: uint256.bnToUint256(0),
+      acceptable_price: uint256.bnToUint256(BigInt("5500")),
       callback_contract: 0,
       callback_gas_limit: uint256.bnToUint256(0),
       decrease_position_swap_type: new CairoCustomEnum({ NoSwap: {} }),
       execution_fee: uint256.bnToUint256(0),
       initial_collateral_delta_amount: uint256.bnToUint256(
-        BigInt("1000000000000000000"),
+        BigInt("2000000000000000000"),
       ),
       initial_collateral_token: ETH_CONTRACT_ADDRESS,
-      is_long: 0,
-      market: 0,
+      is_long: true,
+      market: MARKET_TOKEN_CONTRACT_ADDRESS,
       min_output_amount: uint256.bnToUint256(0),
-      order_type: new CairoCustomEnum({ MarketSwap: {} }),
+      order_type: new CairoCustomEnum({ MarketIncrease: {} }),
       receiver: address,
       referral_code: 0,
-      size_delta_usd: uint256.bnToUint256(BigInt("5000000000000000000000")),
-      swap_path: [MARKET_TOKEN_CONTRACT_ADDRESS],
-      trigger_price: uint256.bnToUint256(0),
+      size_delta_usd: uint256.bnToUint256(BigInt("10000000000000000000000")),
+      swap_path: [],
+      trigger_price: uint256.bnToUint256(BigInt("5000")),
       ui_fee_receiver: 0,
     };
 
@@ -71,5 +71,5 @@ export default function useMarketSwapp() {
     void account.execute([transferCall, createOrderCall]);
   }
 
-  return { swap };
+  return { long };
 }

@@ -6,11 +6,14 @@ import Button from "../../_ui/button";
 import Fieldset from "../../_ui/fieldset";
 import Form from "../../_ui/form";
 import Input from "../../_ui/input";
+import useMarketLong from "../_hooks/use-market-long";
 import PriceInfo from "./price-info";
 import TokenSwapButton from "./token-swap-button";
 import TradeLeverageInput from "./trade-leverage-input";
 
 export default function Trade({ className }: PropsWithClassName) {
+  const { long } = useMarketLong();
+
   return (
     <Form className={className}>
       <Fieldset
@@ -52,7 +55,7 @@ export default function Trade({ className }: PropsWithClassName) {
       </div>
 
       <div className="mt-4 grid w-full grid-cols-2 items-center gap-2">
-        <Button type="submit" variant="success">
+        <Button onClick={() => long()} type="submit" variant="success">
           Buy/Long
         </Button>
         <Button type="submit" variant="danger">
