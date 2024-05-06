@@ -1,4 +1,10 @@
 import { useAccount, useProvider } from "@starknet-react/core";
+import {
+  ETH_CONTRACT_ADDRESS,
+  MARKET_TOKEN_CONTRACT_ADDRESS,
+  ORACLE_CONTRACT_ADDRESS,
+  ORDER_HANDLER_CONTRACT_ADDRESS,
+} from "@zohal/app/_lib/addresses";
 import { useEffect, useState } from "react";
 import { CairoCustomEnum, Contract, uint256 } from "starknet";
 
@@ -20,21 +26,6 @@ export type Position = {
   size_in_tokens: bigint;
   size_in_usd: bigint;
 };
-
-const ORDER_HANDLER_ADDRESS =
-  "0x31b7c130baf07042222d74d143d4ccc89799ab6ab09f0a10a19cf12900e4caf";
-
-const ETH_CONTRACT_ADDRESS =
-  "0x3fa46510b749925fb3fa02e98195909683eaee8d4c982cc647cd98a7f160905";
-
-const MARKET_TOKEN_CONTRACT_ADDRESS =
-  "0x68ad9440759f0bd0367e407d53b5e5c32203590f12d54ed8968f48fee0cf636";
-
-const ORDER_VAULT_CONTRACT_ADDRESS =
-  "0x26dbfc5e776cd2ff1b9daa04bf5048dabae59feba13dc97a4508b3fdf862440";
-
-const ORACLE_CONTRACT_ADDRESS =
-  "0x1bf9db307ff826c261d2030198f692bd14d610e9aa7ec4dc538551f59b5a90";
 
 const dataStoreAbi = [
   {
@@ -182,6 +173,47 @@ export default function useUserPosition() {
     Array<Position & { market_price: bigint }> | undefined
   >(undefined);
 
+  function closeHalfPosition(collateral_token: bigint) {
+    if (account === undefined || address === undefined) {
+      return;
+    }
+
+    const orderHandlerContract = new Contract(
+      order_handler_abi.abi,
+      ORDER_HANDLER_CONTRACT_ADDRESS,
+      provider,
+    );
+
+    const createOrderParams = {
+      acceptable_price: uint256.bnToUint256(BigInt("7000")),
+      callback_contract: 0,
+      callback_gas_limit: uint256.bnToUint256(0),
+      decrease_position_swap_type: new CairoCustomEnum({ NoSwap: {} }),
+      execution_fee: uint256.bnToUint256(0),
+      initial_collateral_delta_amount: uint256.bnToUint256(
+        BigInt("1000000000000000000"),
+      ),
+      initial_collateral_token: collateral_token,
+      is_long: true,
+      market: MARKET_TOKEN_CONTRACT_ADDRESS,
+      min_output_amount: uint256.bnToUint256(BigInt("7000000000000000000000")),
+      order_type: new CairoCustomEnum({ MarketDecrease: {} }),
+      receiver: address,
+      referral_code: 0,
+      size_delta_usd: uint256.bnToUint256(BigInt("7000000000000000000000")),
+      swap_path: [MARKET_TOKEN_CONTRACT_ADDRESS],
+      trigger_price: uint256.bnToUint256(BigInt("7000")),
+      ui_fee_receiver: 0,
+    };
+
+    const createOrderCall = orderHandlerContract.populate("create_order", [
+      address,
+      createOrderParams,
+    ]);
+
+    void account.execute(createOrderCall);
+  }
+
   function closePosition(collateral_token: bigint) {
     if (account === undefined || address === undefined) {
       return;
@@ -189,7 +221,7 @@ export default function useUserPosition() {
 
     const orderHandlerContract = new Contract(
       order_handler_abi.abi,
-      ORDER_HANDLER_ADDRESS,
+      ORDER_HANDLER_CONTRACT_ADDRESS,
       provider,
     );
 
@@ -289,7 +321,7 @@ export default function useUserPosition() {
         const positionsFromContract = await Promise.all(positionsRequests);
         setPositions(
           positionsFromContract.flatMap((positionFromContract) => {
-            if (positionFromContract.collateral_amount === 0n) {
+            if (positionFromContract.collateral_amount === BigInt("0")) {
               return [];
             }
             return [
@@ -308,5 +340,5 @@ export default function useUserPosition() {
     [address, provider],
   );
 
-  return { closePosition, positions };
+  return { closeHalfPosition, closePosition, positions };
 }

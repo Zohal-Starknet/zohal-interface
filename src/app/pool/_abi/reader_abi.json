@@ -1,0 +1,1591 @@
+{
+  "abi": [
+    {
+      "name": "Reader",
+      "type": "impl",
+      "interface_name": "satoru::reader::reader::IReader"
+    },
+    {
+      "name": "satoru::data::data_store::IDataStoreDispatcher",
+      "type": "struct",
+      "members": [
+        {
+          "name": "contract_address",
+          "type": "core::starknet::contract_address::ContractAddress"
+        }
+      ]
+    },
+    {
+      "name": "satoru::market::market::Market",
+      "type": "struct",
+      "members": [
+        {
+          "name": "market_token",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "index_token",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "long_token",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "short_token",
+          "type": "core::starknet::contract_address::ContractAddress"
+        }
+      ]
+    },
+    {
+      "name": "core::array::Span::<core::starknet::contract_address::ContractAddress>",
+      "type": "struct",
+      "members": [
+        {
+          "name": "snapshot",
+          "type": "@core::array::Array::<core::starknet::contract_address::ContractAddress>"
+        }
+      ]
+    },
+    {
+      "name": "satoru::utils::span32::Span32::<core::starknet::contract_address::ContractAddress>",
+      "type": "struct",
+      "members": [
+        {
+          "name": "snapshot",
+          "type": "core::array::Span::<core::starknet::contract_address::ContractAddress>"
+        }
+      ]
+    },
+    {
+      "name": "core::integer::u256",
+      "type": "struct",
+      "members": [
+        {
+          "name": "low",
+          "type": "core::integer::u128"
+        },
+        {
+          "name": "high",
+          "type": "core::integer::u128"
+        }
+      ]
+    },
+    {
+      "name": "satoru::deposit::deposit::Deposit",
+      "type": "struct",
+      "members": [
+        {
+          "name": "key",
+          "type": "core::felt252"
+        },
+        {
+          "name": "account",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "receiver",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "callback_contract",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "ui_fee_receiver",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "market",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "initial_long_token",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "initial_short_token",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "long_token_swap_path",
+          "type": "satoru::utils::span32::Span32::<core::starknet::contract_address::ContractAddress>"
+        },
+        {
+          "name": "short_token_swap_path",
+          "type": "satoru::utils::span32::Span32::<core::starknet::contract_address::ContractAddress>"
+        },
+        {
+          "name": "initial_long_token_amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "initial_short_token_amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "min_market_tokens",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "updated_at_block",
+          "type": "core::integer::u64"
+        },
+        {
+          "name": "execution_fee",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "callback_gas_limit",
+          "type": "core::integer::u256"
+        }
+      ]
+    },
+    {
+      "name": "satoru::withdrawal::withdrawal::Withdrawal",
+      "type": "struct",
+      "members": [
+        {
+          "name": "key",
+          "type": "core::felt252"
+        },
+        {
+          "name": "account",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "receiver",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "callback_contract",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "ui_fee_receiver",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "market",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "long_token_swap_path",
+          "type": "satoru::utils::span32::Span32::<core::starknet::contract_address::ContractAddress>"
+        },
+        {
+          "name": "short_token_swap_path",
+          "type": "satoru::utils::span32::Span32::<core::starknet::contract_address::ContractAddress>"
+        },
+        {
+          "name": "market_token_amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "min_long_token_amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "min_short_token_amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "updated_at_block",
+          "type": "core::integer::u64"
+        },
+        {
+          "name": "execution_fee",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "callback_gas_limit",
+          "type": "core::integer::u256"
+        }
+      ]
+    },
+    {
+      "name": "core::bool",
+      "type": "enum",
+      "variants": [
+        {
+          "name": "False",
+          "type": "()"
+        },
+        {
+          "name": "True",
+          "type": "()"
+        }
+      ]
+    },
+    {
+      "name": "satoru::position::position::Position",
+      "type": "struct",
+      "members": [
+        {
+          "name": "key",
+          "type": "core::felt252"
+        },
+        {
+          "name": "account",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "market",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "collateral_token",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "size_in_usd",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "size_in_tokens",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "collateral_amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "borrowing_factor",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "funding_fee_amount_per_size",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "long_token_claimable_funding_amount_per_size",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "short_token_claimable_funding_amount_per_size",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "increased_at_block",
+          "type": "core::integer::u64"
+        },
+        {
+          "name": "decreased_at_block",
+          "type": "core::integer::u64"
+        },
+        {
+          "name": "is_long",
+          "type": "core::bool"
+        }
+      ]
+    },
+    {
+      "name": "satoru::order::order::OrderType",
+      "type": "enum",
+      "variants": [
+        {
+          "name": "MarketSwap",
+          "type": "()"
+        },
+        {
+          "name": "LimitSwap",
+          "type": "()"
+        },
+        {
+          "name": "MarketIncrease",
+          "type": "()"
+        },
+        {
+          "name": "LimitIncrease",
+          "type": "()"
+        },
+        {
+          "name": "MarketDecrease",
+          "type": "()"
+        },
+        {
+          "name": "LimitDecrease",
+          "type": "()"
+        },
+        {
+          "name": "StopLossDecrease",
+          "type": "()"
+        },
+        {
+          "name": "Liquidation",
+          "type": "()"
+        }
+      ]
+    },
+    {
+      "name": "satoru::order::order::DecreasePositionSwapType",
+      "type": "enum",
+      "variants": [
+        {
+          "name": "NoSwap",
+          "type": "()"
+        },
+        {
+          "name": "SwapPnlTokenToCollateralToken",
+          "type": "()"
+        },
+        {
+          "name": "SwapCollateralTokenToPnlToken",
+          "type": "()"
+        }
+      ]
+    },
+    {
+      "name": "satoru::order::order::Order",
+      "type": "struct",
+      "members": [
+        {
+          "name": "key",
+          "type": "core::felt252"
+        },
+        {
+          "name": "order_type",
+          "type": "satoru::order::order::OrderType"
+        },
+        {
+          "name": "decrease_position_swap_type",
+          "type": "satoru::order::order::DecreasePositionSwapType"
+        },
+        {
+          "name": "account",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "receiver",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "callback_contract",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "ui_fee_receiver",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "market",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "initial_collateral_token",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "swap_path",
+          "type": "satoru::utils::span32::Span32::<core::starknet::contract_address::ContractAddress>"
+        },
+        {
+          "name": "size_delta_usd",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "initial_collateral_delta_amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "trigger_price",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "acceptable_price",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "execution_fee",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "callback_gas_limit",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "min_output_amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "updated_at_block",
+          "type": "core::integer::u64"
+        },
+        {
+          "name": "is_long",
+          "type": "core::bool"
+        },
+        {
+          "name": "is_frozen",
+          "type": "core::bool"
+        }
+      ]
+    },
+    {
+      "name": "satoru::price::price::Price",
+      "type": "struct",
+      "members": [
+        {
+          "name": "min",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "max",
+          "type": "core::integer::u256"
+        }
+      ]
+    },
+    {
+      "name": "satoru::market::market_utils::MarketPrices",
+      "type": "struct",
+      "members": [
+        {
+          "name": "index_token_price",
+          "type": "satoru::price::price::Price"
+        },
+        {
+          "name": "long_token_price",
+          "type": "satoru::price::price::Price"
+        },
+        {
+          "name": "short_token_price",
+          "type": "satoru::price::price::Price"
+        }
+      ]
+    },
+    {
+      "name": "satoru::utils::i256::i256",
+      "type": "struct",
+      "members": [
+        {
+          "name": "mag",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "sign",
+          "type": "core::bool"
+        }
+      ]
+    },
+    {
+      "name": "satoru::mock::referral_storage::IReferralStorageDispatcher",
+      "type": "struct",
+      "members": [
+        {
+          "name": "contract_address",
+          "type": "core::starknet::contract_address::ContractAddress"
+        }
+      ]
+    },
+    {
+      "name": "satoru::pricing::position_pricing_utils::PositionReferralFees",
+      "type": "struct",
+      "members": [
+        {
+          "name": "referral_code",
+          "type": "core::felt252"
+        },
+        {
+          "name": "affiliate",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "trader",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "total_rebate_factor",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "trader_discount_factor",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "total_rebate_amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "trader_discount_amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "affiliate_reward_amount",
+          "type": "core::integer::u256"
+        }
+      ]
+    },
+    {
+      "name": "satoru::pricing::position_pricing_utils::PositionFundingFees",
+      "type": "struct",
+      "members": [
+        {
+          "name": "funding_fee_amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "claimable_long_token_amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "claimable_short_token_amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "latest_funding_fee_amount_per_size",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "latest_long_token_claimable_funding_amount_per_size",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "latest_short_token_claimable_funding_amount_per_size",
+          "type": "core::integer::u256"
+        }
+      ]
+    },
+    {
+      "name": "satoru::pricing::position_pricing_utils::PositionBorrowingFees",
+      "type": "struct",
+      "members": [
+        {
+          "name": "borrowing_fee_usd",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "borrowing_fee_amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "borrowing_fee_receiver_factor",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "borrowing_fee_amount_for_fee_receiver",
+          "type": "core::integer::u256"
+        }
+      ]
+    },
+    {
+      "name": "satoru::pricing::position_pricing_utils::PositionUiFees",
+      "type": "struct",
+      "members": [
+        {
+          "name": "ui_fee_receiver",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "ui_fee_receiver_factor",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "ui_fee_amount",
+          "type": "core::integer::u256"
+        }
+      ]
+    },
+    {
+      "name": "satoru::pricing::position_pricing_utils::PositionFees",
+      "type": "struct",
+      "members": [
+        {
+          "name": "referral",
+          "type": "satoru::pricing::position_pricing_utils::PositionReferralFees"
+        },
+        {
+          "name": "funding",
+          "type": "satoru::pricing::position_pricing_utils::PositionFundingFees"
+        },
+        {
+          "name": "borrowing",
+          "type": "satoru::pricing::position_pricing_utils::PositionBorrowingFees"
+        },
+        {
+          "name": "ui",
+          "type": "satoru::pricing::position_pricing_utils::PositionUiFees"
+        },
+        {
+          "name": "collateral_token_price",
+          "type": "satoru::price::price::Price"
+        },
+        {
+          "name": "position_fee_factor",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "protocol_fee_amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "position_fee_receiver_factor",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "fee_receiver_amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "fee_amount_for_pool",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "position_fee_amount_for_pool",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "position_fee_amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "total_cost_amount_excluding_funding",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "total_cost_amount",
+          "type": "core::integer::u256"
+        }
+      ]
+    },
+    {
+      "name": "satoru::reader::reader_pricing_utils::ExecutionPriceResult",
+      "type": "struct",
+      "members": [
+        {
+          "name": "price_impact_usd",
+          "type": "satoru::utils::i256::i256"
+        },
+        {
+          "name": "price_impact_diff_usd",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "execution_price",
+          "type": "core::integer::u256"
+        }
+      ]
+    },
+    {
+      "name": "satoru::reader::reader_utils::PositionInfo",
+      "type": "struct",
+      "members": [
+        {
+          "name": "position",
+          "type": "satoru::position::position::Position"
+        },
+        {
+          "name": "fees",
+          "type": "satoru::pricing::position_pricing_utils::PositionFees"
+        },
+        {
+          "name": "execution_price_result",
+          "type": "satoru::reader::reader_pricing_utils::ExecutionPriceResult"
+        },
+        {
+          "name": "base_pnl_usd",
+          "type": "satoru::utils::i256::i256"
+        },
+        {
+          "name": "uncapped_base_pnl_usd",
+          "type": "satoru::utils::i256::i256"
+        },
+        {
+          "name": "pnl_after_price_impact_usd",
+          "type": "satoru::utils::i256::i256"
+        }
+      ]
+    },
+    {
+      "name": "satoru::market::market_utils::CollateralType",
+      "type": "struct",
+      "members": [
+        {
+          "name": "long_token",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "short_token",
+          "type": "core::integer::u256"
+        }
+      ]
+    },
+    {
+      "name": "satoru::market::market_utils::PositionType",
+      "type": "struct",
+      "members": [
+        {
+          "name": "long",
+          "type": "satoru::market::market_utils::CollateralType"
+        },
+        {
+          "name": "short",
+          "type": "satoru::market::market_utils::CollateralType"
+        }
+      ]
+    },
+    {
+      "name": "satoru::reader::reader_utils::BaseFundingValues",
+      "type": "struct",
+      "members": [
+        {
+          "name": "funding_fee_amount_per_size",
+          "type": "satoru::market::market_utils::PositionType"
+        },
+        {
+          "name": "claimable_funding_amount_per_size",
+          "type": "satoru::market::market_utils::PositionType"
+        }
+      ]
+    },
+    {
+      "name": "satoru::market::market_utils::GetNextFundingAmountPerSizeResult",
+      "type": "struct",
+      "members": [
+        {
+          "name": "longs_pay_shorts",
+          "type": "core::bool"
+        },
+        {
+          "name": "funding_factor_per_second",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "funding_fee_amount_per_size_delta",
+          "type": "satoru::market::market_utils::PositionType"
+        },
+        {
+          "name": "claimable_funding_amount_per_size_delta",
+          "type": "satoru::market::market_utils::PositionType"
+        }
+      ]
+    },
+    {
+      "name": "satoru::reader::reader::VirtualInventory",
+      "type": "struct",
+      "members": [
+        {
+          "name": "virtual_pool_amount_for_long_token",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "virtual_pool_amount_for_short_token",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "virtual_inventory_for_positions",
+          "type": "satoru::utils::i256::i256"
+        }
+      ]
+    },
+    {
+      "name": "satoru::reader::reader::MarketInfo",
+      "type": "struct",
+      "members": [
+        {
+          "name": "market",
+          "type": "satoru::market::market::Market"
+        },
+        {
+          "name": "borrowing_factor_per_second_for_longs",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "borrowing_factor_per_second_for_shorts",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "base_funding",
+          "type": "satoru::reader::reader_utils::BaseFundingValues"
+        },
+        {
+          "name": "next_funding",
+          "type": "satoru::market::market_utils::GetNextFundingAmountPerSizeResult"
+        },
+        {
+          "name": "virtual_inventory",
+          "type": "satoru::reader::reader::VirtualInventory"
+        },
+        {
+          "name": "is_disabled",
+          "type": "core::bool"
+        }
+      ]
+    },
+    {
+      "name": "satoru::market::market_pool_value_info::MarketPoolValueInfo",
+      "type": "struct",
+      "members": [
+        {
+          "name": "pool_value",
+          "type": "satoru::utils::i256::i256"
+        },
+        {
+          "name": "long_pnl",
+          "type": "satoru::utils::i256::i256"
+        },
+        {
+          "name": "short_pnl",
+          "type": "satoru::utils::i256::i256"
+        },
+        {
+          "name": "net_pnl",
+          "type": "satoru::utils::i256::i256"
+        },
+        {
+          "name": "long_token_amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "short_token_amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "long_token_usd",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "short_token_usd",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "total_borrowing_fees",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "borrowing_fee_pool_factor",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "impact_pool_amount",
+          "type": "core::integer::u256"
+        }
+      ]
+    },
+    {
+      "name": "satoru::pricing::swap_pricing_utils::SwapFees",
+      "type": "struct",
+      "members": [
+        {
+          "name": "fee_receiver_amount",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "fee_amount_for_pool",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "amount_after_fees",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "ui_fee_receiver",
+          "type": "core::starknet::contract_address::ContractAddress"
+        },
+        {
+          "name": "ui_fee_receiver_factor",
+          "type": "core::integer::u256"
+        },
+        {
+          "name": "ui_fee_amount",
+          "type": "core::integer::u256"
+        }
+      ]
+    },
+    {
+      "name": "satoru::reader::reader::IReader",
+      "type": "interface",
+      "items": [
+        {
+          "name": "get_market",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "key",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "satoru::market::market::Market"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_market_by_salt",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "salt",
+              "type": "core::felt252"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "satoru::market::market::Market"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_deposit",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "key",
+              "type": "core::felt252"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "satoru::deposit::deposit::Deposit"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_withdrawal",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "key",
+              "type": "core::felt252"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "satoru::withdrawal::withdrawal::Withdrawal"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_position",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "key",
+              "type": "core::felt252"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "satoru::position::position::Position"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_order",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "key",
+              "type": "core::felt252"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "satoru::order::order::Order"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_position_pnl_usd",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "market",
+              "type": "satoru::market::market::Market"
+            },
+            {
+              "name": "prices",
+              "type": "satoru::market::market_utils::MarketPrices"
+            },
+            {
+              "name": "position_key",
+              "type": "core::felt252"
+            },
+            {
+              "name": "size_delta_usd",
+              "type": "core::integer::u256"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "(satoru::utils::i256::i256, satoru::utils::i256::i256, core::integer::u256)"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_account_positions",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "account",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "start",
+              "type": "core::integer::u32"
+            },
+            {
+              "name": "end",
+              "type": "core::integer::u32"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::array::Array::<satoru::position::position::Position>"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_account_position_info_list",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "referral_storage",
+              "type": "satoru::mock::referral_storage::IReferralStorageDispatcher"
+            },
+            {
+              "name": "position_keys",
+              "type": "core::array::Array::<core::felt252>"
+            },
+            {
+              "name": "prices",
+              "type": "core::array::Array::<satoru::market::market_utils::MarketPrices>"
+            },
+            {
+              "name": "ui_fee_receiver",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::array::Array::<satoru::reader::reader_utils::PositionInfo>"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_position_info",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "referral_storage",
+              "type": "satoru::mock::referral_storage::IReferralStorageDispatcher"
+            },
+            {
+              "name": "position_key",
+              "type": "core::felt252"
+            },
+            {
+              "name": "prices",
+              "type": "satoru::market::market_utils::MarketPrices"
+            },
+            {
+              "name": "size_delta_usd",
+              "type": "core::integer::u256"
+            },
+            {
+              "name": "ui_fee_receiver",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "use_position_size_as_size_delta_usd",
+              "type": "core::bool"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "satoru::reader::reader_utils::PositionInfo"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_account_orders",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "account",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "start",
+              "type": "core::integer::u32"
+            },
+            {
+              "name": "end",
+              "type": "core::integer::u32"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::array::Array::<satoru::order::order::Order>"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_markets",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "start",
+              "type": "core::integer::u32"
+            },
+            {
+              "name": "end",
+              "type": "core::integer::u32"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::array::Array::<satoru::market::market::Market>"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_market_info_list",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "market_price_list",
+              "type": "core::array::Array::<satoru::market::market_utils::MarketPrices>"
+            },
+            {
+              "name": "start",
+              "type": "core::integer::u32"
+            },
+            {
+              "name": "end",
+              "type": "core::integer::u32"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "core::array::Array::<satoru::reader::reader::MarketInfo>"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_market_info",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "prices",
+              "type": "satoru::market::market_utils::MarketPrices"
+            },
+            {
+              "name": "market_key",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "satoru::reader::reader::MarketInfo"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_market_token_price",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "market",
+              "type": "satoru::market::market::Market"
+            },
+            {
+              "name": "index_token_price",
+              "type": "satoru::price::price::Price"
+            },
+            {
+              "name": "long_token_price",
+              "type": "satoru::price::price::Price"
+            },
+            {
+              "name": "short_token_price",
+              "type": "satoru::price::price::Price"
+            },
+            {
+              "name": "pnl_factor_type",
+              "type": "core::felt252"
+            },
+            {
+              "name": "maximize",
+              "type": "core::bool"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "(satoru::utils::i256::i256, satoru::market::market_pool_value_info::MarketPoolValueInfo)"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_net_pnl",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "market",
+              "type": "satoru::market::market::Market"
+            },
+            {
+              "name": "index_token_price",
+              "type": "satoru::price::price::Price"
+            },
+            {
+              "name": "maximize",
+              "type": "core::bool"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "satoru::utils::i256::i256"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_pnl",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "market",
+              "type": "satoru::market::market::Market"
+            },
+            {
+              "name": "index_token_price",
+              "type": "satoru::price::price::Price"
+            },
+            {
+              "name": "is_long",
+              "type": "core::bool"
+            },
+            {
+              "name": "maximize",
+              "type": "core::bool"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "satoru::utils::i256::i256"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_open_interest_with_pnl",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "market",
+              "type": "satoru::market::market::Market"
+            },
+            {
+              "name": "index_token_price",
+              "type": "satoru::price::price::Price"
+            },
+            {
+              "name": "is_long",
+              "type": "core::bool"
+            },
+            {
+              "name": "maximize",
+              "type": "core::bool"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "satoru::utils::i256::i256"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_pnl_to_pool_factor",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "market_address",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "prices",
+              "type": "satoru::market::market_utils::MarketPrices"
+            },
+            {
+              "name": "is_long",
+              "type": "core::bool"
+            },
+            {
+              "name": "maximize",
+              "type": "core::bool"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "satoru::utils::i256::i256"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_swap_amount_out",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "market",
+              "type": "satoru::market::market::Market"
+            },
+            {
+              "name": "prices",
+              "type": "satoru::market::market_utils::MarketPrices"
+            },
+            {
+              "name": "token_in",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "amount_in",
+              "type": "core::integer::u256"
+            },
+            {
+              "name": "ui_fee_receiver",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "(core::integer::u256, satoru::utils::i256::i256, satoru::pricing::swap_pricing_utils::SwapFees)"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_virtual_inventory",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "market",
+              "type": "satoru::market::market::Market"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "satoru::reader::reader::VirtualInventory"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_execution_price",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "market_key",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "index_token_price",
+              "type": "satoru::price::price::Price"
+            },
+            {
+              "name": "position_size_in_usd",
+              "type": "core::integer::u256"
+            },
+            {
+              "name": "position_size_in_token",
+              "type": "core::integer::u256"
+            },
+            {
+              "name": "size_delta_usd",
+              "type": "satoru::utils::i256::i256"
+            },
+            {
+              "name": "is_long",
+              "type": "core::bool"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "satoru::reader::reader_pricing_utils::ExecutionPriceResult"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_swap_price_impact",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "market_key",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "token_in",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "token_out",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "amount_in",
+              "type": "core::integer::u256"
+            },
+            {
+              "name": "token_in_price",
+              "type": "satoru::price::price::Price"
+            },
+            {
+              "name": "token_out_price",
+              "type": "satoru::price::price::Price"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "(satoru::utils::i256::i256, satoru::utils::i256::i256)"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "name": "get_adl_state",
+          "type": "function",
+          "inputs": [
+            {
+              "name": "data_store",
+              "type": "satoru::data::data_store::IDataStoreDispatcher"
+            },
+            {
+              "name": "market",
+              "type": "core::starknet::contract_address::ContractAddress"
+            },
+            {
+              "name": "is_long",
+              "type": "core::bool"
+            },
+            {
+              "name": "prices",
+              "type": "satoru::market::market_utils::MarketPrices"
+            }
+          ],
+          "outputs": [
+            {
+              "type": "(core::integer::u64, core::bool, satoru::utils::i256::i256, core::integer::u256)"
+            }
+          ],
+          "state_mutability": "view"
+        }
+      ]
+    },
+    {
+      "kind": "enum",
+      "name": "satoru::reader::reader::Reader::Event",
+      "type": "event",
+      "variants": []
+    }
+  ]
+}

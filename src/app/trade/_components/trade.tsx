@@ -1,6 +1,7 @@
 "use client";
 
 import { type PropsWithClassName } from "@zohal/app/_lib/utils";
+import { useState } from "react";
 
 import Button from "../../_ui/button";
 import Fieldset from "../../_ui/fieldset";
@@ -12,6 +13,9 @@ import TokenSwapButton from "./token-swap-button";
 import TradeLeverageInput from "./trade-leverage-input";
 
 export default function Trade({ className }: PropsWithClassName) {
+  const [payValue, setPayValue] = useState("");
+  const [longShortValue, setLongShortValue] = useState("");
+
   const { long } = useMarketLong();
 
   return (
@@ -20,11 +24,9 @@ export default function Trade({ className }: PropsWithClassName) {
         field={
           <Input
             className="bg-transparent text-lg"
-            onChange={() => {
-              return;
-            }}
+            onChange={setPayValue}
             placeholder="0.00"
-            value=""
+            value={payValue}
           />
         }
         label="Pay"
@@ -36,11 +38,9 @@ export default function Trade({ className }: PropsWithClassName) {
         field={
           <Input
             className="bg-transparent text-lg"
-            onChange={() => {
-              return;
-            }}
+            onChange={setLongShortValue}
             placeholder="0.00"
-            value=""
+            value={longShortValue}
           />
         }
         label="Long/Short"

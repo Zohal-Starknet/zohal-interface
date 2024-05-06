@@ -1,23 +1,15 @@
 import { useAccount, useProvider } from "@starknet-react/core";
+import {
+  DEPOSIT_HANDLER_CONTRACT_ADDRESS,
+  DEPOSIT_VAULT_CONTRACT_ADDRESS,
+  ETH_CONTRACT_ADDRESS,
+  MARKET_TOKEN_CONTRACT_ADDRESS,
+  USDC_CONTRACT_ADDRESS,
+} from "@zohal/app/_lib/addresses";
 import { Contract, uint256 } from "starknet";
 
 import deposit_handler_abi from "../../../trade/abi/deposit_handler.json";
 import erc_20_abi from "../../../trade/abi/erc_20.json";
-
-const DEPOSIT_HANDLER_CONTRACT_ADDRESS =
-  "0xca895e639e3e3acb258cfd858942278a6ea2b45ef43e720bcc4265fe792dee";
-
-const ETH_CONTRACT_ADDRESS =
-  "0x3fa46510b749925fb3fa02e98195909683eaee8d4c982cc647cd98a7f160905";
-
-const USDC_CONTRACT_ADDRESS =
-  "0x636d15cd4dfe130c744282f86496077e089cb9dc96ccc37bf0d85ea358a5760";
-
-const MARKET_TOKEN_CONTRACT_ADDRESS =
-  "0x68ad9440759f0bd0367e407d53b5e5c32203590f12d54ed8968f48fee0cf636";
-
-const DEPOSIT_VAULT_CONTRACT_ADDRESS =
-  "0x1f5f07df40c02afd897f196028fd2eaf4de35a7fee60b25d1decce9910eb962";
 
 export default function useDeposit() {
   const { account, address } = useAccount();

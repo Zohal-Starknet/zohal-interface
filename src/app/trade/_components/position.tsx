@@ -10,7 +10,7 @@ import useUserPosition from "../_hooks/use-user-position";
 /* eslint-disable @next/next/no-img-element */
 export default function Position({ className }: PropsWithClassName) {
   // TODO @YohanTz: Add ? icon to explain each of the table header
-  const { closePosition, positions } = useUserPosition();
+  const { closeHalfPosition, closePosition, positions } = useUserPosition();
 
   if (positions === undefined) {
     return (
@@ -100,6 +100,12 @@ export default function Position({ className }: PropsWithClassName) {
                 <td className="text-right">
                   <button
                     className="rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2"
+                    onClick={() => closeHalfPosition(position.collateral_token)}
+                  >
+                    Decrease 50%
+                  </button>
+                  <button
+                    className="ml-2 rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2"
                     onClick={() => closePosition(position.collateral_token)}
                   >
                     Close
@@ -115,42 +121,3 @@ export default function Position({ className }: PropsWithClassName) {
 }
 
 const tableHeaderCommonStyles = "pb-4 font-normal";
-
-const tableData = [
-  {
-    collateral: { dollar: "$48.35", token: "48 USDC" },
-    entryPrice: "$1581.35",
-    leverage: "20.00×",
-    liquidationPrice: "$1581.35",
-    markPrice: "$1581.35",
-    netValue: { price: "$2.38", purcentage: "(+$0.03 / +1.26%)" },
-    position: "ETH-USD",
-    positionType: "short",
-    size: "$48.35",
-    token: Tokens.ETH,
-  },
-  {
-    collateral: { dollar: "$18.35", token: "18 USDC" },
-    entryPrice: "$2581.35",
-    leverage: "10.00×",
-    liquidationPrice: "$2581.35",
-    markPrice: "$2581.35",
-    netValue: { price: "$2.38", purcentage: "(-$0.03 / -1.26%)" },
-    position: "BTC-USD",
-    positionType: "long",
-    size: "$18.35",
-    token: Tokens.WBTC,
-  },
-  {
-    collateral: { dollar: "$48.35", token: "48 USDC" },
-    entryPrice: "$1581.35",
-    leverage: "2.00×",
-    liquidationPrice: "$1581.35",
-    markPrice: "$1581.35",
-    netValue: { price: "$2.38", purcentage: "(+$10.03 / -5.26%)" },
-    position: "ETH-USD",
-    positionType: "short",
-    size: "$48.35",
-    token: Tokens.ETH,
-  },
-];

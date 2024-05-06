@@ -1,20 +1,14 @@
 import { useAccount, useProvider } from "@starknet-react/core";
+import {
+  ETH_CONTRACT_ADDRESS,
+  MARKET_TOKEN_CONTRACT_ADDRESS,
+  ORDER_HANDLER_CONTRACT_ADDRESS,
+  ORDER_VAULT_CONTRACT_ADDRESS,
+} from "@zohal/app/_lib/addresses";
 import { CairoCustomEnum, Contract, uint256 } from "starknet";
 
 import erc_20_abi from "../abi/erc_20.json";
 import order_handler_abi from "../abi/order_handler.json";
-
-const ORDER_HANDLER_ADDRESS =
-  "0x31b7c130baf07042222d74d143d4ccc89799ab6ab09f0a10a19cf12900e4caf";
-
-const ETH_CONTRACT_ADDRESS =
-  "0x3fa46510b749925fb3fa02e98195909683eaee8d4c982cc647cd98a7f160905";
-
-const MARKET_TOKEN_CONTRACT_ADDRESS =
-  "0x68ad9440759f0bd0367e407d53b5e5c32203590f12d54ed8968f48fee0cf636";
-
-const ORDER_VAULT_CONTRACT_ADDRESS =
-  "0x26dbfc5e776cd2ff1b9daa04bf5048dabae59feba13dc97a4508b3fdf862440";
 
 export default function useMarketLong() {
   const { account, address } = useAccount();
@@ -37,7 +31,7 @@ export default function useMarketLong() {
 
     const orderHandlerContract = new Contract(
       order_handler_abi.abi,
-      ORDER_HANDLER_ADDRESS,
+      ORDER_HANDLER_CONTRACT_ADDRESS,
       provider,
     );
 

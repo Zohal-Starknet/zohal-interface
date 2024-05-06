@@ -1,20 +1,12 @@
 import { useAccount, useProvider } from "@starknet-react/core";
+import {
+  MARKET_TOKEN_CONTRACT_ADDRESS,
+  WITHDRAWAL_HANDLER_CONTRACT_ADDRESS,
+  WITHDRAWAL_VAULT_CONTRACT_ADDRESS,
+} from "@zohal/app/_lib/addresses";
 import { Contract, uint256 } from "starknet";
 
 import erc_20_abi from "../../../trade/abi/erc_20.json";
-
-const WITHDRAWAL_HANDLER_CONTRACT_ADDRESS = "";
-
-const ETH_CONTRACT_ADDRESS =
-  "0x3fa46510b749925fb3fa02e98195909683eaee8d4c982cc647cd98a7f160905";
-
-const USDC_CONTRACT_ADDRESS =
-  "0x636d15cd4dfe130c744282f86496077e089cb9dc96ccc37bf0d85ea358a5760";
-
-const MARKET_TOKEN_CONTRACT_ADDRESS =
-  "0x68ad9440759f0bd0367e407d53b5e5c32203590f12d54ed8968f48fee0cf636";
-
-const WITHDRAWAL_VAULT_CONTRACT_ADDRESS = "";
 
 export default function useWithdraw() {
   const { account, address } = useAccount();

@@ -30,6 +30,7 @@ export default function SwapInput(props: SwapInputProps) {
     onTokenSymbolChange,
     tokenSymbol,
   } = props;
+  console.log(formattedTokenBalance);
   return (
     <div className="rounded-md border border-[#363636] bg-[#25272E] p-3">
       <div className="flex items-center justify-between">
@@ -38,7 +39,7 @@ export default function SwapInput(props: SwapInputProps) {
         </label>
         {formattedTokenBalance !== undefined && (
           <span className="text-xs text-[#BCBCBD]">
-            Balance: {parseFloat(formattedTokenBalance).toFixed(3)}
+            Balance: {formattedTokenBalance}
           </span>
         )}
       </div>
