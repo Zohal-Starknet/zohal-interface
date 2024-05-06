@@ -19,7 +19,7 @@ export default function NavigationItem(props: NavigationItemProps) {
   const { isExternal, label, pathname } = props;
 
   const currentPathname = usePathname();
-  const isActiveLink = currentPathname === pathname;
+  const isActiveLink = currentPathname.includes(pathname);
 
   return (
     <li>

@@ -3,7 +3,7 @@
 import { useAccount, useBlock, useNetwork } from "@starknet-react/core";
 import { BlockTag } from "starknet";
 
-const testnetBlockUrl = "https://goerli.voyager.online/block";
+const testnetBlockUrl = "https://sepolia.voyager.online/block";
 
 export default function FooterBlockNumber() {
   const { chainId: walletChainId } = useAccount();
@@ -17,7 +17,7 @@ export default function FooterBlockNumber() {
   }
 
   /**
-   * TODO @YohanTz: Always take current block from Goerli, even if no wallet connected
+   * TODO @YohanTz: Always take current block from Sepolia, even if no wallet connected
    * By configuring the StarknetConfig provider ?
    */
 

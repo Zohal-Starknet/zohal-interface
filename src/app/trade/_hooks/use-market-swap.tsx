@@ -1,6 +1,6 @@
 import { useContractWrite, useWaitForTransaction } from "@starknet-react/core";
 import { robotoMono } from "@zohal/app/_helpers/fonts";
-import { TOKENS, type TokenSymbol } from "@zohal/app/_helpers/tokens";
+import { type TokenSymbol, Tokens } from "@zohal/app/_helpers/tokens";
 import clsx from "clsx";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -24,7 +24,7 @@ export default function useMarketSwap(props: UseMarketSwapProps) {
   const [lastTransactionHash, setLastTransactionHash] = useState<
     string | undefined
   >(undefined);
-  const selectedToken = TOKENS[payTokenSymbol];
+  const selectedToken = Tokens[payTokenSymbol];
   // TODO @YohanTz: Export this transaction logic to its own hook (status, toast etc)
   const [status, setStatus] = useState<TransactionStatus>("idle");
 

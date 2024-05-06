@@ -1,6 +1,6 @@
 "use client";
 import { useAccount, useBalance } from "@starknet-react/core";
-import { TOKENS } from "@zohal/app/_helpers/tokens";
+import { Tokens } from "@zohal/app/_helpers/tokens";
 import { type PropsWithClassName } from "@zohal/app/_lib/utils";
 
 import Form from "../../_ui/form";
@@ -30,11 +30,11 @@ export default function Swap({ className }: PropsWithClassName) {
 
   const { data: payTokenBalance } = useBalance({
     address,
-    token: TOKENS[payTokenSymbol].address,
+    token: Tokens[payTokenSymbol].address,
   });
   const { data: receiveTokenBalance } = useBalance({
     address,
-    token: TOKENS[receiveTokenSymbol].address,
+    token: Tokens[receiveTokenSymbol].address,
   });
 
   const noEnteredAmount =

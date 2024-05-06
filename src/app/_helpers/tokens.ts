@@ -3,13 +3,20 @@ type TokenList = Record<
   { address: `0x${string}`; decimals: number; icon: string; name: string }
 >;
 
-export const TOKENS: TokenList = {
+export const Tokens: TokenList = {
   ETH: {
     address:
       "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
     decimals: 18,
     icon: "/tokens/ethereum.png",
     name: "Ethereum",
+  },
+  USDC: {
+    address:
+      "0x27a66eeb60add123efc97fc1a582a5796e0c9df95e4ddffa93988cfabf2af78",
+    decimals: 18,
+    icon: "/tokens/usdc.png",
+    name: "USD",
   },
   WBTC: {
     address:
@@ -18,6 +25,6 @@ export const TOKENS: TokenList = {
     icon: "/tokens/wbtc.png",
     name: "Wrapped BTC",
   },
-};
+} as const;
 
-export type TokenSymbol = keyof typeof TOKENS;
+export type TokenSymbol = keyof typeof Tokens;
