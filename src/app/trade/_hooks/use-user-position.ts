@@ -194,7 +194,7 @@ export default function useUserPosition() {
     );
 
     const createOrderParams = {
-      acceptable_price: uint256.bnToUint256(BigInt("5000")),
+      acceptable_price: uint256.bnToUint256(BigInt("7000")),
       callback_contract: 0,
       callback_gas_limit: uint256.bnToUint256(0),
       decrease_position_swap_type: new CairoCustomEnum({ NoSwap: {} }),
@@ -205,13 +205,13 @@ export default function useUserPosition() {
       initial_collateral_token: collateral_token,
       is_long: true,
       market: MARKET_TOKEN_CONTRACT_ADDRESS,
-      min_output_amount: uint256.bnToUint256(BigInt("5000000000000000000000")),
+      min_output_amount: uint256.bnToUint256(BigInt("7000000000000000000000")),
       order_type: new CairoCustomEnum({ MarketDecrease: {} }),
       receiver: address,
       referral_code: 0,
-      size_delta_usd: uint256.bnToUint256(BigInt("5000000000000000000000")),
+      size_delta_usd: uint256.bnToUint256(BigInt("7000000000000000000000")),
       swap_path: [MARKET_TOKEN_CONTRACT_ADDRESS],
-      trigger_price: uint256.bnToUint256(BigInt("5000")),
+      trigger_price: uint256.bnToUint256(BigInt("7000")),
       ui_fee_receiver: 0,
     };
 
