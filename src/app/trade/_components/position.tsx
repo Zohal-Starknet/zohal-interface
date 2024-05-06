@@ -3,14 +3,14 @@
 import { Tokens } from "@zohal/app/_helpers/tokens";
 import { type PropsWithClassName } from "@zohal/app/_lib/utils";
 import clsx from "clsx";
-import { validateAndParseAddress } from "starknet";
 
 import useUserPosition from "../_hooks/use-user-position";
+import ClosePositionDialog from "./close-position-dialog";
 
 /* eslint-disable @next/next/no-img-element */
 export default function Position({ className }: PropsWithClassName) {
   // TODO @YohanTz: Add ? icon to explain each of the table header
-  const { closeHalfPosition, closePosition, positions } = useUserPosition();
+  const { closePosition, positions } = useUserPosition();
 
   if (positions === undefined) {
     return (
@@ -98,18 +98,10 @@ export default function Position({ className }: PropsWithClassName) {
                 <td>${position.market_price.toString()}</td>
                 {/* <td>{data.liquidationPrice}</td> */}
                 <td className="text-right">
-                  <button
-                    className="rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2"
-                    onClick={() => closeHalfPosition(position.collateral_token)}
-                  >
-                    Decrease 50%
-                  </button>
-                  <button
-                    className="ml-2 rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2"
-                    onClick={() => closePosition(position.collateral_token)}
-                  >
-                    Close
-                  </button>
+                  <ClosePositionDialog
+                    collateral_amount={position.collateral_amount}
+                    collateral_token={position.collateral_token}
+                  />
                 </td>
               </tr>
             );

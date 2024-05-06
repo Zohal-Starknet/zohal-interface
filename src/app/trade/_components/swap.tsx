@@ -50,10 +50,9 @@ export default function Swap({ className }: PropsWithClassName) {
     payTokenValue.length === 0 && receiveTokenValue.length === 0;
 
   // TODO @YohanTz
-  // const insufficientBalance = payTokenBalance
-  //   ? parseFloat(payTokenBalance.formatted) < parseFloat(payTokenValue)
-  //   : true;
-  const insufficientBalance = false;
+  const insufficientBalance = payTokenBalance
+    ? parseFloat(payTokenBalance) < parseFloat(payTokenValue)
+    : true;
 
   return (
     <Form className={className}>
