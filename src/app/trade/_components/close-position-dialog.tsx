@@ -65,12 +65,21 @@ export default function ClosePositionDialog({
           placeholder="Collateral amount to remove"
           value={inputValue}
         />
-        <button
-          className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
-          onClick={() => closePosition(collateral_token)}
-        >
-          {isCloseAction ? "Close position" : "Reduce collateral"}
-        </button>
+        {isCloseAction ? (
+          <button
+            className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
+            onClick={() => closePosition(collateral_token)}
+          >
+            Close Position
+          </button>
+        ) : (
+          <button
+            className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
+            onClick={() => closePosition(collateral_token)}
+          >
+            Reduce position
+          </button>
+        )}
       </DialogContent>
     </Dialog>
   );

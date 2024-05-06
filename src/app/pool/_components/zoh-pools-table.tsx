@@ -36,7 +36,6 @@ function ZohPoolsTableHeader() {
 
 function ZohPoolsTableBody() {
   const { ethPrice, poolData } = usePoolData();
-  console.log(poolData);
 
   const { marketTokenBalance } = useMarketTokenBalance({
     marketTokenAddress: MARKET_TOKEN_CONTRACT_ADDRESS,
