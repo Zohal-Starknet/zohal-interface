@@ -35,7 +35,7 @@ export default function Trade({ className }: PropsWithClassName) {
               value={payValue}
             />
             <div className="relative">
-              <span className="absolute -top-5 right-0 mr-3 w-full whitespace-nowrap text-xs text-[#BCBCBD]">
+              <span className="absolute -top-5 right-0 w-full whitespace-nowrap text-xs text-[#BCBCBD]">
                 Balance: {ethTokenBalance}
               </span>
               <ChooseTokenButton
@@ -60,7 +60,7 @@ export default function Trade({ className }: PropsWithClassName) {
               value={payValue}
             />
             <div className="relative">
-              <span className="absolute -top-5 right-0 mr-3 w-full whitespace-nowrap text-xs text-[#BCBCBD]">
+              <span className="absolute -top-5 right-0 w-full whitespace-nowrap text-xs text-[#BCBCBD]">
                 Balance: {ethTokenBalance}
               </span>
               <ChooseTokenButton

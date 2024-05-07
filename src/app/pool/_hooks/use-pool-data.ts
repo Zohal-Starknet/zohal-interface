@@ -119,7 +119,7 @@ export default function usePoolData() {
         long_token_usd: (poolData.long_token_usd / 10n ** 18n).toString(),
         pool_value: (poolData.pool_value.mag / 10n ** 18n).toString(),
         short_token_amount: (
-          poolData.long_token_amount /
+          poolData.short_token_amount /
           10n ** 18n
         ).toString(),
         short_token_usd: (poolData.short_token_usd / 10n ** 18n).toString(),

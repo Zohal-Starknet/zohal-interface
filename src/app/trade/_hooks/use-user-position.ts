@@ -1,13 +1,18 @@
 import { useAccount, useProvider } from "@starknet-react/core";
 import {
+  DATA_STORE_CONTRACT_ADDRESS,
   ETH_CONTRACT_ADDRESS,
   MARKET_TOKEN_CONTRACT_ADDRESS,
   ORACLE_CONTRACT_ADDRESS,
   ORDER_HANDLER_CONTRACT_ADDRESS,
+  READER_CONTRACT_ADDRESS,
+  REFERRAL_STORAGE_CONTRACT_ADDRESS,
+  USDC_CONTRACT_ADDRESS,
 } from "@zohal/app/_lib/addresses";
 import { useEffect, useState } from "react";
 import { CairoCustomEnum, Contract, uint256 } from "starknet";
 
+import reader_abi from "../../pool/_abi/reader_abi.json";
 import order_handler_abi from "../abi/order_handler.json";
 
 export type Position = {
@@ -247,14 +252,14 @@ export default function useUserPosition() {
         setPositions(undefined);
         const dataStoreContract = new Contract(
           dataStoreAbi,
-          "0xd0d138f2bf91e7a25b4d3d7b819e3d1a5de882047eaf314d35279db1fb6b50",
+          DATA_STORE_CONTRACT_ADDRESS,
           provider,
         );
         const positionKeys =
           (await dataStoreContract.functions.get_account_position_keys(
             address,
             0,
-            1,
+            10,
           )) as Array<bigint>;
 
         const oracleContract = new Contract(
@@ -266,6 +271,40 @@ export default function useUserPosition() {
           (await oracleContract.functions.get_primary_price(
             ETH_CONTRACT_ADDRESS,
           )) as { max: bigint; min: bigint };
+
+        const oracleUsdcPrice =
+          (await oracleContract.functions.get_primary_price(
+            USDC_CONTRACT_ADDRESS,
+          )) as { max: bigint; min: bigint };
+
+        const readerContract = new Contract(
+          reader_abi.abi,
+          READER_CONTRACT_ADDRESS,
+          provider,
+        );
+
+        const positionsInfos: Array<
+          Promise<{ base_pnl_usd: { mag: bigint; sign: bigint } }>
+        > = [];
+        positionKeys.map((positionKey) => {
+          positionsInfos.push(
+            readerContract.functions.get_position_info(
+              {
+                contract_address: DATA_STORE_CONTRACT_ADDRESS,
+              },
+              { contract_address: REFERRAL_STORAGE_CONTRACT_ADDRESS },
+              positionKey,
+              {
+                index_token_price: oracleEthPrice,
+                long_tokenPrice: oracleEthPrice,
+                short_token_price: oracleUsdcPrice,
+              },
+              0,
+              true,
+            ) as Promise<{ base_pnl_usd: { mag: bigint; sign: bigint } }>,
+          );
+        });
+        const positionsInfoFromContract = await Promise.all(positionsInfos);
 
         const positionsRequests: Array<Promise<Position>> = [];
 
@@ -279,13 +318,22 @@ export default function useUserPosition() {
 
         const positionsFromContract = await Promise.all(positionsRequests);
         setPositions(
-          positionsFromContract.flatMap((positionFromContract) => {
+          positionsFromContract.flatMap((positionFromContract, index) => {
             if (positionFromContract.collateral_amount === BigInt("0")) {
               return [];
             }
+            const positionBasePnl =
+              positionsInfoFromContract[index].base_pnl_usd;
+            const multiplicator =
+              positionBasePnl.sign === BigInt("0") ? 1n : -1n;
+
             return [
               {
                 ...positionFromContract,
+                base_pnl_usd: (
+                  (multiplicator * positionBasePnl.mag) /
+                  10n ** 18n
+                ).toString(),
                 market_price: oracleEthPrice.min,
               },
             ];
