@@ -149,7 +149,15 @@ const data = [
   { close: 56.38, high: 56.7, low: 56.25, open: 56.66, time: "2024-05-08" },
   { close: 56.48, high: 56.56, low: 55.93, open: 56.12, time: "2024-05-09" },
   { close: 56.91, high: 57.04, low: 56.26, open: 56.49, time: "2024-05-10" },
-];
+].map((fakeData) => {
+  return {
+    ...fakeData,
+    close: fakeData.close + 3000,
+    high: fakeData.high + 3000,
+    low: fakeData.low + 3000,
+    open: fakeData.open + 3000,
+  };
+});
 
 const backgroundColor = "transparent";
 const upColor = "#40B68B";
