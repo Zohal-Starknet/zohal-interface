@@ -19,7 +19,7 @@ const leverageInputs = [
 export default function TradeLeverageInput(props: TradeLeverageInputProps) {
   const { className } = props;
 
-  const [leverage, setLeverage] = useState("2");
+  const [leverage, setLeverage] = useState("1");
 
   function onLeverageChange(leverageInput: string) {
     // TODO @YohanTz: Pretty sure that there is a mask library to handle × at the end of the input

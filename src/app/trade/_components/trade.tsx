@@ -1,5 +1,7 @@
 "use client";
 
+import { Tokens } from "@zohal/app/_helpers/tokens";
+import useMarketTokenBalance from "@zohal/app/_hooks/use-market-token-balance";
 import { type PropsWithClassName } from "@zohal/app/_lib/utils";
 import { useState } from "react";
 
@@ -8,13 +10,16 @@ import Fieldset from "../../_ui/fieldset";
 import Form from "../../_ui/form";
 import Input from "../../_ui/input";
 import useMarketLong from "../_hooks/use-market-long";
+import ChooseTokenButton from "./choose-token-button";
 import PriceInfo from "./price-info";
 import TokenSwapButton from "./token-swap-button";
 import TradeLeverageInput from "./trade-leverage-input";
 
 export default function Trade({ className }: PropsWithClassName) {
   const [payValue, setPayValue] = useState("");
-  const [longShortValue, setLongShortValue] = useState("");
+  const { marketTokenBalance: ethTokenBalance } = useMarketTokenBalance({
+    marketTokenAddress: Tokens.ETH.address,
+  });
 
   const { long } = useMarketLong();
 
@@ -22,12 +27,23 @@ export default function Trade({ className }: PropsWithClassName) {
     <Form className={className}>
       <Fieldset
         field={
-          <Input
-            className="bg-transparent text-lg"
-            onChange={setPayValue}
-            placeholder="0.00"
-            value={payValue}
-          />
+          <div className="flex items-center justify-between">
+            <Input
+              className="bg-transparent text-lg"
+              onChange={setPayValue}
+              placeholder="0.00"
+              value={payValue}
+            />
+            <div className="relative">
+              <span className="absolute -top-5 right-0 mr-3 w-full whitespace-nowrap text-xs text-[#BCBCBD]">
+                Balance: {ethTokenBalance}
+              </span>
+              <ChooseTokenButton
+                onTokenSymbolChange={() => {}}
+                tokenSymbol="ETH"
+              />
+            </div>
+          </div>
         }
         label="Pay"
       />
@@ -36,12 +52,23 @@ export default function Trade({ className }: PropsWithClassName) {
 
       <Fieldset
         field={
-          <Input
-            className="bg-transparent text-lg"
-            onChange={setLongShortValue}
-            placeholder="0.00"
-            value={longShortValue}
-          />
+          <div className="flex items-center justify-between">
+            <Input
+              className="bg-transparent text-lg"
+              onChange={setPayValue}
+              placeholder="0.00"
+              value={payValue}
+            />
+            <div className="relative">
+              <span className="absolute -top-5 right-0 mr-3 w-full whitespace-nowrap text-xs text-[#BCBCBD]">
+                Balance: {ethTokenBalance}
+              </span>
+              <ChooseTokenButton
+                onTokenSymbolChange={() => {}}
+                tokenSymbol="ETH"
+              />
+            </div>
+          </div>
         }
         label="Long/Short"
       />
@@ -74,17 +101,17 @@ export default function Trade({ className }: PropsWithClassName) {
 }
 
 const priceInfos = [
-  { label: "Entry Price", value: "$0.882" },
+  { label: "Entry Price", value: "$5 000.882" },
   { label: "Price Impact", value: "12%" },
-  { label: "Acceptable Price", value: "$0.882" },
-  { label: "Liq. Price", value: "$0.156" },
-  { label: "Fees and Price Impact", value: "-$85.91" },
+  { label: "Acceptable Price", value: "$4 998.882" },
+  { label: "Liq. Price", value: "$0.000" },
+  { label: "Fees and Price Impact", value: "-$1.91" },
 ];
 
 const tokenPriceInfos = [
   { label: "Market", value: "ETH-USD" },
-  { label: "Entry Price", value: "$1 612.12" },
-  { label: "Exit Price", value: "$1 612.12" },
+  { label: "Entry Price", value: "$5 000.12" },
+  { label: "Exit Price", value: "$0.000" },
   { label: "Borrow Fee", value: "$0.0007/h" },
   { label: "Funding Fee", value: "$0.0007/h" },
   { label: "Available Liquidity", value: "$100 000.00" },
