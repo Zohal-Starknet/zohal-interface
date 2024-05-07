@@ -38,7 +38,7 @@ export default function SwapInput(props: SwapInputProps) {
         </label>
         {formattedTokenBalance !== undefined && (
           <span className="text-xs text-[#BCBCBD]">
-            Balance: {parseFloat(formattedTokenBalance).toFixed(3)}
+            Balance: {formattedTokenBalance}
           </span>
         )}
       </div>

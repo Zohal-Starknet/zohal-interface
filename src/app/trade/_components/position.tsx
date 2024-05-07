@@ -3,9 +3,9 @@
 import { Tokens } from "@zohal/app/_helpers/tokens";
 import { type PropsWithClassName } from "@zohal/app/_lib/utils";
 import clsx from "clsx";
-import { validateAndParseAddress } from "starknet";
 
 import useUserPosition from "../_hooks/use-user-position";
+import ClosePositionDialog from "./close-position-dialog";
 
 /* eslint-disable @next/next/no-img-element */
 export default function Position({ className }: PropsWithClassName) {
@@ -98,12 +98,10 @@ export default function Position({ className }: PropsWithClassName) {
                 <td>${position.market_price.toString()}</td>
                 {/* <td>{data.liquidationPrice}</td> */}
                 <td className="text-right">
-                  <button
-                    className="rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2"
-                    onClick={() => closePosition(position.collateral_token)}
-                  >
-                    Close
-                  </button>
+                  <ClosePositionDialog
+                    collateral_amount={position.collateral_amount}
+                    collateral_token={position.collateral_token}
+                  />
                 </td>
               </tr>
             );
@@ -115,42 +113,3 @@ export default function Position({ className }: PropsWithClassName) {
 }
 
 const tableHeaderCommonStyles = "pb-4 font-normal";
-
-const tableData = [
-  {
-    collateral: { dollar: "$48.35", token: "48 USDC" },
-    entryPrice: "$1581.35",
-    leverage: "20.00×",
-    liquidationPrice: "$1581.35",
-    markPrice: "$1581.35",
-    netValue: { price: "$2.38", purcentage: "(+$0.03 / +1.26%)" },
-    position: "ETH-USD",
-    positionType: "short",
-    size: "$48.35",
-    token: Tokens.ETH,
-  },
-  {
-    collateral: { dollar: "$18.35", token: "18 USDC" },
-    entryPrice: "$2581.35",
-    leverage: "10.00×",
-    liquidationPrice: "$2581.35",
-    markPrice: "$2581.35",
-    netValue: { price: "$2.38", purcentage: "(-$0.03 / -1.26%)" },
-    position: "BTC-USD",
-    positionType: "long",
-    size: "$18.35",
-    token: Tokens.WBTC,
-  },
-  {
-    collateral: { dollar: "$48.35", token: "48 USDC" },
-    entryPrice: "$1581.35",
-    leverage: "2.00×",
-    liquidationPrice: "$1581.35",
-    markPrice: "$1581.35",
-    netValue: { price: "$2.38", purcentage: "(+$10.03 / -5.26%)" },
-    position: "ETH-USD",
-    positionType: "short",
-    size: "$48.35",
-    token: Tokens.ETH,
-  },
-];

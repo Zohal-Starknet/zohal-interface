@@ -13,7 +13,7 @@ export function useTokenInputs(props: Props) {
   const [payTokenValue, setPayTokenValue] = useState("");
 
   const [receiveTokenSymbol, setReceiveTokenSymbol] =
-    useState<TokenSymbol>("WBTC");
+    useState<TokenSymbol>("USDC");
   const [receiveTokenValue, setReceiveTokenValue] = useState("");
 
   const temporaryPayTokenValueRef = useRef("");

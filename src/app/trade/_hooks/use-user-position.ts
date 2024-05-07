@@ -1,7 +1,18 @@
 import { useAccount, useProvider } from "@starknet-react/core";
+import {
+  DATA_STORE_CONTRACT_ADDRESS,
+  ETH_CONTRACT_ADDRESS,
+  MARKET_TOKEN_CONTRACT_ADDRESS,
+  ORACLE_CONTRACT_ADDRESS,
+  ORDER_HANDLER_CONTRACT_ADDRESS,
+  READER_CONTRACT_ADDRESS,
+  REFERRAL_STORAGE_CONTRACT_ADDRESS,
+  USDC_CONTRACT_ADDRESS,
+} from "@zohal/app/_lib/addresses";
 import { useEffect, useState } from "react";
 import { CairoCustomEnum, Contract, uint256 } from "starknet";
 
+import reader_abi from "../../pool/_abi/reader_abi.json";
 import order_handler_abi from "../abi/order_handler.json";
 
 export type Position = {
@@ -20,21 +31,6 @@ export type Position = {
   size_in_tokens: bigint;
   size_in_usd: bigint;
 };
-
-const ORDER_HANDLER_ADDRESS =
-  "0x31b7c130baf07042222d74d143d4ccc89799ab6ab09f0a10a19cf12900e4caf";
-
-const ETH_CONTRACT_ADDRESS =
-  "0x3fa46510b749925fb3fa02e98195909683eaee8d4c982cc647cd98a7f160905";
-
-const MARKET_TOKEN_CONTRACT_ADDRESS =
-  "0x68ad9440759f0bd0367e407d53b5e5c32203590f12d54ed8968f48fee0cf636";
-
-const ORDER_VAULT_CONTRACT_ADDRESS =
-  "0x26dbfc5e776cd2ff1b9daa04bf5048dabae59feba13dc97a4508b3fdf862440";
-
-const ORACLE_CONTRACT_ADDRESS =
-  "0x1bf9db307ff826c261d2030198f692bd14d610e9aa7ec4dc538551f59b5a90";
 
 const dataStoreAbi = [
   {
@@ -189,7 +185,7 @@ export default function useUserPosition() {
 
     const orderHandlerContract = new Contract(
       order_handler_abi.abi,
-      ORDER_HANDLER_ADDRESS,
+      ORDER_HANDLER_CONTRACT_ADDRESS,
       provider,
     );
 
@@ -256,14 +252,14 @@ export default function useUserPosition() {
         setPositions(undefined);
         const dataStoreContract = new Contract(
           dataStoreAbi,
-          "0xd0d138f2bf91e7a25b4d3d7b819e3d1a5de882047eaf314d35279db1fb6b50",
+          DATA_STORE_CONTRACT_ADDRESS,
           provider,
         );
         const positionKeys =
           (await dataStoreContract.functions.get_account_position_keys(
             address,
             0,
-            1,
+            10,
           )) as Array<bigint>;
 
         const oracleContract = new Contract(
@@ -275,6 +271,40 @@ export default function useUserPosition() {
           (await oracleContract.functions.get_primary_price(
             ETH_CONTRACT_ADDRESS,
           )) as { max: bigint; min: bigint };
+
+        const oracleUsdcPrice =
+          (await oracleContract.functions.get_primary_price(
+            USDC_CONTRACT_ADDRESS,
+          )) as { max: bigint; min: bigint };
+
+        const readerContract = new Contract(
+          reader_abi.abi,
+          READER_CONTRACT_ADDRESS,
+          provider,
+        );
+
+        const positionsInfos: Array<
+          Promise<{ base_pnl_usd: { mag: bigint; sign: bigint } }>
+        > = [];
+        positionKeys.map((positionKey) => {
+          positionsInfos.push(
+            readerContract.functions.get_position_info(
+              {
+                contract_address: DATA_STORE_CONTRACT_ADDRESS,
+              },
+              { contract_address: REFERRAL_STORAGE_CONTRACT_ADDRESS },
+              positionKey,
+              {
+                index_token_price: oracleEthPrice,
+                long_tokenPrice: oracleEthPrice,
+                short_token_price: oracleUsdcPrice,
+              },
+              0,
+              true,
+            ) as Promise<{ base_pnl_usd: { mag: bigint; sign: bigint } }>,
+          );
+        });
+        const positionsInfoFromContract = await Promise.all(positionsInfos);
 
         const positionsRequests: Array<Promise<Position>> = [];
 
@@ -288,13 +318,22 @@ export default function useUserPosition() {
 
         const positionsFromContract = await Promise.all(positionsRequests);
         setPositions(
-          positionsFromContract.flatMap((positionFromContract) => {
-            if (positionFromContract.collateral_amount === 0n) {
+          positionsFromContract.flatMap((positionFromContract, index) => {
+            if (positionFromContract.collateral_amount === BigInt("0")) {
               return [];
             }
+            const positionBasePnl =
+              positionsInfoFromContract[index].base_pnl_usd;
+            const multiplicator =
+              positionBasePnl.sign === BigInt("0") ? 1n : -1n;
+
             return [
               {
                 ...positionFromContract,
+                base_pnl_usd: (
+                  (multiplicator * positionBasePnl.mag) /
+                  10n ** 18n
+                ).toString(),
                 market_price: oracleEthPrice.min,
               },
             ];

@@ -1,6 +1,7 @@
 "use client";
 import { useAccount, useBalance } from "@starknet-react/core";
 import { Tokens } from "@zohal/app/_helpers/tokens";
+import useMarketTokenBalance from "@zohal/app/_hooks/use-market-token-balance";
 import { type PropsWithClassName } from "@zohal/app/_lib/utils";
 
 import Form from "../../_ui/form";
@@ -14,7 +15,7 @@ import TokenSwapButton from "./token-swap-button";
  * TODO @YohanTz - Use big numbers for calculations
  */
 export default function Swap({ className }: PropsWithClassName) {
-  const ethBtcRatio = 0.055;
+  const ethUsdcRatio = 7000;
 
   const { address } = useAccount();
 
@@ -26,28 +27,38 @@ export default function Swap({ className }: PropsWithClassName) {
     switchTokens,
     updatePayTokenValue,
     updateReceiveTokenValue,
-  } = useTokenInputs({ ratio: ethBtcRatio });
+  } = useTokenInputs({ ratio: ethUsdcRatio });
 
-  const { data: payTokenBalance } = useBalance({
-    address,
-    token: Tokens[payTokenSymbol].address,
+  // const { data: payTokenBalance } = useBalance({
+  //   address,
+  //   token: Tokens[payTokenSymbol].address,
+  // });
+  // const { data: receiveTokenBalance } = useBalance({
+  //   address,
+  //   token: Tokens[receiveTokenSymbol].address,
+  // });
+
+  const { marketTokenBalance: payTokenBalance } = useMarketTokenBalance({
+    marketTokenAddress: Tokens[payTokenSymbol].address,
   });
-  const { data: receiveTokenBalance } = useBalance({
-    address,
-    token: Tokens[receiveTokenSymbol].address,
+
+  const { marketTokenBalance: receiveTokenBalance } = useMarketTokenBalance({
+    marketTokenAddress: Tokens[receiveTokenSymbol].address,
   });
 
   const noEnteredAmount =
     payTokenValue.length === 0 && receiveTokenValue.length === 0;
 
+  // TODO @YohanTz
   const insufficientBalance = payTokenBalance
-    ? parseFloat(payTokenBalance.formatted) < parseFloat(payTokenValue)
+    ? parseFloat(payTokenBalance) < parseFloat(payTokenValue)
     : true;
 
   return (
     <Form className={className}>
       <SwapInput
-        formattedTokenBalance={payTokenBalance?.formatted}
+        // formattedTokenBalance={payTokenBalance?.formatted}
+        formattedTokenBalance={payTokenBalance}
         id="paySwapInput"
         inputValue={payTokenValue}
         label="Pay"
@@ -59,7 +70,8 @@ export default function Swap({ className }: PropsWithClassName) {
       <TokenSwapButton onClick={switchTokens} />
 
       <SwapInput
-        formattedTokenBalance={receiveTokenBalance?.formatted}
+        // formattedTokenBalance={receiveTokenBalance?.formatted}
+        formattedTokenBalance={receiveTokenBalance}
         id="receiveSwapInput"
         inputValue={receiveTokenValue}
         label="Receive"
@@ -70,7 +82,7 @@ export default function Swap({ className }: PropsWithClassName) {
 
       <SwapMoreInformations
         payTokenSymbol={payTokenSymbol}
-        ratio={ethBtcRatio}
+        ratio={ethUsdcRatio}
         receiveTokenSymbol={receiveTokenSymbol}
       />
 
