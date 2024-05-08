@@ -23,7 +23,7 @@ export default function SwapActionButton(props: SwapActionButtonProps) {
     payTokenSymbol,
     payTokenValue,
   } = props;
-
+  
   const { status, swap } = useMarketSwap({ payTokenSymbol, payTokenValue });
   const { swap: swapp } = useMarketSwapp();
 
@@ -67,7 +67,7 @@ export default function SwapActionButton(props: SwapActionButtonProps) {
   }
 
   return (
-    <Button className={commonSwapActionButtonClassName} onClick={() => swapp()}>
+    <Button className={commonSwapActionButtonClassName} onClick={() => swapp(payTokenValue)}>
       Swap
     </Button>
   );

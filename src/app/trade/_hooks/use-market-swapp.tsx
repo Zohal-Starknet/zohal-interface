@@ -14,7 +14,7 @@ export default function useMarketSwapp() {
   const { account, address } = useAccount();
   const { provider } = useProvider();
 
-  function swap() {
+  function swap(amount) {
     if (account === undefined || address === undefined) {
       return;
     }
@@ -26,7 +26,7 @@ export default function useMarketSwapp() {
     );
     const transferCall = tokenContract.populate("transfer", [
       ORDER_VAULT_CONTRACT_ADDRESS,
-      uint256.bnToUint256(BigInt("1000000000000000000")),
+      uint256.bnToUint256(BigInt(amount) * BigInt("1000000000000000000")),
     ]);
 
     const orderHandlerContract = new Contract(
@@ -42,17 +42,17 @@ export default function useMarketSwapp() {
       decrease_position_swap_type: new CairoCustomEnum({ NoSwap: {} }),
       execution_fee: uint256.bnToUint256(0),
       initial_collateral_delta_amount: uint256.bnToUint256(
-        BigInt("1000000000000000000"),
+        BigInt("1000000000000000000"), //TODO
       ),
-      initial_collateral_token: ETH_CONTRACT_ADDRESS,
+      initial_collateral_token: ETH_CONTRACT_ADDRESS, //TODO : parametrable
       is_long: 0,
       market: 0,
       min_output_amount: uint256.bnToUint256(0),
       order_type: new CairoCustomEnum({ MarketSwap: {} }),
       receiver: address,
       referral_code: 0,
-      size_delta_usd: uint256.bnToUint256(BigInt("5000000000000000000000")),
-      swap_path: [MARKET_TOKEN_CONTRACT_ADDRESS],
+      size_delta_usd: uint256.bnToUint256(BigInt("5000000000000000000000")), //Todo: get_primary_price(token) * initial_collateral_delta_amoutn 
+      swap_path: [MARKET_TOKEN_CONTRACT_ADDRESS], //Todo : address de la pool: routing
       trigger_price: uint256.bnToUint256(0),
       ui_fee_receiver: 0,
     };
