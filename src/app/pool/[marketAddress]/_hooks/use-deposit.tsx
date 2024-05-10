@@ -28,7 +28,7 @@ export default function useDeposit() {
 
     const ethTransferCall = ethTokenContract.populate("transfer", [
       DEPOSIT_VAULT_CONTRACT_ADDRESS,
-      uint256.bnToUint256(BigInt("1000000000000000000")),
+      uint256.bnToUint256(BigInt("1000000000000000000")), //TODO ETH
     ]);
 
     const usdcTokenContract = new Contract(
@@ -39,8 +39,8 @@ export default function useDeposit() {
 
     const usdcTransferCall = usdcTokenContract.populate("transfer", [
       DEPOSIT_VAULT_CONTRACT_ADDRESS,
-      uint256.bnToUint256(BigInt("1000000000000000000")),
-    ]);
+      uint256.bnToUint256(BigInt("1000000000000000000")), //TODO USDC
+    ]); 
 
     const depositHandlerContract = new Contract(
       deposit_handler_abi.abi,
@@ -55,7 +55,7 @@ export default function useDeposit() {
       initial_long_token: ETH_CONTRACT_ADDRESS,
       initial_short_token: USDC_CONTRACT_ADDRESS,
       long_token_swap_path: [],
-      market: MARKET_TOKEN_CONTRACT_ADDRESS,
+      market: MARKET_TOKEN_CONTRACT_ADDRESS, //TODO parametrage du market
       min_market_tokens: 0,
       receiver: address,
       short_token_swap_path: [],

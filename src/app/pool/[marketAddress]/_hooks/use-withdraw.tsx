@@ -25,7 +25,7 @@ export default function useWithdraw() {
 
     const marketTokenTransferCall = marketTokenContract.populate("transfer", [
       WITHDRAWAL_VAULT_CONTRACT_ADDRESS,
-      uint256.bnToUint256(BigInt("1000000000000000000")),
+      uint256.bnToUint256(BigInt("1000000000000000000")), // TODO how much market token link to input
     ]);
 
     const withdrawalHandlerContract = new Contract(
@@ -40,8 +40,8 @@ export default function useWithdraw() {
       execution_fee: uint256.bnToUint256(0),
       long_token_swap_path: [],
       market: MARKET_TOKEN_CONTRACT_ADDRESS,
-      min_long_token_amount: uint256.bnToUint256(BigInt("2500000000000")),
-      min_short_token_amount: uint256.bnToUint256(BigInt("2500000000000")),
+      min_long_token_amount: uint256.bnToUint256(BigInt("2500000000000")), //TODO combien au minimun je reçois des ETH
+      min_short_token_amount: uint256.bnToUint256(BigInt("2500000000000")), //TODO combien au minimun je reçois des USDC
       receiver: address,
       short_token_swap_path: [],
       ui_fee_receiver: 0,

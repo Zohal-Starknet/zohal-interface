@@ -77,8 +77,8 @@ function SellGm() {
 }
 
 const tabItems: [TabItemType, TabItemType] = [
-  { content: <BuyGm />, label: "Buy GM", value: "buy" },
-  { content: <SellGm />, label: "Sell GM", value: "sell" },
+  { content: <BuyGm />, label: "Buy ZOH", value: "buy" },
+  { content: <SellGm />, label: "Sell ZOH", value: "sell" },
 ];
 
 export default function MarketsPage({
