@@ -61,7 +61,7 @@ export default function useMarketSwapp() {
     );
     const transferCall = tokenContract.populate("transfer", [
       ORDER_VAULT_CONTRACT_ADDRESS,
-      uint256.bnToUint256( BigInt(amount * (10 ** Tokens[selectedToken].decimals))),
+      uint256.bnToUint256(BigInt(amount * (10 ** Tokens[selectedToken].decimals))),
     ]);
 
 

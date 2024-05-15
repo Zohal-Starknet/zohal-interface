@@ -17,6 +17,7 @@ import TradeLeverageInput from "./trade-leverage-input";
 
 export default function Trade({ className }: PropsWithClassName) {
   const [payValue, setPayValue] = useState("");
+  const [tokenSymbol, setTokenSymbol] = useState("ETH"); 
   const { marketTokenBalance: ethTokenBalance } = useMarketTokenBalance({
     marketTokenAddress: Tokens.ETH.address,
   });
@@ -40,7 +41,7 @@ export default function Trade({ className }: PropsWithClassName) {
               </span>
               <ChooseTokenButton
                 onTokenSymbolChange={() => {}}
-                tokenSymbol="ETH"
+                tokenSymbol={tokenSymbol}
               />
             </div>
           </div>
@@ -65,7 +66,7 @@ export default function Trade({ className }: PropsWithClassName) {
               </span>
               <ChooseTokenButton
                 onTokenSymbolChange={() => {}}
-                tokenSymbol="ETH"
+                tokenSymbol={tokenSymbol}
               />
             </div>
           </div>
@@ -75,14 +76,14 @@ export default function Trade({ className }: PropsWithClassName) {
 
       <TradeLeverageInput className="py-6" />
 
-      <div className="flex flex-col gap-2 rounded-md border border-[#363636] p-3">
+      <div className="flex flex-col gap-2 rounded-md border border-[#36363t6] p-3">
         {priceInfos.map((priceInfo, index) => (
           <PriceInfo key={index} {...priceInfo} />
         ))}
       </div>
 
       <div className="mt-4 grid w-full grid-cols-2 items-center gap-2">
-        <Button onClick={() => long()} type="submit" variant="success">
+        <Button onClick={() => long(tokenSymbol, payValue)} type="submit" variant="success">
           Buy/Long
         </Button>
         <Button type="submit" variant="danger">
