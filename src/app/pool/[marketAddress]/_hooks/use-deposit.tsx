@@ -15,7 +15,7 @@ export default function useDeposit() {
   const { account, address } = useAccount();
   const { provider } = useProvider();
 
-  function deposit() {
+  function deposit(token0: string, token1: string) {
     if (account === undefined || address === undefined) {
       return;
     }
@@ -28,7 +28,7 @@ export default function useDeposit() {
 
     const ethTransferCall = ethTokenContract.populate("transfer", [
       DEPOSIT_VAULT_CONTRACT_ADDRESS,
-      uint256.bnToUint256(BigInt("1000000000000000000")), //TODO ETH
+      uint256.bnToUint256(BigInt(token0)* BigInt(10 ** 18)),
     ]);
 
     const usdcTokenContract = new Contract(
@@ -39,7 +39,7 @@ export default function useDeposit() {
 
     const usdcTransferCall = usdcTokenContract.populate("transfer", [
       DEPOSIT_VAULT_CONTRACT_ADDRESS,
-      uint256.bnToUint256(BigInt("1000000000000000000")), //TODO USDC
+      uint256.bnToUint256(BigInt(token1) *BigInt(10 ** 18)),
     ]); 
 
     const depositHandlerContract = new Contract(

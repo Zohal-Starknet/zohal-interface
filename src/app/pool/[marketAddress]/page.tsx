@@ -56,7 +56,7 @@ function BuyGm() {
       />
       <button
         className="my-4 rounded-lg border border-[#363636] bg-[#1b1d22] py-2"
-        onClick={() => deposit()}
+        onClick={() => deposit(ethInputValue,usdcInputValue )}
       >
         Deposit
       </button>
