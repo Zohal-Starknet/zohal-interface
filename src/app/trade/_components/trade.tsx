@@ -76,7 +76,7 @@ export default function Trade({ className }: PropsWithClassName) {
 
       <TradeLeverageInput className="py-6" />
 
-      <div className="flex flex-col gap-2 rounded-md border border-[#36363t6] p-3">
+      <div className="flex flex-col gap-2 rounded-md border border-[#363636] p-3">
         {priceInfos.map((priceInfo, index) => (
           <PriceInfo key={index} {...priceInfo} />
         ))}
