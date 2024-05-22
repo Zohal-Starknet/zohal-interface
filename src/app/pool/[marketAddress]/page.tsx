@@ -56,7 +56,7 @@ function BuyGm() {
       />
       <button
         className="my-4 rounded-lg border border-[#363636] bg-[#1b1d22] py-2"
-        onClick={() => deposit()}
+        onClick={() => deposit(ethInputValue,usdcInputValue )}
       >
         Deposit
       </button>
@@ -67,18 +67,38 @@ function BuyGm() {
 function SellGm() {
   const { withdraw } = useWithdraw();
 
+  const { marketTokenBalance: zohTokenBalance } = useMarketTokenBalance({
+    marketTokenAddress: Tokens.ZOH.address,
+  });
+
+const [zohInputValue, setZohInputValue] = useState("");
+
   return (
-    <div className="mt-4 flex flex-col gap-2">
-      <input />
-      <input />
-      <button onClick={() => withdraw()}>Withdraw</button>
+    <div className="mt-4 flex flex-col gap-2 px-4">
+      <div className="flex items-end justify-between">
+        <p>ZOH</p>
+        <p className="text-sm text-neutral-300">Balance: {zohTokenBalance}</p>
+      </div>
+      <Input
+        className="text-md rounded-lg border border-[#363636] bg-transparent px-3 py-2"
+        id="eth-input"
+        onChange={setZohInputValue}
+        placeholder="0.0"
+        value={zohInputValue}
+      />
+      <button
+        className="my-4 rounded-lg border border-[#363636] bg-[#1b1d22] py-2"
+        onClick={() => withdraw()}
+      >
+        Withdraw
+      </button>
     </div>
   );
 }
 
 const tabItems: [TabItemType, TabItemType] = [
-  { content: <BuyGm />, label: "Buy GM", value: "buy" },
-  { content: <SellGm />, label: "Sell GM", value: "sell" },
+  { content: <BuyGm />, label: "Buy ZOH", value: "buy" },
+  { content: <SellGm />, label: "Sell ZOH", value: "sell" },
 ];
 
 export default function MarketsPage({
