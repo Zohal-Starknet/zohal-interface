@@ -1,0 +1,55 @@
+.container {
+  padding: 20px;
+  margin: 0 auto;
+  width: fit-content;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 3rem;
+  margin: 0;
+}
+
+.search-bar {
+  display: block;
+  margin: 20px auto;
+  padding: 10px;
+  width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.market-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.market-table th {
+  background-color: #1e1e1e;
+  color: white;
+  padding: 10px;
+  text-align: left;
+}
+
+.market-table tr:nth-child(even) {
+  background-color: #282828;
+}
+
+.market-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #444;
+}
+
+.positive {
+  color: #16c784;
+}
+
+.negative {
+  color: #ea3943;
+}
