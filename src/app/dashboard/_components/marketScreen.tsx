@@ -1,4 +1,4 @@
-import React, { Key, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './marketScreen.css';
 
 interface Token {
@@ -72,7 +72,6 @@ export default function MarketScreen() {
                 placeholder="Token name"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                style={{ color: 'black' }}
             />
             {loading ? (
                 <p>Loading...</p>
@@ -107,8 +106,8 @@ export default function MarketScreen() {
                                 <td className={token.priceChange7d >= 0 ? 'positive' : 'negative'}>
                                     {token.priceChange7d >= 0 ? <>&#9650; {token.priceChange7d.toLocaleString()}%</> : <>&#9660; {Math.abs(token.priceChange7d).toLocaleString()}%</>}
                                 </td>
-                                <td>${token.volume24h.toLocaleString()}$</td>
-                                <td>${token.marketCap.toLocaleString()}$</td>
+                                <td>${token.volume24h.toLocaleString()}</td>
+                                <td>${token.marketCap.toLocaleString()}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -116,5 +115,4 @@ export default function MarketScreen() {
             )}
         </div>
     );
-
-};
+}
