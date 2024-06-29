@@ -1,6 +1,5 @@
 import { useAccount, useProvider } from "@starknet-react/core";
 import {
-  ETH_CONTRACT_ADDRESS,
   ORACLE_CONTRACT_ADDRESS,
   MARKET_TOKEN_CONTRACT_ADDRESS,
   ORDER_HANDLER_CONTRACT_ADDRESS,
@@ -9,6 +8,7 @@ import {
 import { Tokens } from "@zohal/app/_helpers/tokens";
 import { CairoCustomEnum, Contract, uint256 } from "starknet";
 
+import oracle_abi from "../abi/oracle.json";
 import erc_20_abi from "../abi/erc_20.json";
 import order_handler_abi from "../abi/order_handler.json";
 
@@ -16,39 +16,7 @@ export default function useMarketSwapp() {
   const { account, address } = useAccount();
   const { provider } = useProvider();
 
-  const oracleAbi = [
-    {
-      inputs: [
-        {
-          name: "token",
-          type: "core::starknet::contract_address::ContractAddress",
-        },
-      ],
-      name: "get_primary_price",
-      outputs: [
-        {
-          type: "satoru::price::price::Price",
-        },
-      ],
-      state_mutability: "view",
-      type: "function",
-    },
-    {
-      members: [
-        {
-          name: "min",
-          type: "core::integer::u256",
-        },
-        {
-          name: "max",
-          type: "core::integer::u256",
-        },
-      ],
-      name: "satoru::price::price::Price",
-      type: "struct",
-    },
-  ];
-
+  //@ts-ignore
   async function swap(selectedToken, amount) {
     if (account === undefined || address === undefined) {
       return;
@@ -59,14 +27,14 @@ export default function useMarketSwapp() {
       Tokens[selectedToken].address,
       provider,
     );
+
     const transferCall = tokenContract.populate("transfer", [
       ORDER_VAULT_CONTRACT_ADDRESS,
       uint256.bnToUint256(BigInt(amount * (10 ** Tokens[selectedToken].decimals))),
     ]);
 
-
     const oracleContract = new Contract(
-      oracleAbi,
+      oracle_abi.abi,
       ORACLE_CONTRACT_ADDRESS,
       provider,
     );
@@ -76,9 +44,7 @@ export default function useMarketSwapp() {
       Tokens[selectedToken].address,
     )) as { max: bigint; min: bigint };
     
-    console.log("Oracle price:" + oraclePrice.min);
-
-    const orderHandlerContract = new Contract(
+    const routerContract = new Contract(
       order_handler_abi.abi,
       ORDER_HANDLER_CONTRACT_ADDRESS,
       provider,

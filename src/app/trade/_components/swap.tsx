@@ -31,15 +31,6 @@ export default function Swap({ className }: PropsWithClassName) {
     updateReceiveTokenValue,
   } = useTokenInputs({ ratio: ethUsdcRatio });
 
-  // const { data: payTokenBalance } = useBalance({
-  //   address,
-  //   token: Tokens[payTokenSymbol].address,
-  // });
-  // const { data: receiveTokenBalance } = useBalance({
-  //   address,
-  //   token: Tokens[receiveTokenSymbol].address,
-  // });
-
   const { marketTokenBalance: payTokenBalance } = useMarketTokenBalance({
     marketTokenAddress: Tokens[payTokenSymbol].address,
   });

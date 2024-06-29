@@ -1,4 +1,4 @@
-import { Tokens, type TokenSymbol } from "@zohal/app/_helpers/tokens";
+import { type TokenSymbol, Tokens } from "@zohal/app/_helpers/tokens";
 import { Dialog, DialogContent, DialogHeader } from "@zohal/app/_ui/Modal";
 import Divider from "@zohal/app/_ui/divider";
 import Input from "@zohal/app/_ui/input";

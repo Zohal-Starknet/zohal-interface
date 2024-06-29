@@ -325,14 +325,14 @@ export default function useUserPosition() {
             const positionBasePnl =
               positionsInfoFromContract[index].base_pnl_usd;
             const multiplicator =
-              positionBasePnl.sign === BigInt("0") ? 1n : -1n;
+              positionBasePnl.sign === BigInt("0") ? BigInt(1) : BigInt(-1);
 
             return [
               {
                 ...positionFromContract,
                 base_pnl_usd: (
                   (multiplicator * positionBasePnl.mag) /
-                  10n ** 18n
+                  BigInt(Math.pow(10, 18))
                 ).toString(),
                 market_price: oracleEthPrice.min,
               },

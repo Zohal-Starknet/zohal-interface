@@ -18,7 +18,7 @@ export default function useMarketTokenBalance({
   useEffect(() => {
     const fetchBalance = async () => {
       if (address === undefined) {
-        setMarketTokenBalance(0);
+        setMarketTokenBalance("0");
         return;
       }
 
@@ -32,7 +32,7 @@ export default function useMarketTokenBalance({
         address,
       )) as bigint;
       setMarketTokenBalance(
-        new Intl.NumberFormat().format((balanceOf / 10n ** 18n).toString()),
+        new Intl.NumberFormat().format((Number(balanceOf) / 10 ** 18)),
       );
     };
 

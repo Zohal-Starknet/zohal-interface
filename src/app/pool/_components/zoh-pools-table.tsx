@@ -61,28 +61,38 @@ function ZohPoolsTableBody() {
               />
               <p>ETH/USD</p>
             </td>
-            <td className="px-1 py-3">${IntlFormatter.format(ethPrice)}</td>
+            <td className="px-1 py-3">${IntlFormatter.format(Number(ethPrice))}</td>
             <td className="px-1 py-3">
               {/* <p>5,623,489.29 ZOH</p>
               <p className="text-[#bcbcbd]">($12,776,103.40)</p> */}
-              <p className="text-[#bcbcbd]">
-                (${IntlFormatter.format(poolData.pool_value)})
-              </p>
+              {poolData && (
+                <p className="text-[#bcbcbd]">
+                  (${IntlFormatter.format(Number(poolData.pool_value))})
+                </p>
+              )}
             </td>
             <td className="px-1 py-3">
-              <p>{IntlFormatter.format(poolData.long_token_amount)} ETH</p>{" "}
-              <p className="text-[#bcbcbd]">
-                (${IntlFormatter.format(poolData.long_token_usd)})
-              </p>
+              {poolData && (
+                <>
+                  <p>{IntlFormatter.format(Number(poolData.long_token_amount))} ETH</p>
+                  <p className="text-[#bcbcbd]">
+                    (${IntlFormatter.format(Number(poolData.long_token_usd))})
+                  </p>
+                </>
+              )}
             </td>
             <td className="px-1 py-3">
-              <p>{IntlFormatter.format(poolData.short_token_amount)} USDC</p>{" "}
-              <p className="text-[#bcbcbd]">
-                (${IntlFormatter.format(poolData.short_token_usd)})
-              </p>
+              {poolData && (
+                <>
+                  <p>{IntlFormatter.format(Number(poolData.short_token_amount))} USDC</p>
+                  <p className="text-[#bcbcbd]">
+                    (${IntlFormatter.format(Number(poolData.short_token_usd))})
+                  </p>
+                </>
+              )}
             </td>
             <td className="px-1 py-3">
-              <p>{marketTokenBalance} ZOH</p>{" "}
+              <p>{marketTokenBalance} ZOH</p>
               {/* <p className="text-[#bcbcbd]">($0.00)</p> */}
             </td>
             {/* <td className="px-2 py-3">14.54%</td> */}

@@ -1,0 +1,34 @@
+{
+    "abi" :[
+        {
+          "inputs": [
+            {
+              "name": "token",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ],
+          "name": "get_primary_price",
+          "outputs": [
+            {
+              "type": "satoru::price::price::Price"
+            }
+          ],
+          "state_mutability": "view",
+          "type": "function"
+        },
+        {
+          "members": [
+            {
+              "name": "min",
+              "type": "core::integer::u256"
+            },
+            {
+              "name": "max",
+              "type": "core::integer::u256"
+            }
+          ],
+          "name": "satoru::price::price::Price",
+          "type": "struct"
+        }
+      ]
+}

@@ -11,7 +11,7 @@ import {
   DialogTrigger,
 } from "@zohal/app/_ui/Modal";
 import Input from "@zohal/app/_ui/input";
-import { useState } from "react";
+import { useState, ChangeEvent } from "react";
 
 import useUserPosition from "../_hooks/use-user-position";
 
@@ -27,13 +27,14 @@ export default function ClosePositionDialog({
   const [inputValue, setInputValue] = useState("");
   const { closePosition } = useUserPosition();
 
-  const formattedCollateralAmount = (collateral_amount / 10n ** 18n).toString();
+  const decimals = BigInt(Math.pow(10, 18));
+  const formattedCollateralAmount = (collateral_amount / decimals).toString();
 
   const isCloseAction =
     parseFloat(inputValue) >= parseFloat(formattedCollateralAmount);
 
-  function onInputChange(newValue: string) {
-    setInputValue(newValue);
+  function onInputChange(e: ChangeEvent<HTMLInputElement>) {
+    setInputValue(e.target.value);
   }
 
   return (
@@ -61,6 +62,7 @@ export default function ClosePositionDialog({
         <Input
           className="rounded-lg border border-[#363636] bg-transparent px-3 py-3 text-sm"
           id="Close position"
+          // @ts-expect-error: Input onChange event typing issue
           onChange={onInputChange}
           placeholder="Collateral amount to remove"
           value={inputValue}

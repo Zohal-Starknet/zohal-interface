@@ -12,7 +12,8 @@ import { CairoCustomEnum, Contract, uint256 } from "starknet";
 import erc_20_abi from "../abi/erc_20.json";
 import order_handler_abi from "../abi/order_handler.json";
 
-export default function useMarketLong(tokenSymbol, tokenAmount) {
+//@ts-ignore
+export default function useMarketLong() {
   const { account, address } = useAccount();
   const { provider } = useProvider();
 
@@ -49,7 +50,8 @@ export default function useMarketLong(tokenSymbol, tokenAmount) {
     },
   ];
 
-  async function long() {
+  //@ts-ignore
+  async function long(tokenSymbol, tokenAmount) {
     if (account === undefined || address === undefined) {
       return;
     }

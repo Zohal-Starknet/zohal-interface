@@ -4,7 +4,6 @@ import Button from "../../_ui/button";
 import { useConnectModal } from "../../zohal-modal";
 import useMarketSwap from "../_hooks/use-market-swap";
 import useMarketSwapp from "../_hooks/use-market-swapp";
-import { Tokens } from "@zohal/app/_helpers/tokens";
 
 type SwapActionButtonProps = {
   /** Whether the user balance is sufficient or not */

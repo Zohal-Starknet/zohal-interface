@@ -1,7 +1,6 @@
 import { useAccount, useProvider } from "@starknet-react/core";
 import {
   MARKET_TOKEN_CONTRACT_ADDRESS,
-  WITHDRAWAL_HANDLER_CONTRACT_ADDRESS,
   WITHDRAWAL_VAULT_CONTRACT_ADDRESS,
 } from "@zohal/app/_lib/addresses";
 import { Contract, uint256 } from "starknet";
@@ -25,16 +24,16 @@ export default function useWithdraw() {
 
     const marketTokenTransferCall = marketTokenContract.populate("transfer", [
       WITHDRAWAL_VAULT_CONTRACT_ADDRESS,
-      uint256.bnToUint256(BigInt("1000000000000000000")), // TODO how much market token link to input
+      uint256.bnToUint256(BigInt("1000000000000000000")), 
     ]);
 
-    const withdrawalHandlerContract = new Contract(
+    /*const withdrawalHandlerContract = new Contract(
       withdrawal_vault_abi.abi,
       WITHDRAWAL_HANDLER_CONTRACT_ADDRESS,
       provider,
-    );
+    );*/
 
-    const createWithdrawalParams = {
+    /*const createWithdrawalParams = {
       callback_contract: 0,
       callback_gas_limit: uint256.bnToUint256(0),
       execution_fee: uint256.bnToUint256(0),
@@ -45,14 +44,14 @@ export default function useWithdraw() {
       receiver: address,
       short_token_swap_path: [],
       ui_fee_receiver: 0,
-    };
+    };*/
 
-    const createWithdrawalCall = withdrawalHandlerContract.populate(
+    /*const createWithdrawalCall = withdrawalHandlerContract.populate(
       "create_withdrawal",
       [address, createWithdrawalParams],
-    );
+    );*/
 
-    void account.execute([marketTokenTransferCall, createWithdrawalCall]);
+    void account.execute([marketTokenTransferCall, /*createWithdrawalCall*/]);
   }
 
   return { withdraw };

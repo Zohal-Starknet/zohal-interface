@@ -12,18 +12,18 @@ export const Tokens: TokenList = {
     icon: "/tokens/ethereum.png",
     name: "Ethereum",
   },
-  ZOH: {
-    address: ZOH_CONTRACT_ADDRESS,
-    decimals: 18,
-    icon: "/tokens/zoh.png",
-    name: "Zohal",
-  },
   USDC: {
     address: USDC_CONTRACT_ADDRESS,
     decimals: 18,
     icon: "/tokens/usdc.png",
     name: "USD",
   },
+  ZOH: {
+    address: ZOH_CONTRACT_ADDRESS,
+    decimals: 18,
+    icon: "/tokens/zoh.png",
+    name: "Zohal",
+  }
 } as const;
 
 export type TokenSymbol = keyof typeof Tokens;

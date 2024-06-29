@@ -16,13 +16,13 @@ type PoolData = {
   borrowing_fee_pool_factor: bigint;
   impact_pool_amount: bigint;
   long_pnl: { mag: bigint; sign: boolean };
-  long_token_amount: bigint;
-  long_token_usd: bigint;
+  long_token_amount: string;
+  long_token_usd: string;
   net_pnl: { mag: bigint; sign: boolean };
-  pool_value: { mag: bigint; sign: boolean };
+  pool_value: string;
   short_pnl: { mag: bigint; sign: boolean };
-  short_token_amount: bigint;
-  short_token_usd: bigint;
+  short_token_amount: string;
+  short_token_usd: string;
   total_borrowing_fees: bigint;
 };
 
@@ -61,7 +61,7 @@ const oracleAbi = [
 
 export default function usePoolData() {
   const { provider } = useProvider();
-  const [poolData, setPoolData] = useState<unknown>(undefined);
+  const [poolData, setPoolData] = useState<PoolData | undefined>(undefined);
   const [ethPrice, setEthPrice] = useState("");
 
   useEffect(() => {
@@ -112,17 +112,18 @@ export default function usePoolData() {
         )) as [unknown, PoolData];
 
       const poolData = tokenPriceResponse[1];
+      const decimals = BigInt(Math.pow(10, 18));
 
       setPoolData({
         ...poolData,
-        long_token_amount: (poolData.long_token_amount / 10n ** 18n).toString(),
-        long_token_usd: (poolData.long_token_usd / 10n ** 18n).toString(),
-        pool_value: (poolData.pool_value.mag / 10n ** 18n).toString(),
+        long_token_amount: (BigInt(poolData.long_token_amount) / decimals).toString(),
+        long_token_usd: (BigInt(poolData.long_token_usd) / decimals).toString(),
+        pool_value: (BigInt(poolData.pool_value) / decimals).toString(),
         short_token_amount: (
-          poolData.short_token_amount /
-          10n ** 18n
+          BigInt(poolData.short_token_amount) /
+          decimals
         ).toString(),
-        short_token_usd: (poolData.short_token_usd / 10n ** 18n).toString(),
+        short_token_usd: (BigInt(poolData.short_token_usd) / decimals).toString(),
       });
     };
 

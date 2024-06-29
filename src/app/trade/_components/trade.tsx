@@ -22,6 +22,7 @@ export default function Trade({ className }: PropsWithClassName) {
     marketTokenAddress: Tokens.ETH.address,
   });
 
+  
   const { long } = useMarketLong();
 
   return (
