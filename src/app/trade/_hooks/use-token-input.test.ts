@@ -53,7 +53,7 @@ describe("Token Input Hook", () => {
     expect(result.current.payTokenValue).toEqual("2");
     expect(result.current.receiveTokenValue).toEqual("4");
     expect(result.current.payTokenSymbol).toEqual("ETH");
-    expect(result.current.receiveTokenSymbol).toEqual("BTC");
+    expect(result.current.receiveTokenSymbol).toEqual("USDC");
 
     act(() => {
       result.current.switchTokens();
@@ -61,7 +61,7 @@ describe("Token Input Hook", () => {
 
     expect(result.current.payTokenValue).toEqual("4");
     expect(result.current.receiveTokenValue).toEqual("2");
-    expect(result.current.payTokenSymbol).toEqual("BTC");
+    expect(result.current.payTokenSymbol).toEqual("USDC");
     expect(result.current.receiveTokenSymbol).toEqual("ETH");
   });
 });
