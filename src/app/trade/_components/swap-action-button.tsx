@@ -3,7 +3,6 @@ import { LoadIcon } from "@zohal/app/_ui/icons";
 import Button from "../../_ui/button";
 import { useConnectModal } from "../../zohal-modal";
 import useMarketSwap from "../_hooks/use-market-swap";
-import useMarketSwapp from "../_hooks/use-market-swapp";
 
 type SwapActionButtonProps = {
   /** Whether the user balance is sufficient or not */
@@ -24,8 +23,7 @@ export default function SwapActionButton(props: SwapActionButtonProps) {
     payTokenValue,
   } = props;
 
-  const { status, swap } = useMarketSwap({ payTokenSymbol, payTokenValue });
-  const { swap: swapp } = useMarketSwapp();
+  const { swap: swapp } = useMarketSwap();
 
   const { openConnectModal } = useConnectModal();
 
@@ -58,13 +56,13 @@ export default function SwapActionButton(props: SwapActionButtonProps) {
   }
 
   // TODO @YohanTz: loading directly in the Button component as a prop
-  if (status === "loading") {
+  //if (status === "loading") {
     return (
       <Button className={commonSwapActionButtonClassName}>
         <LoadIcon className="animate-spin" label="Loading..." />
       </Button>
     );
-  }
+  //}
 
   return (
     <Button className={commonSwapActionButtonClassName} onClick={() => swapp(payTokenSymbol, payTokenValue)}>

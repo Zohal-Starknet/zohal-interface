@@ -1,37 +1,43 @@
 import { useAccount, useProvider } from "@starknet-react/core";
 import {
+  ETH_CONTRACT_ADDRESS,
   ORACLE_CONTRACT_ADDRESS,
   MARKET_TOKEN_CONTRACT_ADDRESS,
   ORDER_HANDLER_CONTRACT_ADDRESS,
   ORDER_VAULT_CONTRACT_ADDRESS,
 } from "@zohal/app/_lib/addresses";
-import { Tokens } from "@zohal/app/_helpers/tokens";
 import { CairoCustomEnum, Contract, uint256 } from "starknet";
 
-import oracle_abi from "../abi/oracle.json";
 import erc_20_abi from "../abi/erc_20.json";
 import router_abi from "../abi/router.json";
+import oracle_abi from "../abi/oracle.json";
 
-export default function useMarketSwap() {
+//@ts-ignore
+export default function useMarketTrade() {
   const { account, address } = useAccount();
   const { provider } = useProvider();
 
   //@ts-ignore
-  async function swap(selectedToken, amount) {
+  async function trade(tokenSymbol, tokenAmount, isLong) {
     if (account === undefined || address === undefined) {
       return;
     }
 
     const tokenContract = new Contract(
       erc_20_abi.abi,
-      Tokens[selectedToken].address,
+      ETH_CONTRACT_ADDRESS,
       provider,
     );
-
     const transferCall = tokenContract.populate("transfer", [
       ORDER_VAULT_CONTRACT_ADDRESS,
-      uint256.bnToUint256(BigInt(amount * (10 ** Tokens[selectedToken].decimals))),
+      uint256.bnToUint256(BigInt(tokenAmount * (10 ** tokenSymbol.decimals))),
     ]);
+
+    const orderHandlerContract = new Contract(
+      router_abi.abi,
+      ORDER_HANDLER_CONTRACT_ADDRESS,
+      provider,
+    );
 
     const oracleContract = new Contract(
       oracle_abi.abi,
@@ -40,49 +46,51 @@ export default function useMarketSwap() {
     );
 
     const oraclePrice = (await oracleContract.functions.get_primary_price(
-      Tokens[selectedToken].address,
+      tokenSymbol.address,
     )) as { max: bigint; min: bigint };
-    
-    const routerContract = new Contract(
-      router_abi.abi,
-      ORDER_HANDLER_CONTRACT_ADDRESS,
-      provider,
-    );
 
-    const orderKey = generateOrderKey(address, MARKET_TOKEN_CONTRACT_ADDRESS, Tokens[selectedToken].address);
+    const orderKey = generateOrderKey(address, MARKET_TOKEN_CONTRACT_ADDRESS, tokenSymbol.address);
 
-    const setOrderParams = {
+    const orderParams = {
       key: orderKey,
-      order_type: new CairoCustomEnum({ MarketSwap: {} }),
+      order_type: new CairoCustomEnum({ MarketIncrease: {} }),
       decrease_position_swap_type: new CairoCustomEnum({ NoSwap: {} }),
       account: address,
       receiver: address,
       callback_contract: 0,
       ui_fee_receiver: 0,
       market: MARKET_TOKEN_CONTRACT_ADDRESS,
-      initial_collateral_token: Tokens[selectedToken].address,
-      swap_path: [MARKET_TOKEN_CONTRACT_ADDRESS], // Ensure proper path format
-      size_delta_usd: uint256.bnToUint256(oraclePrice.min * BigInt(amount * (10 ** Tokens[selectedToken].decimals))),
-      initial_collateral_delta_amount: uint256.bnToUint256(BigInt(amount)),
-      trigger_price: uint256.bnToUint256(0),
-      acceptable_price: uint256.bnToUint256(0),
+      initial_collateral_token: tokenSymbol.address,
+      swap_path: [], 
+      size_delta_usd: uint256.bnToUint256(oraclePrice.min * BigInt(tokenAmount * (10 ** tokenSymbol.decimals))),
+      initial_collateral_delta_amount: uint256.bnToUint256(BigInt(tokenAmount)),
+      trigger_price: uint256.bnToUint256(oraclePrice.min),
+      acceptable_price: uint256.bnToUint256(oraclePrice.min),
       execution_fee: uint256.bnToUint256(0),
       callback_gas_limit: uint256.bnToUint256(0),
       min_output_amount: uint256.bnToUint256(0),
       updated_at_block: BigInt(await provider.getBlockNumber()),
-      is_long: new CairoCustomEnum({ False: {} }), // Assuming swap is neither long nor short
+      is_long: new CairoCustomEnum(isLong ? { True: {} } : { False: {} }),
       is_frozen: new CairoCustomEnum({ False: {} })
     };
 
-    const setOrderCall = routerContract.populate("set_order", [
+    const setOrderCall = orderHandlerContract.populate("set_order", [
       orderKey,
-      setOrderParams,
+      orderParams,
     ]);
 
     void account.execute([transferCall, setOrderCall]);
   }
 
-  return { swap };
+  function long(tokenSymbol, tokenAmount) {
+    return trade(tokenSymbol, tokenAmount, true);
+  }
+
+  function short(tokenSymbol, tokenAmount) {
+    return trade(tokenSymbol, tokenAmount, false);
+  }
+
+  return { long, short };
 }
 
 function generateOrderKey(account, market, token) {
