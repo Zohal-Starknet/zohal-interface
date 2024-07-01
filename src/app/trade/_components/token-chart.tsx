@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Chart, Series } from "./Chart";
+import { Chart, Series } from "./chart";
 import { ColorType, CrosshairMode } from "lightweight-charts";
 import { robotoMono } from "@zohal/app/_helpers/fonts";
 
