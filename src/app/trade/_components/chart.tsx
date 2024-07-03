@@ -127,6 +127,7 @@ const ChartContainer = forwardRef<IChartApi, ChartContainerProps>((props, ref) =
   }, [layout]);
 
   return (
+    //@ts-ignore
     <ChartContext.Provider value={chartApiRef.current}>
       {props.children}
     </ChartContext.Provider>
@@ -153,10 +154,13 @@ const Series = forwardRef<ISeriesApi<SeriesType>, PropsWithChildren<SeriesProps>
     api: () => ISeriesApi<SeriesType>;
     free: () => void;
   }>({
+    //@ts-ignore
     api() {
       if (!this._api) {
         const { data, type, ...rest } = props;
+        //@ts-ignore
         this._api = parent.api().addCandlestickSeries(rest);
+         //@ts-ignore
         this._api.setData(data);
       }
       return this._api;
@@ -185,6 +189,7 @@ const Series = forwardRef<ISeriesApi<SeriesType>, PropsWithChildren<SeriesProps>
   useImperativeHandle(ref, () => context.current.api(), []);
 
   return (
+     //@ts-ignore
     <ChartContext.Provider value={context.current}>
       {props.children}
     </ChartContext.Provider>

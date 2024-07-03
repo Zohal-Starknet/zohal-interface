@@ -17,6 +17,7 @@ export default function useMarketSwap() {
   const { provider } = useProvider();
   const [status, setStatus] = useState<TransactionStatus>("idle");
 
+   //@ts-ignore
   async function swap(selectedToken, amount, oraclePrice) {
     if (account === undefined || address === undefined) {
       return;

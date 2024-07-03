@@ -5,7 +5,6 @@ import { useAccount } from "@starknet-react/core";
 import { Tokens } from "@zohal/app/_helpers/tokens";
 import useMarketTokenBalance from "@zohal/app/_hooks/use-market-token-balance";
 import { PropsWithClassName } from "@zohal/app/_lib/utils";
-import { fetchEthUsdcRatio } from "../../_helpers/fetch-eth-usdc-ratio";
 
 import Form from "../../_ui/form";
 import { useTokenInputs } from "../_hooks/use-token-input";
@@ -101,6 +100,7 @@ export default function Swap({ className }: PropsWithClassName) {
         noEnteredAmount={noEnteredAmount}
         payTokenSymbol={payTokenSymbol}
         payTokenValue={payTokenValue}
+         //@ts-ignore
         oraclePrice={ethUsdcRatio}
       />
     </Form>
