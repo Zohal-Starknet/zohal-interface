@@ -23,7 +23,7 @@ export default function SwapActionButton(props: SwapActionButtonProps) {
     payTokenValue,
   } = props;
 
-  const { swap: swapp } = useMarketSwap();
+  const { swap } = useMarketSwap();
 
   const { openConnectModal } = useConnectModal();
 

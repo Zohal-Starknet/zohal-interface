@@ -92,7 +92,7 @@ export default function useUserPosition() {
       }
       setPositions(undefined);
       const dataStoreContract = new Contract(
-        datastore_abi,
+        datastore_abi.abi,
         DATA_STORE_CONTRACT_ADDRESS,
         provider,
       );
@@ -103,7 +103,7 @@ export default function useUserPosition() {
       )) as Array<bigint>;
 
       const oracleContract = new Contract(
-        oracle_abi,
+        oracle_abi.abi,
         ORACLE_CONTRACT_ADDRESS,
         provider,
       );

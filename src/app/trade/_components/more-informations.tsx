@@ -4,7 +4,7 @@ import * as Collapsible from "@radix-ui/react-collapsible";
 import { type TokenSymbol } from "@zohal/app/_helpers/tokens";
 import { ChevronRight } from "@zohal/app/_ui/icons";
 import clsx from "clsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import PriceInfo from "./price-info";
 
@@ -21,19 +21,20 @@ type SwapMoreInformationsProps = {
 export default function SwapMoreInformations(props: SwapMoreInformationsProps) {
   const { payTokenSymbol, ratio, receiveTokenSymbol } = props;
   const [open, setOpen] = useState<boolean | undefined>(undefined);
+  const [priceInfos, setPriceInfos] = useState<{ label: string, value: string }[]>([]);
 
-  const priceInfos = [
-    // TODO - Do real Price informations based on User selection and input
-    { label: `${payTokenSymbol} Price`, value: "$26,146.00" },
-    { label: `${receiveTokenSymbol} Price`, value: "$0.818" },
-    { label: "Available Liquidity", value: "$272,569.02" },
-    {
-      label: "Price",
-      value: `${(1 / ratio).toFixed(
-        4,
-      )} ${payTokenSymbol} / ${receiveTokenSymbol}`,
-    },
-  ];
+  useEffect(() => {
+    const formattedRatio = (1 / ratio).toFixed(4);
+    setPriceInfos([
+      { label: `${payTokenSymbol} Price`, value: `${(ratio).toFixed(2)} $` },
+      { label: `${receiveTokenSymbol} Price`, value: `${(1 / ratio).toFixed(4)} ${payTokenSymbol} ` },
+      { label: "Available Liquidity", value: "$272,569.02" },
+      {
+        label: "Price",
+        value: `${formattedRatio} ${payTokenSymbol} / ${receiveTokenSymbol}`,
+      },
+    ]);
+  }, [ratio, payTokenSymbol, receiveTokenSymbol]);
 
   return (
     <Collapsible.Root
