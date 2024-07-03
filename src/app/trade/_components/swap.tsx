@@ -1,8 +1,10 @@
 "use client";
-import { useAccount, useBalance } from "@starknet-react/core";
+
+import { useEffect, useState } from "react";
+import { useAccount } from "@starknet-react/core";
 import { Tokens } from "@zohal/app/_helpers/tokens";
 import useMarketTokenBalance from "@zohal/app/_hooks/use-market-token-balance";
-import { type PropsWithClassName } from "@zohal/app/_lib/utils";
+import { PropsWithClassName } from "@zohal/app/_lib/utils";
 
 import Form from "../../_ui/form";
 import { useTokenInputs } from "../_hooks/use-token-input";
@@ -11,15 +13,32 @@ import SwapActionButton from "./swap-action-button";
 import SwapInput from "./swap-input";
 import TokenSwapButton from "./token-swap-button";
 
-/**
- * TODO @YohanTz - Use big numbers for calculations
- */
 export default function Swap({ className }: PropsWithClassName) {
-
-  
-  const ethUsdcRatio = 7000;
+  const [ethUsdcRatio, setEthUsdcRatio] = useState<number>(0);
 
   const { address } = useAccount();
+
+  const fetchEthUsdcRatio= async() =>  {
+    const pair = "eth/usd";
+    const apiUrl = `/api/fetch-candlestick?pair=${pair}`;
+    try {
+      const response = await fetch(apiUrl);
+      if (response.ok) {
+        const data = await response.json();
+        const latestPrice = data.data[data.data.length - 1].close;
+        setEthUsdcRatio(latestPrice/10**8);
+      }
+    } catch (error) {
+      console.error("Error fetching ETH/USDC ratio:", error);
+      throw error;
+    }
+  }
+
+  useEffect(() => {
+    fetchEthUsdcRatio();
+    const intervalId = setInterval(fetchEthUsdcRatio, 15 * 60 * 1000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   const {
     payTokenSymbol,
@@ -30,15 +49,6 @@ export default function Swap({ className }: PropsWithClassName) {
     updatePayTokenValue,
     updateReceiveTokenValue,
   } = useTokenInputs({ ratio: ethUsdcRatio });
-
-  // const { data: payTokenBalance } = useBalance({
-  //   address,
-  //   token: Tokens[payTokenSymbol].address,
-  // });
-  // const { data: receiveTokenBalance } = useBalance({
-  //   address,
-  //   token: Tokens[receiveTokenSymbol].address,
-  // });
 
   const { marketTokenBalance: payTokenBalance } = useMarketTokenBalance({
     marketTokenAddress: Tokens[payTokenSymbol].address,
@@ -51,7 +61,6 @@ export default function Swap({ className }: PropsWithClassName) {
   const noEnteredAmount =
     payTokenValue.length === 0 && receiveTokenValue.length === 0;
 
-  // TODO @YohanTz
   const insufficientBalance = payTokenBalance
     ? parseFloat(payTokenBalance) < parseFloat(payTokenValue)
     : true;
@@ -59,7 +68,6 @@ export default function Swap({ className }: PropsWithClassName) {
   return (
     <Form className={className}>
       <SwapInput
-        // formattedTokenBalance={payTokenBalance?.formatted}
         formattedTokenBalance={payTokenBalance}
         id="paySwapInput"
         inputValue={payTokenValue}
@@ -72,7 +80,6 @@ export default function Swap({ className }: PropsWithClassName) {
       <TokenSwapButton onClick={switchTokens} />
 
       <SwapInput
-        // formattedTokenBalance={receiveTokenBalance?.formatted}
         formattedTokenBalance={receiveTokenBalance}
         id="receiveSwapInput"
         inputValue={receiveTokenValue}
@@ -93,6 +100,8 @@ export default function Swap({ className }: PropsWithClassName) {
         noEnteredAmount={noEnteredAmount}
         payTokenSymbol={payTokenSymbol}
         payTokenValue={payTokenValue}
+         //@ts-ignore
+        oraclePrice={ethUsdcRatio}
       />
     </Form>
   );

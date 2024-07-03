@@ -9,7 +9,7 @@ import Button from "../../_ui/button";
 import Fieldset from "../../_ui/fieldset";
 import Form from "../../_ui/form";
 import Input from "../../_ui/input";
-import useMarketLong from "../_hooks/use-market-long";
+import useMarketTrade from "../_hooks/use-market-trade";
 import ChooseTokenButton from "./choose-token-button";
 import PriceInfo from "./price-info";
 import TokenSwapButton from "./token-swap-button";
@@ -22,7 +22,8 @@ export default function Trade({ className }: PropsWithClassName) {
     marketTokenAddress: Tokens.ETH.address,
   });
 
-  const { long } = useMarketLong();
+  
+  const { long } = useMarketTrade();
 
   return (
     <Form className={className}>

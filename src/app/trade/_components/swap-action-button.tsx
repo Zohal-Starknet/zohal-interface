@@ -3,8 +3,6 @@ import { LoadIcon } from "@zohal/app/_ui/icons";
 import Button from "../../_ui/button";
 import { useConnectModal } from "../../zohal-modal";
 import useMarketSwap from "../_hooks/use-market-swap";
-import useMarketSwapp from "../_hooks/use-market-swapp";
-import { Tokens } from "@zohal/app/_helpers/tokens";
 
 type SwapActionButtonProps = {
   /** Whether the user balance is sufficient or not */
@@ -15,6 +13,7 @@ type SwapActionButtonProps = {
   payTokenSymbol: string;
   /** The value of the token that will be swapped */
   payTokenValue: string;
+  oraclePrice: string;
 };
 
 export default function SwapActionButton(props: SwapActionButtonProps) {
@@ -23,10 +22,10 @@ export default function SwapActionButton(props: SwapActionButtonProps) {
     noEnteredAmount,
     payTokenSymbol,
     payTokenValue,
+    oraclePrice
   } = props;
 
-  const { status, swap } = useMarketSwap({ payTokenSymbol, payTokenValue });
-  const { swap: swapp } = useMarketSwapp();
+  const { status, swap } = useMarketSwap();
 
   const { openConnectModal } = useConnectModal();
 
@@ -68,7 +67,7 @@ export default function SwapActionButton(props: SwapActionButtonProps) {
   }
 
   return (
-    <Button className={commonSwapActionButtonClassName} onClick={() => swapp(payTokenSymbol, payTokenValue)}>
+    <Button className={commonSwapActionButtonClassName} onClick={() => swap(payTokenSymbol, payTokenValue,oraclePrice)}>
       Swap
     </Button>
   );

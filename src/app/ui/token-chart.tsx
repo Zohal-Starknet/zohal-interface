@@ -1,5 +1,6 @@
 "use client";
 
+//@ts-ignore
 import { robotoMono } from "@satoru/utils/fonts";
 // TODO @YohanTz: Add NOTICE file mentioning Trading view for using their chart library
 import { createChart, ColorType, CrosshairMode } from "lightweight-charts";
@@ -25,6 +26,7 @@ export default function TokenChart() {
         }
       });
       const json = await response.json();
+      //@ts-ignore
       setData(json.map(d => ({
         time: d.time,
         open: d.open + 3000,

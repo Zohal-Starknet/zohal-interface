@@ -44,6 +44,7 @@ export default function Position({ className }: PropsWithClassName) {
         </thead>
         <tbody>
           {positions.map((position) => {
+            const decimals = BigInt(Math.pow(10, 18));
             return (
               <tr
                 className="border-b border-neutral-800 text-sm"
@@ -86,12 +87,12 @@ export default function Position({ className }: PropsWithClassName) {
                 <td className="pr-6">
                   $
                   {(
-                    (position.market_price * position.collateral_amount) /
-                    10n ** 18n
+                    (BigInt(position.market_price) * BigInt(position.collateral_amount)) /
+                    decimals
                   ).toString()}
                 </td>
                 <td>
-                  {(position.collateral_amount / 10n ** 18n).toString()} ETH
+                  {(BigInt(position.collateral_amount) / decimals).toString()} ETH
                   <br />
                 </td>
                 <td>$5000</td>

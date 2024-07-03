@@ -1,0 +1,106 @@
+{
+    "abi": [
+        {
+            "type": "function",
+            "name": "get_account_position_keys",
+            "inputs": [
+                {
+                    "name": "account",
+                    "type": "core::starknet::contract_address::ContractAddress"
+                },
+                {
+                    "name": "start",
+                    "type": "core::integer::u32"
+                },
+                {
+                    "name": "end",
+                    "type": "core::integer::u32"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "core::array::Array::<core::felt252>"
+                }
+            ],
+            "state_mutability": "view"
+        },
+        {
+            "type": "function",
+            "name": "get_position",
+            "inputs": [
+                {
+                    "name": "key",
+                    "type": "core::felt252"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "satoru::position::position::Position"
+                }
+            ],
+            "state_mutability": "view"
+        },
+        {
+            "type": "struct",
+            "name": "satoru::position::position::Position",
+            "members": [
+                {
+                    "name": "key",
+                    "type": "core::felt252"
+                },
+                {
+                    "name": "account",
+                    "type": "core::starknet::contract_address::ContractAddress"
+                },
+                {
+                    "name": "market",
+                    "type": "core::starknet::contract_address::ContractAddress"
+                },
+                {
+                    "name": "collateral_token",
+                    "type": "core::starknet::contract_address::ContractAddress"
+                },
+                {
+                    "name": "size_in_usd",
+                    "type": "core::integer::u256"
+                },
+                {
+                    "name": "size_in_tokens",
+                    "type": "core::integer::u256"
+                },
+                {
+                    "name": "collateral_amount",
+                    "type": "core::integer::u256"
+                },
+                {
+                    "name": "borrowing_factor",
+                    "type": "core::integer::u256"
+                },
+                {
+                    "name": "funding_fee_amount_per_size",
+                    "type": "core::integer::u256"
+                },
+                {
+                    "name": "long_token_claimable_funding_amount_per_size",
+                    "type": "core::integer::u256"
+                },
+                {
+                    "name": "short_token_claimable_funding_amount_per_size",
+                    "type": "core::integer::u256"
+                },
+                {
+                    "name": "increased_at_block",
+                    "type": "core::integer::u64"
+                },
+                {
+                    "name": "decreased_at_block",
+                    "type": "core::integer::u64"
+                },
+                {
+                    "name": "is_long",
+                    "type": "core::bool"
+                }
+            ]
+        }
+    ]
+}

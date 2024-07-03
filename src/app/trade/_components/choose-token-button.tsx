@@ -1,4 +1,4 @@
-import { Tokens, type TokenSymbol } from "@zohal/app/_helpers/tokens";
+import { type TokenSymbol, Tokens } from "@zohal/app/_helpers/tokens";
 import { ChevronRight } from "@zohal/app/_ui/icons";
 import { useState } from "react";
 
