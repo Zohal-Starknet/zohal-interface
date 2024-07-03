@@ -28,8 +28,6 @@ export default function Swap({ className }: PropsWithClassName) {
         const data = await response.json();
         const latestPrice = data.data[data.data.length - 1].close;
         setEthUsdcRatio(latestPrice/10**8);
-      } else {
-        throw new Error("Failed to fetch data from external API");
       }
     } catch (error) {
       console.error("Error fetching ETH/USDC ratio:", error);
