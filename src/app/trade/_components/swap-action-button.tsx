@@ -13,6 +13,7 @@ type SwapActionButtonProps = {
   payTokenSymbol: string;
   /** The value of the token that will be swapped */
   payTokenValue: string;
+  oraclePrice: string;
 };
 
 export default function SwapActionButton(props: SwapActionButtonProps) {
@@ -21,9 +22,10 @@ export default function SwapActionButton(props: SwapActionButtonProps) {
     noEnteredAmount,
     payTokenSymbol,
     payTokenValue,
+    oraclePrice
   } = props;
 
-  const { swap } = useMarketSwap();
+  const { status, swap } = useMarketSwap();
 
   const { openConnectModal } = useConnectModal();
 
@@ -56,16 +58,16 @@ export default function SwapActionButton(props: SwapActionButtonProps) {
   }
 
   // TODO @YohanTz: loading directly in the Button component as a prop
-  //if (status === "loading") {
+  if (status === "loading") {
     return (
       <Button className={commonSwapActionButtonClassName}>
         <LoadIcon className="animate-spin" label="Loading..." />
       </Button>
     );
-  //}
+  }
 
   return (
-    <Button className={commonSwapActionButtonClassName} onClick={() => swapp(payTokenSymbol, payTokenValue)}>
+    <Button className={commonSwapActionButtonClassName} onClick={() => swap(payTokenSymbol, payTokenValue,oraclePrice)}>
       Swap
     </Button>
   );

@@ -103,6 +103,7 @@ export default function Swap({ className }: PropsWithClassName) {
         noEnteredAmount={noEnteredAmount}
         payTokenSymbol={payTokenSymbol}
         payTokenValue={payTokenValue}
+        oraclePrice={ethUsdcRatio}
       />
     </Form>
   );
