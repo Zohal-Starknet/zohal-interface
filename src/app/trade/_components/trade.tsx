@@ -14,16 +14,23 @@ import ChooseTokenButton from "./choose-token-button";
 import PriceInfo from "./price-info";
 import TokenSwapButton from "./token-swap-button";
 import TradeLeverageInput from "./trade-leverage-input";
+import { ETH_CONTRACT_ADDRESS} from "../../_lib/addresses";
+
 
 export default function Trade({ className }: PropsWithClassName) {
-  const [payValue, setPayValue] = useState("");
-  const [tokenSymbol, setTokenSymbol] = useState("ETH"); 
+  const [payValue, setPayValue] = useState("0");
+  const [tokenSymbol, setTokenSymbol] = useState( {
+    address: ETH_CONTRACT_ADDRESS,
+    decimals: 18,
+    icon: "/tokens/ethereum.png",
+    name: "Ethereum",
+  }); 
   const { marketTokenBalance: ethTokenBalance } = useMarketTokenBalance({
     marketTokenAddress: Tokens.ETH.address,
   });
 
-  
-  const { long } = useMarketTrade();
+  const { trade } = useMarketTrade();
+  console.log("Token Symbole: " + JSON.stringify(tokenSymbol));
 
   return (
     <Form className={className}>
@@ -40,9 +47,10 @@ export default function Trade({ className }: PropsWithClassName) {
               <span className="absolute -top-5 right-0 w-full whitespace-nowrap text-xs text-[#BCBCBD]">
                 Balance: {ethTokenBalance}
               </span>
+              
               <ChooseTokenButton
                 onTokenSymbolChange={() => {}}
-                tokenSymbol={tokenSymbol}
+                tokenSymbol={"ETH"}
               />
             </div>
           </div>
@@ -67,7 +75,7 @@ export default function Trade({ className }: PropsWithClassName) {
               </span>
               <ChooseTokenButton
                 onTokenSymbolChange={() => {}}
-                tokenSymbol={tokenSymbol}
+                tokenSymbol={"USDC"}
               />
             </div>
           </div>
@@ -84,10 +92,10 @@ export default function Trade({ className }: PropsWithClassName) {
       </div>
 
       <div className="mt-4 grid w-full grid-cols-2 items-center gap-2">
-        <Button onClick={() => long(tokenSymbol, payValue)} type="submit" variant="success">
+        <Button onClick={() => trade(tokenSymbol, Number(payValue), true)} type="submit" variant="success">
           Buy/Long
         </Button>
-        <Button type="submit" variant="danger">
+        <Button onClick={() => trade(tokenSymbol, Number(payValue), false)} type="submit" variant="danger">
           Sell/Short
         </Button>
       </div>

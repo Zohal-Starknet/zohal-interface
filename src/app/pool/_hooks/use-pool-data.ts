@@ -26,61 +26,15 @@ type PoolData = {
   total_borrowing_fees: bigint;
 };
 
-const oracleAbi = [
-  {
-    inputs: [
-      {
-        name: "token",
-        type: "core::starknet::contract_address::ContractAddress",
-      },
-    ],
-    name: "get_primary_price",
-    outputs: [
-      {
-        type: "satoru::price::price::Price",
-      },
-    ],
-    state_mutability: "view",
-    type: "function",
-  },
-  {
-    members: [
-      {
-        name: "min",
-        type: "core::integer::u256",
-      },
-      {
-        name: "max",
-        type: "core::integer::u256",
-      },
-    ],
-    name: "satoru::price::price::Price",
-    type: "struct",
-  },
-];
 
 export default function usePoolData() {
   const { provider } = useProvider();
   const [poolData, setPoolData] = useState<PoolData | undefined>(undefined);
-  const [ethPrice, setEthPrice] = useState("");
+  const [ethPrice, setEthPrice] = useState("3500");
 
   useEffect(() => {
     const fetchPoolData = async () => {
-      const oracleContract = new Contract(
-        oracleAbi,
-        ORACLE_CONTRACT_ADDRESS,
-        provider,
-      );
-
-      const oracleEthPrice = (await oracleContract.functions.get_primary_price(
-        ETH_CONTRACT_ADDRESS,
-      )) as { max: bigint; min: bigint };
-
-      setEthPrice(oracleEthPrice.min.toString());
-
-      const oracleUsdcPrice = (await oracleContract.functions.get_primary_price(
-        USDC_CONTRACT_ADDRESS,
-      )) as { max: bigint; min: bigint };
+     
 
       const readerContract = new Contract(
         reader_abi.abi,
@@ -100,11 +54,12 @@ export default function usePoolData() {
             short_token: USDC_CONTRACT_ADDRESS,
           },
           // index_token_price
-          oracleEthPrice,
+
+          {min: ethPrice, max: ethPrice},
           // long_token_price
-          oracleEthPrice,
+          {min: ethPrice, max: ethPrice},
           // short_token_price
-          oracleUsdcPrice,
+          {min: 1, max: 1},
           // pnl_factor_type
           "0x4896bc14d7c67b49131baf26724d3f29032ddd7539a3a8d88324140ea2de9b4",
           // maximize
@@ -118,7 +73,8 @@ export default function usePoolData() {
         ...poolData,
         long_token_amount: (BigInt(poolData.long_token_amount) / decimals).toString(),
         long_token_usd: (BigInt(poolData.long_token_usd) / decimals).toString(),
-        pool_value: (BigInt(poolData.pool_value) / decimals).toString(),
+        //@ts-ignore
+        pool_value: (BigInt(poolData.pool_value.mag) / decimals).toString(),
         short_token_amount: (
           BigInt(poolData.short_token_amount) /
           decimals
