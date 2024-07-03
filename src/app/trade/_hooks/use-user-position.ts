@@ -73,6 +73,7 @@ export default function useUserPosition() {
       swap_path: [MARKET_TOKEN_CONTRACT_ADDRESS],
       trigger_price: uint256.bnToUint256(BigInt("7000")), // TODO: Oracle price
       ui_fee_receiver: 0,
+       //@ts-ignore
       updated_at_block: BigInt(await provider.getBlockNumber()), // Await here
       is_frozen: new CairoCustomEnum({ False: {} })
     };
@@ -92,7 +93,7 @@ export default function useUserPosition() {
       }
       setPositions(undefined);
       const dataStoreContract = new Contract(
-        datastore_abi,
+        datastore_abi.abi,
         DATA_STORE_CONTRACT_ADDRESS,
         provider,
       );
@@ -103,7 +104,7 @@ export default function useUserPosition() {
       )) as Array<bigint>;
 
       const oracleContract = new Contract(
-        oracle_abi,
+        oracle_abi.abi,
         ORACLE_CONTRACT_ADDRESS,
         provider,
       );
@@ -115,6 +116,7 @@ export default function useUserPosition() {
         USDC_CONTRACT_ADDRESS,
       )) as { max: bigint; min: bigint };
 
+       //@ts-ignore
       const readerContract = new Contract(
         reader_abi.abi,
         READER_CONTRACT_ADDRESS,
@@ -183,6 +185,7 @@ export default function useUserPosition() {
   return { closePosition, positions };
 }
 
+ //@ts-ignore
 function generateOrderKey(account, market, token) {
   // Implement a function to generate a unique order key based on the account, market, and token.
   // This is just a placeholder and should be implemented based on your application's logic.

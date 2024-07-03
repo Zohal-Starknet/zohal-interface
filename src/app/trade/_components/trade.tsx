@@ -23,7 +23,7 @@ export default function Trade({ className }: PropsWithClassName) {
   });
 
   
-  const { long } = useMarketLong();
+  const { long } = useMarketTrade();
 
   return (
     <Form className={className}>

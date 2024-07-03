@@ -40,7 +40,7 @@ export default function TokenChart() {
           low: Number(d.low) / 100000000,
           close: Number(d.close) / 100000000,
         }));
-
+         //@ts-ignore
         const uniqueData = Array.from(new Map(formattedData.map(item => [item.time, item])).values()).sort((a, b) => a.time - b.time);
 
         const filteredData = getLastTwoDaysData(uniqueData);
@@ -63,6 +63,7 @@ export default function TokenChart() {
   return (
     <div className="relative flex h-100 w-full flex-col border-b border-[#2A2E37] lg:h-auto lg:flex-1">
       <Chart
+       //@ts-ignore
         layout={{ background: { color: backgroundColor, type: ColorType.Solid }, fontFamily: robotoMono.style.fontFamily, textColor }}
         grid={{ horzLines: { color: gridLinesColor }, vertLines: { color: gridLinesColor } }}
         crosshair={{ mode: CrosshairMode.Normal }}

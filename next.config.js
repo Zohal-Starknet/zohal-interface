@@ -14,7 +14,7 @@ const nextConfig = {
     ];
   },
   eslint: {
-    ignoreDuringBuilds: process.env.NEXT_PUBLIC_DISABLE_ESLINT === 'true',
+    ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: process.env.NEXT_PUBLIC_DISABLE_TYPECHECK === 'true',

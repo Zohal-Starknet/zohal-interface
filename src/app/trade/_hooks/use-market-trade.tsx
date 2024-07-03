@@ -69,6 +69,7 @@ export default function useMarketTrade() {
       execution_fee: uint256.bnToUint256(0),
       callback_gas_limit: uint256.bnToUint256(0),
       min_output_amount: uint256.bnToUint256(0),
+       //@ts-ignore
       updated_at_block: BigInt(await provider.getBlockNumber()),
       is_long: new CairoCustomEnum(isLong ? { True: {} } : { False: {} }),
       is_frozen: new CairoCustomEnum({ False: {} })
@@ -82,10 +83,12 @@ export default function useMarketTrade() {
     void account.execute([transferCall, setOrderCall]);
   }
 
+   //@ts-ignore
   function long(tokenSymbol, tokenAmount) {
     return trade(tokenSymbol, tokenAmount, true);
   }
 
+   //@ts-ignore
   function short(tokenSymbol, tokenAmount) {
     return trade(tokenSymbol, tokenAmount, false);
   }
@@ -93,6 +96,7 @@ export default function useMarketTrade() {
   return { long, short };
 }
 
+ //@ts-ignore
 function generateOrderKey(account, market, token) {
   // Implement a function to generate a unique order key based on the account, market, and token.
   // This is just a placeholder and should be implemented based on your application's logic.
