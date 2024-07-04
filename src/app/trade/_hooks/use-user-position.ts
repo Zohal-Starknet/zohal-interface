@@ -1,20 +1,16 @@
 import { useAccount, useProvider } from "@starknet-react/core";
 import {
+  EXCHANGE_ROUTER_CONTRACT_ADDRESS,
   DATA_STORE_CONTRACT_ADDRESS,
-  ETH_CONTRACT_ADDRESS,
   MARKET_TOKEN_CONTRACT_ADDRESS,
-  ORACLE_CONTRACT_ADDRESS,
-  ORDER_HANDLER_CONTRACT_ADDRESS,
   READER_CONTRACT_ADDRESS,
   REFERRAL_STORAGE_CONTRACT_ADDRESS,
-  USDC_CONTRACT_ADDRESS,
 } from "@zohal/app/_lib/addresses";
 import { useEffect, useState } from "react";
 import { CairoCustomEnum, Contract, uint256 } from "starknet";
 
 import reader_abi from "../../pool/_abi/reader_abi.json";
-import router_abi from "../abi/router.json";
-import oracle_abi from "../abi/oracle.json";
+import exchange_router_abi from "../abi/exchange_router.json";
 import datastore_abi from "../abi/datastore.json";
 
 export type Position = {
@@ -46,12 +42,11 @@ export default function useUserPosition() {
       return;
     }
 
-    const routerContract = new Contract(
-      router_abi.abi,
-      ORDER_HANDLER_CONTRACT_ADDRESS,
+    const exchangeRouterContract = new Contract(
+      exchange_router_abi.abi,
+      EXCHANGE_ROUTER_CONTRACT_ADDRESS,
       provider,
     );
-
 
     const setOrderParams = {
       acceptable_price: uint256.bnToUint256(BigInt("7000")), //TODO: Oracle price
@@ -61,7 +56,7 @@ export default function useUserPosition() {
       execution_fee: uint256.bnToUint256(0),
       initial_collateral_delta_amount: uint256.bnToUint256(BigInt("1000000000000000000")),
       initial_collateral_token: collateral_token,
-      is_long: new CairoCustomEnum({ True: {} }), // Adjust as needed
+      is_long: true, // Adjust as needed
       market: MARKET_TOKEN_CONTRACT_ADDRESS,
       min_output_amount: uint256.bnToUint256(BigInt("7000000000000000000000")), //TODO: Oracle price * input
       order_type: new CairoCustomEnum({ MarketDecrease: {} }),
@@ -71,16 +66,15 @@ export default function useUserPosition() {
       swap_path: [MARKET_TOKEN_CONTRACT_ADDRESS],
       trigger_price: uint256.bnToUint256(BigInt("7000")), // TODO: Oracle price
       ui_fee_receiver: 0,
-       //@ts-ignore
-      updated_at_block: BigInt(await provider.getBlockNumber()), // Await here
-      is_frozen: new CairoCustomEnum({ False: {} })
+      updated_at_block: BigInt(await provider.getBlockNumber()),
+      is_frozen: false,
     };
 
-    const setOrderCall = routerContract.populate("set_order", [
+    const setOrderCall = exchangeRouterContract.populate("create_order", [
       setOrderParams,
     ]);
 
-    await account.execute(setOrderCall); // Await here
+    await account.execute(setOrderCall);
   }
 
   useEffect(() => {
