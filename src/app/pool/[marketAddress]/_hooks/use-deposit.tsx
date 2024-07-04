@@ -1,6 +1,6 @@
 import { useAccount, useProvider } from "@starknet-react/core";
 import {
-  DEPOSIT_HANDLER_CONTRACT_ADDRESS,
+  EXCHANGE_ROUTER_CONTRACT_ADDRESS,
   DEPOSIT_VAULT_CONTRACT_ADDRESS,
   ETH_CONTRACT_ADDRESS,
   MARKET_TOKEN_CONTRACT_ADDRESS,
@@ -8,7 +8,7 @@ import {
 } from "@zohal/app/_lib/addresses";
 import { Contract, uint256 } from "starknet";
 
-import deposit_handler_abi from "../../../trade/abi/deposit_handler.json";
+import exchange_router_abi from "../../../trade/abi/exchange_router.json";
 import erc_20_abi from "../../../trade/abi/erc_20.json";
 
 export default function useDeposit() {
@@ -28,7 +28,7 @@ export default function useDeposit() {
 
     const ethTransferCall = ethTokenContract.populate("transfer", [
       DEPOSIT_VAULT_CONTRACT_ADDRESS,
-      uint256.bnToUint256(BigInt(token0)* BigInt(10 ** 18)),
+      uint256.bnToUint256(BigInt(token0) * BigInt(10 ** 18)),
     ]);
 
     const usdcTokenContract = new Contract(
@@ -39,12 +39,12 @@ export default function useDeposit() {
 
     const usdcTransferCall = usdcTokenContract.populate("transfer", [
       DEPOSIT_VAULT_CONTRACT_ADDRESS,
-      uint256.bnToUint256(BigInt(token1) *BigInt(10 ** 18)),
+      uint256.bnToUint256(BigInt(token1) * BigInt(10 ** 18)),
     ]); 
 
-    const depositHandlerContract = new Contract(
-      deposit_handler_abi.abi,
-      DEPOSIT_HANDLER_CONTRACT_ADDRESS,
+    const exchangeRouterContract = new Contract(
+      exchange_router_abi.abi,
+      EXCHANGE_ROUTER_CONTRACT_ADDRESS,
       provider,
     );
 
@@ -62,9 +62,9 @@ export default function useDeposit() {
       ui_fee_receiver: 0,
     };
 
-    const createDepositCall = depositHandlerContract.populate(
+    const createDepositCall = exchangeRouterContract.populate(
       "create_deposit",
-      [address, createDepositParams],
+      [createDepositParams],
     );
 
     void account.execute([

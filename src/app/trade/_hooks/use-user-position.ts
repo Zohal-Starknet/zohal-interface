@@ -52,10 +52,8 @@ export default function useUserPosition() {
       provider,
     );
 
-    const orderKey = generateOrderKey(address, MARKET_TOKEN_CONTRACT_ADDRESS, collateral_token);
 
     const setOrderParams = {
-      key: orderKey,
       acceptable_price: uint256.bnToUint256(BigInt("7000")), //TODO: Oracle price
       callback_contract: 0,
       callback_gas_limit: uint256.bnToUint256(0),
@@ -79,7 +77,6 @@ export default function useUserPosition() {
     };
 
     const setOrderCall = routerContract.populate("set_order", [
-      orderKey,
       setOrderParams,
     ]);
 
@@ -92,29 +89,19 @@ export default function useUserPosition() {
         return;
       }
       setPositions(undefined);
+
       const dataStoreContract = new Contract(
         datastore_abi.abi,
         DATA_STORE_CONTRACT_ADDRESS,
         provider,
       );
-      const positionKeys = (await dataStoreContract.functions.get_account_position_keys(
+
+      const positionKeys = (await dataStoreContract.get_account_position_keys(
         address,
         0,
         10,
       )) as Array<bigint>;
 
-      const oracleContract = new Contract(
-        oracle_abi.abi,
-        ORACLE_CONTRACT_ADDRESS,
-        provider,
-      );
-      const oracleEthPrice = (await oracleContract.functions.get_primary_price(
-        ETH_CONTRACT_ADDRESS,
-      )) as { max: bigint; min: bigint };
-
-      const oracleUsdcPrice = (await oracleContract.functions.get_primary_price(
-        USDC_CONTRACT_ADDRESS,
-      )) as { max: bigint; min: bigint };
 
        //@ts-ignore
       const readerContract = new Contract(
@@ -126,6 +113,7 @@ export default function useUserPosition() {
       const positionsInfos: Array<
         Promise<{ base_pnl_usd: { mag: bigint; sign: bigint } }>
       > = [];
+
       positionKeys.map((positionKey) => {
         positionsInfos.push(
           readerContract.functions.get_position_info(
@@ -135,10 +123,11 @@ export default function useUserPosition() {
             { contract_address: REFERRAL_STORAGE_CONTRACT_ADDRESS },
             positionKey,
             {
-              index_token_price: oracleEthPrice,
-              long_tokenPrice: oracleEthPrice,
-              short_token_price: oracleUsdcPrice,
+              index_token_price: {min:3550,max:3560},
+              long_token_price: {min:3550,max:3560},
+              short_token_price: {min:1,max:1},
             },
+            0,
             0,
             true,
           ) as Promise<{ base_pnl_usd: { mag: bigint; sign: bigint } }>,
@@ -172,7 +161,7 @@ export default function useUserPosition() {
                 (multiplicator * positionBasePnl.mag) /
                 BigInt(Math.pow(10, 18))
               ).toString(),
-              market_price: oracleEthPrice.min,
+              market_price: BigInt(3500),
             },
           ];
         }),
@@ -185,9 +174,4 @@ export default function useUserPosition() {
   return { closePosition, positions };
 }
 
- //@ts-ignore
-function generateOrderKey(account, market, token) {
-  // Implement a function to generate a unique order key based on the account, market, and token.
-  // This is just a placeholder and should be implemented based on your application's logic.
-  return `0x${BigInt(account).toString(16)}${BigInt(market).toString(16)}${BigInt(token).toString(16)}`;
-}
+
