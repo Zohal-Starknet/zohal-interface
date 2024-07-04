@@ -33,8 +33,8 @@ export default function ClosePositionDialog({
   const isCloseAction =
     parseFloat(inputValue) >= parseFloat(formattedCollateralAmount);
 
-  function onInputChange(e: ChangeEvent<HTMLInputElement>) {
-    setInputValue(e.target.value);
+  function onInputChange(newValue: string) {
+    setInputValue(newValue);
   }
 
   return (
@@ -62,7 +62,6 @@ export default function ClosePositionDialog({
         <Input
           className="rounded-lg border border-[#363636] bg-transparent px-3 py-3 text-sm"
           id="Close position"
-          // @ts-expect-error: Input onChange event typing issue
           onChange={onInputChange}
           placeholder="Collateral amount to remove"
           value={inputValue}
