@@ -8,6 +8,7 @@ import {
 } from "@zohal/app/_lib/addresses";
 import { useEffect, useState } from "react";
 import { CairoCustomEnum, Contract, uint256 } from "starknet";
+import useEthPrice  from "../_hooks/use-market-data";
 
 import reader_abi from "../../pool/_abi/reader_abi.json";
 import exchange_router_abi from "../abi/exchange_router.json";
@@ -36,8 +37,9 @@ export default function useUserPosition() {
   const [positions, setPositions] = useState<
     Array<Position & { market_price: bigint }> | undefined
   >(undefined);
+  const {ethData} = useEthPrice();
 
-  async function closePosition(collateral_token: bigint) {
+  async function closePosition(collateral_token: bigint, collateral_amount: bigint) {
     if (account === undefined || address === undefined) {
       return;
     }
@@ -49,7 +51,7 @@ export default function useUserPosition() {
     );
 
     const setOrderParams = {
-      acceptable_price: uint256.bnToUint256(BigInt("7000")), //TODO: Oracle price
+      acceptable_price: uint256.bnToUint256(BigInt(ethData.currentPrice)),
       callback_contract: 0,
       callback_gas_limit: uint256.bnToUint256(0),
       decrease_position_swap_type: new CairoCustomEnum({ NoSwap: {} }),
@@ -58,11 +60,11 @@ export default function useUserPosition() {
       initial_collateral_token: collateral_token,
       is_long: true, // Adjust as needed
       market: MARKET_TOKEN_CONTRACT_ADDRESS,
-      min_output_amount: uint256.bnToUint256(BigInt("7000000000000000000000")), //TODO: Oracle price * input
+      min_output_amount: uint256.bnToUint256(BigInt(ethData.currentPrice) * collateral_amount),
       order_type: new CairoCustomEnum({ MarketDecrease: {} }),
       receiver: address,
       referral_code: 0,
-      size_delta_usd: uint256.bnToUint256(BigInt("7000000000000000000000")), //TODO: Oracle price * input
+      size_delta_usd: uint256.bnToUint256(collateral_amount * BigInt("7000000000000000000000")), //TODO: Oracle price * input
       swap_path: [MARKET_TOKEN_CONTRACT_ADDRESS],
       trigger_price: uint256.bnToUint256(BigInt("7000")), // TODO: Oracle price
       ui_fee_receiver: 0,
