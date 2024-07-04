@@ -69,7 +69,7 @@ export default function ClosePositionDialog({
         {isCloseAction ? (
           <button
             className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
-            onClick={() => closePosition(collateral_token)}
+            onClick={() => closePosition(collateral_token, collateral_amount)}
           >
             Close Position
           </button>
