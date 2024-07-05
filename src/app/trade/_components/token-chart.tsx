@@ -2,7 +2,6 @@
 
 import React from "react";
 import dynamic from "next/dynamic";
-import Head from "next/head";
 import Script from "next/script";
 
 const TradingViewChart = dynamic(() => import("./trading-view-chart"), { ssr: false });
