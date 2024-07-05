@@ -41,7 +41,7 @@ export default function useUserPosition() {
     Array<Position & { base_pnl_usd: bigint} & { market_price: bigint }> | undefined
   >(undefined);
 
-  async function closePosition(collateral_token: bigint) {
+  async function closePosition(collateral_token: bigint, collateral_amount: bigint) {
     if (account === undefined || address === undefined) {
       return;
     }
@@ -63,11 +63,11 @@ export default function useUserPosition() {
       initial_collateral_token: collateral_token,
       is_long: new CairoCustomEnum({ True: {} }), // Adjust as needed
       market: MARKET_TOKEN_CONTRACT_ADDRESS,
-      min_output_amount: uint256.bnToUint256(BigInt("7000000000000000000000")), //TODO: Oracle price * input
+      min_output_amount: uint256.bnToUint256(BigInt(7000000000000000000000) * collateral_amount),
       order_type: new CairoCustomEnum({ MarketDecrease: {} }),
       receiver: address,
       referral_code: 0,
-      size_delta_usd: uint256.bnToUint256(BigInt("7000000000000000000000")), //TODO: Oracle price * input
+      size_delta_usd: uint256.bnToUint256(collateral_amount * BigInt("7000000000000000000000")), //TODO: Oracle price * input
       swap_path: [MARKET_TOKEN_CONTRACT_ADDRESS],
       trigger_price: uint256.bnToUint256(BigInt("7000")), // TODO: Oracle price
       ui_fee_receiver: 0,

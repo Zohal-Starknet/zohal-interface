@@ -31,8 +31,6 @@ export default function Trade({ className }: PropsWithClassName) {
   const [leverage, setLeverage] = useState(1);
 
   const { trade } = useMarketTrade();
-  console.log("Token Symbole: " + JSON.stringify(tokenSymbol));
-
   return (
     <Form className={className}>
       <Fieldset
