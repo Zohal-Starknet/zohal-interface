@@ -37,6 +37,7 @@ export default function TradeLeverageInput(props: TradeLeverageInputProps) {
           <Slider
             max={50}
             min={1.1}
+            //@ts-ignore
             onValueChange={(value) => setLeverage(value)}
             step={0.1}
             value={[leverage]}
@@ -44,6 +45,7 @@ export default function TradeLeverageInput(props: TradeLeverageInputProps) {
           <div className="h-10 w-20 flex-auto items-center rounded-md border border-[#363636] bg-[#25272E]">
             <Input
               className="h-full w-full bg-transparent px-2 text-sm"
+              //@ts-ignore
               onChange={onLeverageChange}
               placeholder="0.00×"
               value={leverage.toString()}

@@ -8,7 +8,7 @@ export default function ChartPanel() {
     <div className="flex flex-auto flex-col">
       <ChartHeader />
       <Divider />
-      <TokenChart />
+      <TokenChart/>
     </div>
   );
 }
