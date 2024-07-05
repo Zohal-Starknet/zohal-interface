@@ -105,7 +105,7 @@ export default function Position({ className }: PropsWithClassName) {
                   <br />
                 </td>
                 <td>{(position.base_pnl_usd).toString()}</td>
-                <td>${ethData.currentPrice.toString()}</td>
+                <td>${(ethData.currentPrice.toFixed(2))}</td>
                 {/* <td>{data.liquidationPrice}</td> */}
                 <td className="text-right">
                   <ClosePositionDialog

@@ -28,6 +28,7 @@ export default function Trade({ className }: PropsWithClassName) {
   const { marketTokenBalance: ethTokenBalance } = useMarketTokenBalance({
     marketTokenAddress: Tokens.ETH.address,
   });
+  const [leverage, setLeverage] = useState(1);
 
   const { trade } = useMarketTrade();
   console.log("Token Symbole: " + JSON.stringify(tokenSymbol));
@@ -83,7 +84,7 @@ export default function Trade({ className }: PropsWithClassName) {
         label="Long/Short"
       />
 
-      <TradeLeverageInput className="py-6" />
+      <TradeLeverageInput className="py-6" leverage={leverage} setLeverage={setLeverage}/>
 
       <div className="flex flex-col gap-2 rounded-md border border-[#363636] p-3">
         {priceInfos.map((priceInfo, index) => (
@@ -92,10 +93,10 @@ export default function Trade({ className }: PropsWithClassName) {
       </div>
 
       <div className="mt-4 grid w-full grid-cols-2 items-center gap-2">
-        <Button onClick={() => trade(tokenSymbol, Number(payValue), true)} type="submit" variant="success">
+        <Button onClick={() => trade(tokenSymbol, Number(payValue), true, leverage)} type="submit" variant="success">
           Buy/Long
         </Button>
-        <Button onClick={() => trade(tokenSymbol, Number(payValue), false)} type="submit" variant="danger">
+        <Button onClick={() => trade(tokenSymbol, Number(payValue), false, leverage)} type="submit" variant="danger">
           Sell/Short
         </Button>
       </div>
