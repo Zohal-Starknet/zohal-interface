@@ -124,7 +124,6 @@ const datafeed = {
             //@ts-ignore
             onHistoryCallback(bars, { noData: false });
         } catch (error) {
-            //@ts-ignore
             onErrorCallback(error);
         }
     },
