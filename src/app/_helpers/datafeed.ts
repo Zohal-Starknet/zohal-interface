@@ -1,4 +1,4 @@
-import { makeApiRequest, generateSymbol, parseFullSymbol } from './helpers';
+import { makeApiRequest } from './helpers';
 
 interface DatafeedConfiguration {
     supported_resolutions: string[];
@@ -7,10 +7,9 @@ interface DatafeedConfiguration {
 }
 
 const configurationData: DatafeedConfiguration = {
-    supported_resolutions: ['1D', '1W', '1M'],
+    supported_resolutions: ['15M', '1D', '1W', '1M'],
     exchanges: [
-        { value: 'Bitfinex', name: 'Bitfinex', desc: 'Bitfinex' },
-        { value: 'Kraken', name: 'Kraken', desc: 'Kraken bitcoin exchange' },
+        { value: 'Pragma', name: 'Pragma', desc: 'Pragma' },
     ],
     symbols_types: [
         { name: 'crypto', value: 'crypto' }
@@ -37,31 +36,12 @@ interface LibrarySymbolInfo {
 
 async function getAllSymbols() {
     const data = await makeApiRequest('data/v3/all/exchanges');
-    let allSymbols: any[] = [];
-
-    for (const exchange of configurationData.exchanges) {
-        const pairs = data.Data[exchange.value].pairs;
-
-        for (const leftPairPart of Object.keys(pairs)) {
-            const symbols = pairs[leftPairPart].map((rightPairPart: string) => {
-                const symbol = generateSymbol(exchange.value, leftPairPart, rightPairPart);
-                return {
-                    symbol: symbol.short,
-                    ticker: symbol.full,
-                    description: symbol.short,
-                    exchange: exchange.value,
-                    type: 'crypto',
-                };
-            });
-            allSymbols = [...allSymbols, ...symbols];
-        }
-    }
+    let allSymbols: any[] = [{exchange: "Pragma",ticker:"ETH/USD"}];
     return allSymbols;
 }
 
 const datafeed = {
     onReady: (callback: (config: DatafeedConfiguration) => void) => {
-        console.log('[onReady]: Method call');
         setTimeout(() => callback(configurationData));
     },
     searchSymbols: async (
@@ -70,7 +50,6 @@ const datafeed = {
         symbolType: string,
         onResultReadyCallback: (symbols: any[]) => void
     ) => {
-        console.log('[searchSymbols]: Method call');
         const symbols = await getAllSymbols();
         const newSymbols = symbols.filter(symbol => {
             const isExchangeValid = exchange === '' || symbol.exchange === exchange;
@@ -86,7 +65,6 @@ const datafeed = {
         onSymbolResolvedCallback: (symbolInfo: LibrarySymbolInfo) => void,
         onResolveErrorCallback: (reason: string) => void
     ) => {
-        console.log('[resolveSymbol]: Method call', symbolName);
         const symbols = await getAllSymbols();
         const symbolItem = symbols.find(({ ticker }) => ticker === symbolName);
         if (!symbolItem) {
@@ -111,7 +89,6 @@ const datafeed = {
             volume_precision: 2,
             data_status: 'streaming',
         };
-        console.log('[resolveSymbol]: Symbol resolved', symbolName);
         onSymbolResolvedCallback(symbolInfo);
     },
     getBars: async (
@@ -122,43 +99,28 @@ const datafeed = {
         onErrorCallback: (error: Error) => void
     ) => {
         const { from, to } = periodParams;
-        console.log('[getBars]: Method call', symbolInfo, resolution, from, to);
-        const parsedSymbol = parseFullSymbol(symbolInfo.ticker);
-        if (!parsedSymbol) {
-            onErrorCallback(new Error('Invalid symbol'));
-            return;
-        }
-        const urlParameters = {
-            fsym: parsedSymbol.fromSymbol,
-            tsym: parsedSymbol.toSymbol,
-            toTs: to,
-            limit: 2000,
-        };
-        const query = Object.keys(urlParameters)
-            .map(name => `${name}=${encodeURIComponent(urlParameters[name])}`)
-            .join('&');
         try {
-            const data = await makeApiRequest(`data/histoday?${query}`);
-            if (data.Response && data.Response === 'Error' || data.Data.length === 0) {
+            const pair = "eth/usd";
+            const apiUrl = `/api/fetch-candlestick?pair=${pair}`;
+            const data = await makeApiRequest(apiUrl);
+            if (data.Response && data.Response === 'Error' || data.data.length === 0) {
                 onHistoryCallback([], { noData: true });
                 return;
             }
             let bars = [];
-            data.Data.forEach((bar: any) => {
-                if (bar.time >= from && bar.time < to) {
-                    bars = [...bars, {
-                        time: bar.time * 1000,
-                        low: bar.low,
-                        high: bar.high,
-                        open: bar.open,
-                        close: bar.close,
-                    }];
-                }
+            let time ;
+            data.data.forEach((bar: any) => {
+                time = new Date(bar.time).getTime();
+                bars = [...bars, {
+                    time: time ,
+                    low: bar.low / 10 **8,
+                    high: bar.high / 10 **8,
+                    open: bar.open / 10 **8,
+                    close: bar.close / 10 **8,
+                }];
             });
-            console.log(`[getBars]: returned ${bars.length} bar(s)`);
             onHistoryCallback(bars, { noData: false });
         } catch (error) {
-            console.log('[getBars]: Get error', error);
             onErrorCallback(error);
         }
     },

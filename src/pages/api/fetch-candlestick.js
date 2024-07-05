@@ -2,7 +2,7 @@
 
 export default async function handler(req, res) {
     const { pair } = req.query;
-    const apiUrl = `https://api.dev.pragma.build/node/v1/aggregation/candlestick/${pair}?interval=15min`;
+    const apiUrl = `https://api.dev.pragma.build/node/v1/aggregation/candlestick/${pair}?interval=2h`;
   
     try {
       const response = await fetch(apiUrl, {

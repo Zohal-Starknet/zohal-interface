@@ -10,14 +10,11 @@ const TradingViewChart = dynamic(() => import("./trading-view-chart"), { ssr: fa
 export default function TokenChart() {
   return (
     <>
-      <Head>
-        <title>TradingView Chart Integration</title>
-      </Head>
       <Script src="/static/charting_library/charting_library.standalone.js" strategy="lazyOnload" />
       <Script src="/static/datafeeds/udf/dist/bundle.js" strategy="lazyOnload" />
       <div className="relative flex h-100 w-full flex-col border-b border-[#2A2E37] lg:h-auto lg:flex-1">
         <TradingViewChart
-          symbol="AAPL"
+          symbol="ETH/USD"
           interval="1D"
           library_path="/static/charting_library/"
           locale="en"
