@@ -30,8 +30,6 @@ export default function Trade({ className }: PropsWithClassName) {
   });
 
   const { trade } = useMarketTrade();
-  console.log("Token Symbole: " + JSON.stringify(tokenSymbol));
-
   return (
     <Form className={className}>
       <Fieldset
