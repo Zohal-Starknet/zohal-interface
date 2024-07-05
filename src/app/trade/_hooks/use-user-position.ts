@@ -16,6 +16,7 @@ import reader_abi from "../../pool/_abi/reader_abi.json";
 import router_abi from "../abi/router.json";
 import oracle_abi from "../abi/oracle.json";
 import datastore_abi from "../abi/datastore.json";
+import useEthPrice from "./use-market-data";
 
 export type Position = {
   account: bigint;
@@ -122,9 +123,9 @@ export default function useUserPosition() {
             { contract_address: REFERRAL_STORAGE_CONTRACT_ADDRESS },
             positionKey,
             {
-              index_token_price: {min:3550,max:3560},
-              long_token_price: {min:3550,max:3560},
-              short_token_price: {min:1,max:1},
+              index_token_price: {min: 2925, max: 2925},
+              long_token_price: {min: 2925, max: 2925},
+              short_token_price: {min: 1, max: 1},
             },
             0,
             0,
@@ -159,7 +160,7 @@ export default function useUserPosition() {
               base_pnl_usd: (
                 (multiplicator * positionBasePnl.mag)
               ),
-              market_price: BigInt(3500),
+              market_price: BigInt(2925),
             },
           ];
         }),

@@ -8,11 +8,13 @@ import { CairoCustomEnum, Contract, uint256 } from "starknet";
 
 import erc_20_abi from "../abi/erc_20.json";
 import exchange_router_abi from "../abi/exchange_router.json";
+import useEthPrice from "./use-market-data";
 
 //@ts-ignore
 export default function useMarketTrade() {
   const { account, address } = useAccount();
   const { provider } = useProvider();
+  const {ethData} = useEthPrice();
 
   //@ts-ignore
   async function trade(tokenSymbol, tokenAmount, isLong, leverage) {
@@ -38,10 +40,10 @@ export default function useMarketTrade() {
       market: MARKET_TOKEN_CONTRACT_ADDRESS,
       initial_collateral_token: tokenSymbol.address,
       swap_path: [], 
-      size_delta_usd: uint256.bnToUint256(BigInt(leverage) * BigInt(3500) * BigInt(tokenAmount * (10 ** tokenSymbol.decimals))),
+      size_delta_usd: uint256.bnToUint256(BigInt(leverage) * BigInt(ethData.currentPrice.toPrecision(4)) * BigInt(tokenAmount * (10 ** tokenSymbol.decimals))),
       initial_collateral_delta_amount: uint256.bnToUint256(BigInt(tokenAmount)),
       trigger_price: uint256.bnToUint256(0),
-      acceptable_price: uint256.bnToUint256(BigInt(3500)),
+      acceptable_price: uint256.bnToUint256(BigInt(ethData.currentPrice.toPrecision(4))),
       execution_fee: uint256.bnToUint256(0),
       callback_gas_limit: uint256.bnToUint256(0),
       min_output_amount: uint256.bnToUint256(0),

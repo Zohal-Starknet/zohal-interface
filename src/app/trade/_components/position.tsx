@@ -71,7 +71,7 @@ export default function Position({ className }: PropsWithClassName) {
                       {position.is_long ? "LONG" : "SHORT"}
                     </span>
                     <br />
-                    <span className="text-sm text-[#bcbcbd]">{(position.size_in_usd / (BigInt(3500) * BigInt(position.collateral_amount))).toString()}×</span>
+                    <span className="text-sm text-[#bcbcbd]">{(position.size_in_usd / (BigInt(position.market_price) * BigInt(position.collateral_amount))).toString()}×</span>
                   </div>
                 </td> 
                 {/* <td className="py-4">
@@ -88,7 +88,7 @@ export default function Position({ className }: PropsWithClassName) {
                 </td> */}
                 <td>
                   <div>
-                    ${((position.size_in_usd + BigInt(position.base_pnl_usd)) / decimals).toString()}
+                    ${((position.collateral_amount * BigInt((ethData.currentPrice.toFixed(0))) + BigInt(position.base_pnl_usd)) / decimals).toString()}
                     <br />
                     <span className={clsx(position.base_pnl_usd > 0 ? "text-sm text-[#40B68B]" : "text-sm text-[#FF5354]")}>
                     {position.base_pnl_usd>0 ? '+':''}{(position.base_pnl_usd / decimals).toString()}$</span>
@@ -104,7 +104,7 @@ export default function Position({ className }: PropsWithClassName) {
                   {(BigInt(position.collateral_amount) / decimals).toString()} ETH
                   <br />
                 </td>
-                <td>{(position.base_pnl_usd).toString()}</td>
+                <td>$3500</td>
                 <td>${(ethData.currentPrice.toFixed(2))}</td>
                 {/* <td>{data.liquidationPrice}</td> */}
                 <td className="text-right">
