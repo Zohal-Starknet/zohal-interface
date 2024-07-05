@@ -41,7 +41,6 @@ export default function useUserPosition() {
   const [positions, setPositions] = useState<
     Array<Position & { base_pnl_usd: bigint} & { market_price: bigint }> | undefined
   >(undefined);
-  const {ethData} = useEthPrice();
 
   async function closePosition(collateral_token: bigint, collateral_amount: bigint) {
     if (account === undefined || address === undefined) {
@@ -124,8 +123,8 @@ export default function useUserPosition() {
             { contract_address: REFERRAL_STORAGE_CONTRACT_ADDRESS },
             positionKey,
             {
-              index_token_price: {min: ethData.currentPrice.toPrecision(4), max: ethData.currentPrice.toPrecision(4)},
-              long_token_price: {min: ethData.currentPrice.toPrecision(4), max: ethData.currentPrice.toPrecision(4)},
+              index_token_price: {min: 2925, max: 2925},
+              long_token_price: {min: 2925, max: 2925},
               short_token_price: {min: 1, max: 1},
             },
             0,
@@ -161,7 +160,7 @@ export default function useUserPosition() {
               base_pnl_usd: (
                 (multiplicator * positionBasePnl.mag)
               ),
-              market_price: BigInt(ethData.currentPrice.toPrecision(4)),
+              market_price: BigInt(2925),
             },
           ];
         }),
