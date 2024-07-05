@@ -71,9 +71,9 @@ export default function useUserPosition() {
       swap_path: [MARKET_TOKEN_CONTRACT_ADDRESS],
       trigger_price: uint256.bnToUint256(BigInt("7000")), // TODO: Oracle price
       ui_fee_receiver: 0,
-       //@ts-ignore
-      updated_at_block: BigInt(await provider.getBlockNumber()), // Await here
-      is_frozen: new CairoCustomEnum({ False: {} })
+      //@ts-ignore
+      updated_at_block: BigInt(await provider.getBlockNumber()),
+      is_frozen: false,
     };
 
     const setOrderCall = routerContract.populate("set_order", [
@@ -101,7 +101,6 @@ export default function useUserPosition() {
         0,
         10,
       )) as Array<bigint>;
-
 
        //@ts-ignore
       const readerContract = new Contract(
