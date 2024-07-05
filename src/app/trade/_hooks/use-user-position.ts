@@ -98,7 +98,6 @@ export default function useUserPosition() {
         10,
       )) as Array<bigint>;
 
-
        //@ts-ignore
       const readerContract = new Contract(
         reader_abi.abi,
