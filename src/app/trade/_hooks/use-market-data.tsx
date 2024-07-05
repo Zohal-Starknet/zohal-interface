@@ -69,6 +69,7 @@ export default function useEthPrice() {
       }
     } catch (error) {
       console.error("Failed to fetch data: ", error);
+      //@ts-ignore
       setError(error);
     } finally {
       setLoading(false);

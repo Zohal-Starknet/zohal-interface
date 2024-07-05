@@ -107,10 +107,12 @@ const datafeed = {
                 onHistoryCallback([], { noData: true });
                 return;
             }
+            //@ts-ignore
             let bars = [];
             let time ;
             data.data.forEach((bar: any) => {
                 time = new Date(bar.time).getTime();
+                //@ts-ignore
                 bars = [...bars, {
                     time: time ,
                     low: bar.low / 10 **8,
@@ -119,6 +121,7 @@ const datafeed = {
                     close: bar.close / 10 **8,
                 }];
             });
+            //@ts-ignore
             onHistoryCallback(bars, { noData: false });
         } catch (error) {
             onErrorCallback(error);

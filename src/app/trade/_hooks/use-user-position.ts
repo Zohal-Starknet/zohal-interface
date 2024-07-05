@@ -68,6 +68,7 @@ export default function useUserPosition() {
       swap_path: [MARKET_TOKEN_CONTRACT_ADDRESS],
       trigger_price: uint256.bnToUint256(BigInt("7000")), // TODO: Oracle price
       ui_fee_receiver: 0,
+      //@ts-ignore
       updated_at_block: BigInt(await provider.getBlockNumber()),
       is_frozen: false,
     };

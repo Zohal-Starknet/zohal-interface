@@ -36,6 +36,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = (props) => {
       theme: 'dark',
     };
 
+    //@ts-ignore
     const tvWidget = new window.TradingView.widget(widgetOptions);
 
     tvWidget.onChartReady(() => {
