@@ -7,7 +7,7 @@ interface DatafeedConfiguration {
 }
 
 const configurationData: DatafeedConfiguration = {
-    supported_resolutions: ['15M', '1D', '1W', '1M'],
+    supported_resolutions: ['15', '60', '1D', '1W', '1M'],
     exchanges: [
         { value: 'Pragma', name: 'Pragma', desc: 'Pragma' },
     ],
@@ -121,8 +121,11 @@ const datafeed = {
                     close: bar.close / 10 **8,
                 }];
             });
+
+            bars.sort((a, b) => a.time - b.time);
+
             //@ts-ignore
-            onHistoryCallback(bars, { noData: false });
+            onHistoryCallback(bars, {  noData: bars.length === 0});
         } catch (error) {
             //@ts-ignore
             onErrorCallback(error);

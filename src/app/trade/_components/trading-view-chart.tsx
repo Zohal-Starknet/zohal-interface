@@ -34,7 +34,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = (props) => {
       const widgetOptions = {
         symbol: props.symbol || "ETH/USD",
         datafeed: datafeed,
-        interval: props.interval || "1D",
+        interval: props.interval || "60",
         container: chartContainerRef.current,
         library_path: props.library_path || "/static/charting_library/",
         locale: props.locale || "en",
@@ -45,7 +45,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = (props) => {
         user_id: props.user_id,
         fullscreen: props.fullscreen || false,
         autosize: props.autosize || true,
-        theme: 'dark',
+        theme: 'dark'
       };
 
       const tvWidget = new window.TradingView.widget(widgetOptions);
