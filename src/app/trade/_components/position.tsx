@@ -71,7 +71,7 @@ export default function Position({ className }: PropsWithClassName) {
                       {position.is_long ? "LONG" : "SHORT"}
                     </span>
                     <br />
-                    <span className="text-sm text-[#bcbcbd]">{(position.size_in_usd / (BigInt(3500) * BigInt(position.collateral_amount))).toString()}×</span>
+                    <span className="text-sm text-[#bcbcbd]">{(position.size_in_usd / (BigInt(position.market_price) * BigInt(position.collateral_amount))).toString()}×</span>
                   </div>
                 </td> 
                 {/* <td className="py-4">
