@@ -15,7 +15,7 @@ export default function useMarketTrade() {
   const { provider } = useProvider();
 
   //@ts-ignore
-  async function trade(tokenSymbol, tokenAmount, isLong) {
+  async function trade(tokenSymbol, tokenAmount, isLong, leverage) {
     if (account === undefined || address === undefined) {
       return;
     }
@@ -38,7 +38,7 @@ export default function useMarketTrade() {
       market: MARKET_TOKEN_CONTRACT_ADDRESS,
       initial_collateral_token: tokenSymbol.address,
       swap_path: [], 
-      size_delta_usd: uint256.bnToUint256(BigInt(3500) * BigInt(tokenAmount * (10 ** tokenSymbol.decimals))),
+      size_delta_usd: uint256.bnToUint256(BigInt(leverage) * BigInt(3500) * BigInt(tokenAmount * (10 ** tokenSymbol.decimals))),
       initial_collateral_delta_amount: uint256.bnToUint256(BigInt(tokenAmount)),
       trigger_price: uint256.bnToUint256(0),
       acceptable_price: uint256.bnToUint256(BigInt(3500)),
