@@ -6,16 +6,18 @@ import clsx from "clsx";
 
 import useUserPosition from "../_hooks/use-user-position";
 import ClosePositionDialog from "./close-position-dialog";
+import useEthPrice  from "../_hooks/use-market-data";
 
 /* eslint-disable @next/next/no-img-element */
 export default function Position({ className }: PropsWithClassName) {
   // TODO @YohanTz: Add ? icon to explain each of the table header
   const { closePosition, positions } = useUserPosition();
+  const {ethData} = useEthPrice();
 
   if (positions === undefined) {
     return (
       <div className="mt-4 flex justify-center text-neutral-400">
-        Loading...
+        Connect your wallet to see your positions
       </div>
     );
   }
@@ -34,7 +36,7 @@ export default function Position({ className }: PropsWithClassName) {
         <thead className="border-b border-neutral-800 text-left">
           <tr className="text-[#bcbcbd]">
             <th className={tableHeaderCommonStyles}>Position</th>
-            {/* <th className={tableHeaderCommonStyles}>Net Value</th> */}
+            <th className={tableHeaderCommonStyles}>Net Value</th>
             <th className={tableHeaderCommonStyles}>Size</th>
             <th className={tableHeaderCommonStyles}>Collateral</th>
             <th className={tableHeaderCommonStyles}>Entry Price</th>
@@ -69,9 +71,9 @@ export default function Position({ className }: PropsWithClassName) {
                       {position.is_long ? "LONG" : "SHORT"}
                     </span>
                     <br />
-                    <span className="text-sm text-[#bcbcbd]">1×</span>
+                    <span className="text-sm text-[#bcbcbd]">{(position.size_in_usd / (BigInt(3500) * BigInt(position.collateral_amount))).toString()}×</span>
                   </div>
-                </td>
+                </td> 
                 {/* <td className="py-4">
                   {data.netValue.price}
                   <br />
@@ -84,19 +86,26 @@ export default function Position({ className }: PropsWithClassName) {
                     {data.netValue.purcentage}
                   </span>
                 </td> */}
+                <td>
+                  <div>
+                    ${((position.size_in_usd + BigInt(position.base_pnl_usd)) / decimals).toString()}
+                    <br />
+                    <span className={clsx(position.base_pnl_usd > 0 ? "text-sm text-[#40B68B]" : "text-sm text-[#FF5354]")}>
+                    {position.base_pnl_usd>0 ? '+':''}{(position.base_pnl_usd / decimals).toString()}$</span>
+                  </div>
+                </td> 
                 <td className="pr-6">
                   $
                   {(
-                    (BigInt(position.market_price) * BigInt(position.collateral_amount)) /
-                    decimals
+                    position.size_in_usd / decimals
                   ).toString()}
                 </td>
                 <td>
                   {(BigInt(position.collateral_amount) / decimals).toString()} ETH
                   <br />
                 </td>
-                <td>$5000</td>
-                <td>${position.market_price.toString()}</td>
+                <td>{(position.base_pnl_usd).toString()}</td>
+                <td>${ethData.currentPrice.toString()}</td>
                 {/* <td>{data.liquidationPrice}</td> */}
                 <td className="text-right">
                   <ClosePositionDialog
