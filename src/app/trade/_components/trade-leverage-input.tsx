@@ -7,6 +7,8 @@ import { useState } from "react";
 type TradeLeverageInputProps = {
   /** ClassName applied to the container of the component */
   className?: string;
+  leverage: number;
+  setLeverage: (value: number) => void;
 };
 
 const leverageInputs = [
@@ -17,13 +19,13 @@ const leverageInputs = [
 ];
 
 export default function TradeLeverageInput(props: TradeLeverageInputProps) {
-  const { className } = props;
+  const { className, leverage, setLeverage } = props;
 
-  const [leverage, setLeverage] = useState("1");
-
-  function onLeverageChange(leverageInput: string) {
-    // TODO @YohanTz: Pretty sure that there is a mask library to handle × at the end of the input
-    setLeverage(leverageInput.toString());
+  function onLeverageChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const value = parseFloat(event.target.value);
+    if (!isNaN(value)) {
+      setLeverage(value);
+    }
   }
 
   return (
@@ -35,16 +37,16 @@ export default function TradeLeverageInput(props: TradeLeverageInputProps) {
           <Slider
             max={50}
             min={1.1}
-            onValueChange={(value) => setLeverage(value.toString())}
+            onValueChange={(value) => setLeverage(value)}
             step={0.1}
-            value={[parseFloat(leverage)]}
+            value={[leverage]}
           />
           <div className="h-10 w-20 flex-auto items-center rounded-md border border-[#363636] bg-[#25272E]">
             <Input
               className="h-full w-full bg-transparent px-2 text-sm"
               onChange={onLeverageChange}
               placeholder="0.00×"
-              value={leverage}
+              value={leverage.toString()}
             />
           </div>
         </div>
@@ -54,7 +56,7 @@ export default function TradeLeverageInput(props: TradeLeverageInputProps) {
               <button
                 className="h-10 flex-shrink-0 rounded-lg border border-[#363636] bg-[#1b1d22] px-2 text-xs"
                 key={leverageInput.name}
-                onClick={() => setLeverage(leverageInput.value.toString())}
+                onClick={() => setLeverage(leverageInput.value)}
               >
                 {leverageInput.name}
               </button>

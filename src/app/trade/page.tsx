@@ -9,6 +9,7 @@ export default function Home() {
       <main className="flex flex-auto flex-col lg:flex-row lg:overflow-hidden">
         <div className="flex flex-auto flex-col">
           <ChartPanel />
+          <PositionPanel className="hidden lg:block" />
         </div>
         <TradeSwapPanel />
       </main>
