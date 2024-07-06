@@ -58,7 +58,7 @@ export default function ClosePositionDialog({
           <DialogDescription>Adjust or close your position</DialogDescription>
         </DialogHeader>
         <div className="-mb-3">
-          <p className="w-full text-right text-sm text-neutral-300">
+          <p className="text-muted-foreground w-full text-right text-sm">
             Max: {formattedCollateralAmount} ETH
           </p>
         </div>
