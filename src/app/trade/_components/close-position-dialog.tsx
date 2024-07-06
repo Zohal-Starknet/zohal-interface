@@ -41,6 +41,10 @@ export default function ClosePositionDialog({
     setInputValue(newValue);
   }
 
+  if (!open) {
+    return null;
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
