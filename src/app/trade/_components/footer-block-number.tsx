@@ -43,4 +43,4 @@ export default function FooterBlockNumber() {
 }
 
 const badgeContainerClassName =
-  "inline-flex items-center gap-2 rounded-md border border-[#363636] bg-[#1b1d22] px-2 py-1";
+  "inline-flex items-center gap-2 rounded-md border border-border bg-secondary px-2 py-1";

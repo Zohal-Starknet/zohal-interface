@@ -12,11 +12,11 @@ export default function TokenSwapButton(props: TokenSwapButtonProps) {
   return (
     <div className="relative flex items-center justify-center">
       <button
-        className="absolute mx-auto rounded-lg border border-[#363636] bg-[#4b4f5d] p-2"
+        className="border-border bg-background absolute mx-auto rounded-lg border p-2"
         onClick={onClick}
         type="button"
       >
-        <SwapIcon className="h-5 w-5 text-white" label="Swap" />
+        <SwapIcon className="text-foreground h-5 w-5" label="Swap" />
       </button>
     </div>
   );

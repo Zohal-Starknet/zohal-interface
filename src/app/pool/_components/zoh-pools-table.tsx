@@ -18,8 +18,8 @@ const IntlFormatter = new Intl.NumberFormat();
 
 function ZohPoolsTableHeader() {
   return (
-    <thead className="border-b border-neutral-800 text-sm">
-      <tr className="text-[#bcbcbd]">
+    <thead className="border-border border-b text-sm">
+      <tr className="text-muted-foreground">
         <th className={tableHeaderCommonStyles}>Market</th>
         <th className={tableHeaderCommonStyles}>Price</th>
         {/* <th className={tableHeaderCommonStyles}>Total Supply</th> */}
@@ -61,12 +61,14 @@ function ZohPoolsTableBody() {
               />
               <p>ETH/USD</p>
             </td>
-            <td className="px-1 py-3">${IntlFormatter.format(Number(ethPrice))}</td>
+            <td className="px-1 py-3">
+              ${IntlFormatter.format(Number(ethPrice))}
+            </td>
             <td className="px-1 py-3">
               {/* <p>5,623,489.29 ZOH</p>
-              <p className="text-[#bcbcbd]">($12,776,103.40)</p> */}
+              <p className="text-muted-foreground">($12,776,103.40)</p> */}
               {poolData && (
-                <p className="text-[#bcbcbd]">
+                <p className="text-muted-foreground">
                   (${IntlFormatter.format(Number(poolData.pool_value))})
                 </p>
               )}
@@ -74,8 +76,11 @@ function ZohPoolsTableBody() {
             <td className="px-1 py-3">
               {poolData && (
                 <>
-                  <p>{IntlFormatter.format(Number(poolData.long_token_amount))} ETH</p>
-                  <p className="text-[#bcbcbd]">
+                  <p>
+                    {IntlFormatter.format(Number(poolData.long_token_amount))}{" "}
+                    ETH
+                  </p>
+                  <p className="text-muted-foreground">
                     (${IntlFormatter.format(Number(poolData.long_token_usd))})
                   </p>
                 </>
@@ -84,8 +89,11 @@ function ZohPoolsTableBody() {
             <td className="px-1 py-3">
               {poolData && (
                 <>
-                  <p>{IntlFormatter.format(Number(poolData.short_token_amount))} USDC</p>
-                  <p className="text-[#bcbcbd]">
+                  <p>
+                    {IntlFormatter.format(Number(poolData.short_token_amount))}{" "}
+                    USDC
+                  </p>
+                  <p className="text-muted-foreground">
                     (${IntlFormatter.format(Number(poolData.short_token_usd))})
                   </p>
                 </>
@@ -93,7 +101,7 @@ function ZohPoolsTableBody() {
             </td>
             <td className="px-1 py-3">
               <p>{marketTokenBalance} ZOH</p>
-              {/* <p className="text-[#bcbcbd]">($0.00)</p> */}
+              {/* <p className="text-muted-foreground">($0.00)</p> */}
             </td>
             {/* <td className="px-2 py-3">14.54%</td> */}
             <td className="px-2 py-3 text-right">

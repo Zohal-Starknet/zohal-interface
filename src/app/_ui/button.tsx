@@ -30,7 +30,7 @@ export const buttonVariants = cva(
         outline:
           "border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800 dark:hover:text-slate-50",
         secondary:
-          "bg-[#1d1f23] text-white hover:bg-neutral-800 dark:bg-[#1d1f23] dark:text-white dark:hover:bg-neutral-800",
+          "bg-secondary dark:bg-secondary text-white hover:bg-neutral-800 dark:text-white dark:hover:bg-neutral-800",
         success:
           "bg-btn-success text-white hover:bg-btn-success dark:bg-btn-success dark:text-white dark:hover:bg-btn-success/90",
       },

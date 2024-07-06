@@ -26,7 +26,7 @@ export default function EditPosition({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2">
+          <button className="border-border bg-secondary rounded-lg border px-3 py-2">
             Edit
           </button>
         </DropdownMenuTrigger>

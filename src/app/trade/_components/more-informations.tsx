@@ -21,13 +21,18 @@ type SwapMoreInformationsProps = {
 export default function SwapMoreInformations(props: SwapMoreInformationsProps) {
   const { payTokenSymbol, ratio, receiveTokenSymbol } = props;
   const [open, setOpen] = useState<boolean | undefined>(undefined);
-  const [priceInfos, setPriceInfos] = useState<{ label: string, value: string }[]>([]);
+  const [priceInfos, setPriceInfos] = useState<
+    { label: string; value: string }[]
+  >([]);
 
   useEffect(() => {
     const formattedRatio = (1 / ratio).toFixed(4);
     setPriceInfos([
-      { label: `${payTokenSymbol} Price`, value: `${(ratio).toFixed(2)} $` },
-      { label: `${receiveTokenSymbol} Price`, value: `${(1 / ratio).toFixed(4)} ${payTokenSymbol} ` },
+      { label: `${payTokenSymbol} Price`, value: `${ratio.toFixed(2)} $` },
+      {
+        label: `${receiveTokenSymbol} Price`,
+        value: `${(1 / ratio).toFixed(4)} ${payTokenSymbol} `,
+      },
       { label: "Available Liquidity", value: "$272,569.02" },
       {
         label: "Price",
@@ -38,7 +43,7 @@ export default function SwapMoreInformations(props: SwapMoreInformationsProps) {
 
   return (
     <Collapsible.Root
-      className="mt-5 rounded-md border border-[#363636] p-2"
+      className="border-border mt-5 rounded-md border p-2"
       onOpenChange={(openValue) => {
         setOpen(openValue);
       }}
@@ -48,7 +53,7 @@ export default function SwapMoreInformations(props: SwapMoreInformationsProps) {
           <span>More informations</span>
           <ChevronRight
             className={clsx(
-              "text-right text-white",
+              "text-foreground text-right",
               open === undefined
                 ? ""
                 : open

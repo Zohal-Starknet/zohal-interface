@@ -5,7 +5,7 @@ export default function EarnPage() {
     <main className="mx-auto mt-6 w-full max-w-6xl">
       <div>
         <h1 className="text-3xl">ZOH Pools</h1>
-        <p className="text-sm text-[#A5A5A7]">
+        <p className="text-muted-foreground text-sm">
           Purchase ZOH Tokens to earn fees from swaps and leverage trading.
         </p>
       </div>

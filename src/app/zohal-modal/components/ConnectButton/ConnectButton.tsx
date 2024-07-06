@@ -29,16 +29,16 @@ export function ConnectButton() {
           >
             {address !== undefined && (
               <button
-                className="flex h-10 items-center rounded-xl bg-[#1d1f23] p-0.5"
+                className="bg-secondary flex h-10 items-center rounded-xl p-0.5"
                 onClick={openAccountModal}
               >
                 {/* TODO @YohanTz: Display Skeleton ? */}
                 {displayBalance !== undefined && (
-                  <span className="hidden whitespace-nowrap px-2 text-sm text-neutral-300 sm:block">
+                  <span className="text-secondary-foreground hidden whitespace-nowrap px-2 text-sm sm:block">
                     {displayBalance}
                   </span>
                 )}
-                <div className="flex h-full items-center gap-2 rounded-[10px] bg-[#2f3339] px-2">
+                <div className="bg-background flex h-full items-center gap-2 rounded-[10px] px-2">
                   {connectorId !== undefined && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -53,7 +53,7 @@ export function ConnectButton() {
             )}
             {address === undefined && (
               <button
-                className="flex h-10 items-center rounded-xl bg-[#1d1f23] px-4 transition-colors hover:bg-neutral-800"
+                className="bg-secondary flex h-10 items-center rounded-xl px-4 transition-colors hover:bg-neutral-800"
                 onClick={openConnectModal}
               >
                 Connect wallet

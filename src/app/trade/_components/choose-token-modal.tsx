@@ -44,7 +44,7 @@ export default function ChooseTokenModal(props: ChooseTokenModalProps) {
         <DialogHeader className="mx-6 text-left">Select a token</DialogHeader>
 
         <Input
-          className="mx-6 rounded-md border border-[#363636] bg-[#1b1d22] px-3 py-2 text-base"
+          className="border-border bg-secondary mx-6 rounded-md border px-3 py-2 text-base"
           onChange={(newQuery) => setSearchQuery(newQuery)}
           placeholder="Search name or paste address"
           value={searchQuery}
@@ -58,7 +58,7 @@ export default function ChooseTokenModal(props: ChooseTokenModalProps) {
               filteredTokens.map((filteredToken) => {
                 return (
                   <button
-                    className="flex items-center justify-between px-6 py-2 transition-colors hover:bg-[#121317]"
+                    className="hover:bg-card flex items-center justify-between px-6 py-2 transition-colors"
                     key={filteredToken.tokenSymbol}
                     onClick={() =>
                       onTokenSymbolChange(filteredToken.tokenSymbol)
@@ -72,7 +72,7 @@ export default function ChooseTokenModal(props: ChooseTokenModalProps) {
                       />
                       <div className="flex flex-col text-left">
                         <h4>{filteredToken?.name}</h4>
-                        <span className="text-xs text-[#A5A5A7]">
+                        <span className="text-muted-foreground text-xs">
                           {tokenSymbol}
                         </span>
                       </div>

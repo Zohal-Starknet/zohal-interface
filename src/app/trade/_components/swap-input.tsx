@@ -31,13 +31,13 @@ export default function SwapInput(props: SwapInputProps) {
     tokenSymbol,
   } = props;
   return (
-    <div className="rounded-md border border-[#363636] bg-[#25272E] p-3">
+    <div className="border-border bg-card rounded-md border p-3">
       <div className="flex items-center justify-between">
         <label className="block text-xs" htmlFor={id}>
           {label}
         </label>
         {formattedTokenBalance !== undefined && (
-          <span className="text-xs text-[#BCBCBD]">
+          <span className="text-muted-foreground text-xs">
             Balance: {formattedTokenBalance}
           </span>
         )}

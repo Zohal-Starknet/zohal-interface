@@ -33,8 +33,8 @@ export default function Position({ className }: PropsWithClassName) {
   return (
     <div className={clsx("w-full", className)}>
       <table className="w-full">
-        <thead className="border-b border-neutral-800 text-left">
-          <tr className="text-[#bcbcbd]">
+        <thead className="border-border border-b text-left">
+          <tr className="text-muted-foreground">
             <th className={tableHeaderCommonStyles}>Position</th>
             <th className={tableHeaderCommonStyles}>Net Value</th>
             <th className={tableHeaderCommonStyles}>Size</th>
@@ -48,12 +48,9 @@ export default function Position({ className }: PropsWithClassName) {
           {positions.map((position) => {
             const decimals = BigInt(Math.pow(10, 18));
             return (
-              <tr
-                className="border-b border-neutral-800 text-sm"
-                key={position.key}
-              >
+              <tr className="border-border border-b text-sm" key={position.key}>
                 <td className="flex gap-4 py-4">
-                  <div className="flex-shrink-0 rounded-full border border-neutral-600 p-1">
+                  <div className="border-border flex-shrink-0 rounded-full border p-1">
                     <img
                       alt={`Ethereum icon`}
                       className="w-8 rounded-full"
@@ -64,14 +61,14 @@ export default function Position({ className }: PropsWithClassName) {
                     ETH-USD
                     <span
                       className={clsx(
-                        "ml-4 rounded-sm px-1 py-0.5 text-xs font-semibold text-black",
+                        "text-background ml-4 rounded-sm px-1 py-0.5 text-xs font-semibold",
                         position.is_long ? "bg-[#40B68B]" : "bg-[#FF5354]",
                       )}
                     >
                       {position.is_long ? "LONG" : "SHORT"}
                     </span>
                     <br />
-                    <span className="text-sm text-[#bcbcbd]">
+                    <span className="text-muted-foreground text-sm">
                       {(
                         position.size_in_usd /
                         (BigInt(position.market_price) *

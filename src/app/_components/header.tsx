@@ -5,6 +5,7 @@ import Link from "next/link";
 import Divider from "../_ui/divider";
 import { ConnectButton } from "../zohal-modal";
 import Navigation from "./navigation";
+import { ThemeToggle } from "./theme-toggle";
 
 /* eslint-disable @next/next/no-img-element */
 export default function Header() {
@@ -21,7 +22,10 @@ export default function Header() {
           </Link>
           <Navigation />
         </div>
-        <ConnectButton />
+        <div className="items-cneter flex gap-2">
+          <ConnectButton />
+          {/* <ThemeToggle /> */}
+        </div>
       </header>
       <Divider />
     </>

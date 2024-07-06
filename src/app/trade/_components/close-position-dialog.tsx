@@ -63,7 +63,7 @@ export default function ClosePositionDialog({
           </p>
         </div>
         <Input
-          className="rounded-lg border border-[#363636] bg-transparent px-3 py-3 text-sm"
+          className="border-border rounded-lg border bg-transparent px-3 py-3 text-sm"
           id="Close position"
           onChange={onInputChange}
           placeholder="Collateral amount to remove"
@@ -71,14 +71,14 @@ export default function ClosePositionDialog({
         />
         {isCloseAction ? (
           <button
-            className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
+            className="border-border bg-secondary w-full rounded-lg border px-3 py-2 text-sm"
             onClick={() => closePosition(collateral_token, collateral_amount)}
           >
             Close Position
           </button>
         ) : (
           <button
-            className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
+            className="border-border bg-secondary w-full rounded-lg border px-3 py-2 text-sm"
             onClick={() => closePosition(collateral_token, collateral_amount)}
           >
             Reduce position
