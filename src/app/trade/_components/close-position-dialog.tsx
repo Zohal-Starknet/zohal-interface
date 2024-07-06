@@ -11,18 +11,22 @@ import {
   DialogTrigger,
 } from "@zohal/app/_ui/Modal";
 import Input from "@zohal/app/_ui/input";
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, PropsWithChildren } from "react";
 
 import useUserPosition from "../_hooks/use-user-position";
 
 interface ClosePositionDialogProps {
   collateral_amount: bigint;
   collateral_token: bigint;
+  onOpenChange(open: boolean): void;
+  open: boolean;
 }
 
 export default function ClosePositionDialog({
   collateral_amount,
   collateral_token,
+  open,
+  onOpenChange,
 }: ClosePositionDialogProps) {
   const [inputValue, setInputValue] = useState("");
   const { closePosition } = useUserPosition();
@@ -38,12 +42,7 @@ export default function ClosePositionDialog({
   }
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <button className="rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2">
-          Edit
-        </button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>

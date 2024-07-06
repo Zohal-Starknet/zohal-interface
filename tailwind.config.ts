@@ -14,10 +14,46 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
       },
+      borderColor: {
+        DEFAULT: "hsl(var(--border))",
+      },
       colors: {
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        background: "hsl(var(--background))",
+        border: "hsl(var(--border))",
         "btn-danger": "#FF5354",
         "btn-primary": "#4681f4",
         "btn-success": "#40B68B",
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        foreground: "hsl(var(--foreground))",
+        input: "hsl(var(--input))",
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        ring: "hsl(var(--ring))",
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
       },
       keyframes: {
         rotate0: {
