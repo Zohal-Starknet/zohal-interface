@@ -30,7 +30,12 @@ export default function Trade({ className }: PropsWithClassName) {
   });
   const [leverage, setLeverage] = useState(1);
   // TODO @YohanTz: Type properly
-  const [slTpInfos, setSlTpInfos] = useState<SlTpInfos>(undefined);
+  const [slTpInfos, setSlTpInfos] = useState<SlTpInfos>({
+    slRoi: "",
+    slTriggerPrice: "",
+    tpRoi: "",
+    tpTriggerPrice: "",
+  });
 
   const { trade } = useMarketTrade();
 

@@ -13,14 +13,12 @@ import Divider from "@zohal/app/_ui/divider";
 import Input from "@zohal/app/_ui/input";
 import { PropsWithChildren, useState } from "react";
 
-export type SlTpInfos =
-  | undefined
-  | {
-      tpTriggerPrice: string;
-      tpRoi: string;
-      slTriggerPrice: string;
-      slRoi: string;
-    };
+export type SlTpInfos = {
+  tpTriggerPrice: string;
+  tpRoi: string;
+  slTriggerPrice: string;
+  slRoi: string;
+};
 
 type SlTpCheckboxProps = {
   slTpInfos: SlTpInfos;
@@ -37,54 +35,36 @@ function SlTpModal({
   const [temporarySlTpInfos, setTemporarySlTpInfos] =
     useState<SlTpInfos>(slTpInfos);
 
-  // TODO @YohanTz: Handle properly
-  const temporaryTpTriggerPrice =
-    temporarySlTpInfos !== undefined ? temporarySlTpInfos.tpTriggerPrice : "";
-  const temporarySlTriggerPrice =
-    temporarySlTpInfos !== undefined ? temporarySlTpInfos.slTriggerPrice : "";
-  const temporaryTpRoi =
-    temporarySlTpInfos !== undefined ? temporarySlTpInfos.tpRoi : "";
-  const temporarySlRoi =
-    temporarySlTpInfos !== undefined ? temporarySlTpInfos.slRoi : "";
-
   function onUpdateTpTriggerPrice(newTpTriggerPrice: string) {
-    if (temporarySlTpInfos !== undefined) {
-      // Update ROI here
-      setTemporarySlTpInfos({
-        ...temporarySlTpInfos,
-        tpTriggerPrice: newTpTriggerPrice,
-      });
-    }
+    // Update ROI here
+    setTemporarySlTpInfos({
+      ...temporarySlTpInfos,
+      tpTriggerPrice: newTpTriggerPrice,
+    });
   }
 
   function onUpdateSlTriggerPrice(newSlTriggerPrice: string) {
-    if (temporarySlTpInfos !== undefined) {
-      // Update ROI here
-      setTemporarySlTpInfos({
-        ...temporarySlTpInfos,
-        slTriggerPrice: newSlTriggerPrice,
-      });
-    }
+    // Update ROI here
+    setTemporarySlTpInfos({
+      ...temporarySlTpInfos,
+      slTriggerPrice: newSlTriggerPrice,
+    });
   }
 
   function onUpdateTpRoi(newTpRoi: string) {
-    if (temporarySlTpInfos !== undefined) {
-      // Update Trigger price here
-      setTemporarySlTpInfos({
-        ...temporarySlTpInfos,
-        tpRoi: newTpRoi,
-      });
-    }
+    // Update Trigger price here
+    setTemporarySlTpInfos({
+      ...temporarySlTpInfos,
+      tpRoi: newTpRoi,
+    });
   }
 
   function onUpdateSlRoi(newSlRoi: string) {
-    if (temporarySlTpInfos !== undefined) {
-      // Update Trigger price here
-      setTemporarySlTpInfos({
-        ...temporarySlTpInfos,
-        slRoi: newSlRoi,
-      });
-    }
+    // Update Trigger price here
+    setTemporarySlTpInfos({
+      ...temporarySlTpInfos,
+      slRoi: newSlRoi,
+    });
   }
 
   function onConfirm() {
@@ -129,14 +109,14 @@ function SlTpModal({
               <Input
                 className="h-12 w-full rounded-md bg-secondary px-2 text-xs"
                 placeholder="Trigger price"
-                value={temporaryTpTriggerPrice}
+                value={temporarySlTpInfos.tpTriggerPrice}
                 onChange={onUpdateTpTriggerPrice}
               />
               <div className="flex h-12 w-full items-center overflow-hidden rounded-md bg-secondary pr-2">
                 <Input
                   className="h-full w-full bg-secondary px-2 text-xs"
                   placeholder="ROI"
-                  value={temporaryTpRoi}
+                  value={temporarySlTpInfos.tpRoi}
                   onChange={onUpdateTpRoi}
                 />
                 <span>%</span>
@@ -154,14 +134,14 @@ function SlTpModal({
               <Input
                 className="h-12 w-full rounded-md bg-secondary px-2 text-xs"
                 placeholder="Trigger price"
-                value={temporarySlTriggerPrice}
+                value={temporarySlTpInfos.slTriggerPrice}
                 onChange={onUpdateSlTriggerPrice}
               />
               <div className="flex h-12 w-full items-center overflow-hidden rounded-md bg-secondary pr-2">
                 <Input
                   className="h-full w-full bg-secondary px-2 text-xs"
                   placeholder="ROI"
-                  value={temporarySlRoi}
+                  value={temporarySlTpInfos.slRoi}
                   onChange={onUpdateSlRoi}
                 />
                 <span>%</span>
@@ -174,7 +154,27 @@ function SlTpModal({
           <Button variant="default" onClick={onConfirm}>
             Confirm
           </Button>
-          <Button variant="secondary">Cancel</Button>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              // TODO @YohanTz: Refacto
+              setTemporarySlTpInfos({
+                slRoi: "",
+                slTriggerPrice: "",
+                tpRoi: "",
+                tpTriggerPrice: "",
+              });
+              setSlTpInfos({
+                slRoi: "",
+                slTriggerPrice: "",
+                tpRoi: "",
+                tpTriggerPrice: "",
+              });
+              setIsOpen(false);
+            }}
+          >
+            Cancel
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
@@ -186,11 +186,18 @@ export default function SlTpCheckbox({
   setSlTpInfos,
   slTpInfos,
 }: PropsWithClassName<SlTpCheckboxProps>) {
+  // TODO @YohanTz: Refacto
+  const hasTpOrSlInfo =
+    slTpInfos.slRoi.length > 0 ||
+    slTpInfos.slTriggerPrice.length > 0 ||
+    slTpInfos.tpRoi.length > 0 ||
+    slTpInfos.tpTriggerPrice.length > 0;
+
   return (
     <div className={cn("", className)}>
       <SlTpModal setSlTpInfos={setSlTpInfos} slTpInfos={slTpInfos}>
         <button className="flex items-center gap-2">
-          <Checkbox checked={slTpInfos !== undefined} />
+          <Checkbox checked={hasTpOrSlInfo} />
           <p className="text-sm">TP / SL (Entire position)</p>
         </button>
       </SlTpModal>
