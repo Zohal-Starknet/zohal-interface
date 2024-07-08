@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAccount } from "@starknet-react/core";
-import { Tokens } from "@zohal/app/_helpers/tokens";
+import { TokenSymbol, Tokens } from "@zohal/app/_helpers/tokens";
 import useMarketTokenBalance from "@zohal/app/_hooks/use-market-token-balance";
 import { PropsWithClassName } from "@zohal/app/_lib/utils";
 
@@ -12,13 +12,14 @@ import SwapMoreInformations from "./more-informations";
 import SwapActionButton from "./swap-action-button";
 import SwapInput from "./swap-input";
 import TokenSwapButton from "./token-swap-button";
+import ChooseTokenButton from "./choose-token-button";
 
 export default function Swap({ className }: PropsWithClassName) {
   const [ethUsdcRatio, setEthUsdcRatio] = useState<number>(0);
 
   const { address } = useAccount();
 
-  const fetchEthUsdcRatio= async() =>  {
+  const fetchEthUsdcRatio = async () => {
     const pair = "eth/usd";
     const apiUrl = `/api/fetch-candlestick?pair=${pair}`;
     try {
@@ -26,13 +27,13 @@ export default function Swap({ className }: PropsWithClassName) {
       if (response.ok) {
         const data = await response.json();
         const latestPrice = data.data[data.data.length - 1].close;
-        setEthUsdcRatio(latestPrice/10**8);
+        setEthUsdcRatio(latestPrice / 10 ** 8);
       }
     } catch (error) {
       console.error("Error fetching ETH/USDC ratio:", error);
       throw error;
     }
-  }
+  };
 
   useEffect(() => {
     fetchEthUsdcRatio();
@@ -65,6 +66,8 @@ export default function Swap({ className }: PropsWithClassName) {
     ? parseFloat(payTokenBalance) < parseFloat(payTokenValue)
     : true;
 
+  const onTokenSymbolChange = (_tokenSymbol: TokenSymbol) => switchTokens();
+
   return (
     <Form className={className}>
       <SwapInput
@@ -73,9 +76,12 @@ export default function Swap({ className }: PropsWithClassName) {
         inputValue={payTokenValue}
         label="Pay"
         onInputChange={updatePayTokenValue}
-        onTokenSymbolChange={(_tokenSymbol) => switchTokens()}
-        tokenSymbol={payTokenSymbol}
-      />
+      >
+        <ChooseTokenButton
+          onTokenSymbolChange={onTokenSymbolChange}
+          tokenSymbol={payTokenSymbol}
+        />
+      </SwapInput>
 
       <TokenSwapButton onClick={switchTokens} />
 
@@ -85,9 +91,12 @@ export default function Swap({ className }: PropsWithClassName) {
         inputValue={receiveTokenValue}
         label="Receive"
         onInputChange={updateReceiveTokenValue}
-        onTokenSymbolChange={(_tokenSymbol) => switchTokens()}
-        tokenSymbol={receiveTokenSymbol}
-      />
+      >
+        <ChooseTokenButton
+          onTokenSymbolChange={onTokenSymbolChange}
+          tokenSymbol={receiveTokenSymbol}
+        />
+      </SwapInput>
 
       <SwapMoreInformations
         payTokenSymbol={payTokenSymbol}
@@ -100,7 +109,7 @@ export default function Swap({ className }: PropsWithClassName) {
         noEnteredAmount={noEnteredAmount}
         payTokenSymbol={payTokenSymbol}
         payTokenValue={payTokenValue}
-         //@ts-ignore
+        //@ts-ignore
         oraclePrice={ethUsdcRatio}
       />
     </Form>

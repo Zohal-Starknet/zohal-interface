@@ -26,8 +26,8 @@ export default function EditPosition({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="border-border bg-secondary rounded-lg border px-3 py-2">
-            Edit
+          <button className="rounded-lg border border-border bg-secondary px-3 py-2">
+            Market
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="space-y-1">

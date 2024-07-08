@@ -1,12 +1,12 @@
 "use client";
 
 import { Tokens } from "@zohal/app/_helpers/tokens";
-import { type PropsWithClassName } from "@zohal/app/_lib/utils";
+import { cn, type PropsWithClassName } from "@zohal/app/_lib/utils";
 import clsx from "clsx";
 
 import useUserPosition from "../_hooks/use-user-position";
 import useEthPrice from "../_hooks/use-market-data";
-import EditPosition from "./edit-position";
+import EditMarketPosition from "./edit-market-position";
 
 /* eslint-disable @next/next/no-img-element */
 export default function Position({ className }: PropsWithClassName) {
@@ -33,7 +33,7 @@ export default function Position({ className }: PropsWithClassName) {
   return (
     <div className={clsx("w-full", className)}>
       <table className="w-full">
-        <thead className="border-border border-b text-left">
+        <thead className="border-b border-border text-left">
           <tr className="text-muted-foreground">
             <th className={tableHeaderCommonStyles}>Position</th>
             <th className={tableHeaderCommonStyles}>Net Value</th>
@@ -41,16 +41,18 @@ export default function Position({ className }: PropsWithClassName) {
             <th className={tableHeaderCommonStyles}>Collateral</th>
             <th className={tableHeaderCommonStyles}>Entry Price</th>
             <th className={tableHeaderCommonStyles}>Market Price</th>
-            {/* <th className={tableHeaderCommonStyles}>Liquidation Price</th> */}
+            <th className={cn("text-end", tableHeaderCommonStyles)}>
+              Close by
+            </th>
           </tr>
         </thead>
         <tbody>
           {positions.map((position) => {
             const decimals = BigInt(Math.pow(10, 18));
             return (
-              <tr className="border-border border-b text-sm" key={position.key}>
+              <tr className="border-b border-border text-sm" key={position.key}>
                 <td className="flex gap-4 py-4">
-                  <div className="border-border flex-shrink-0 rounded-full border p-1">
+                  <div className="flex-shrink-0 rounded-full border border-border p-1">
                     <img
                       alt={`Ethereum icon`}
                       className="w-8 rounded-full"
@@ -61,14 +63,14 @@ export default function Position({ className }: PropsWithClassName) {
                     ETH-USD
                     <span
                       className={clsx(
-                        "text-background ml-4 rounded-sm px-1 py-0.5 text-xs font-semibold",
+                        "ml-4 rounded-sm px-1 py-0.5 text-xs font-semibold text-background",
                         position.is_long ? "bg-[#40B68B]" : "bg-[#FF5354]",
                       )}
                     >
                       {position.is_long ? "LONG" : "SHORT"}
                     </span>
                     <br />
-                    <span className="text-muted-foreground text-sm">
+                    <span className="text-sm text-muted-foreground">
                       {(
                         position.size_in_usd /
                         (BigInt(position.market_price) *
@@ -124,7 +126,7 @@ export default function Position({ className }: PropsWithClassName) {
                 <td>${ethData.currentPrice.toFixed(2)}</td>
                 {/* <td>{data.liquidationPrice}</td> */}
                 <td className="text-right">
-                  <EditPosition
+                  <EditMarketPosition
                     collateral_amount={position.collateral_amount}
                     collateral_token={position.collateral_token}
                   />

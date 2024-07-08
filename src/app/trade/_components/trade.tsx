@@ -17,7 +17,7 @@ import TradeLeverageInput from "./trade-leverage-input";
 import { ETH_CONTRACT_ADDRESS } from "../../_lib/addresses";
 
 export default function Trade({ className }: PropsWithClassName) {
-  const [payValue, setPayValue] = useState("0");
+  const [payValue, setPayValue] = useState("");
   const [tokenSymbol, setTokenSymbol] = useState({
     address: ETH_CONTRACT_ADDRESS,
     decimals: 18,
@@ -42,7 +42,7 @@ export default function Trade({ className }: PropsWithClassName) {
               value={payValue}
             />
             <div className="relative">
-              <span className="text-muted-foreground absolute -top-5 right-0 w-full whitespace-nowrap text-xs">
+              <span className="absolute -top-5 right-0 w-full whitespace-nowrap text-xs text-muted-foreground">
                 Balance: {ethTokenBalance}
               </span>
 
@@ -68,7 +68,7 @@ export default function Trade({ className }: PropsWithClassName) {
               value={payValue}
             />
             <div className="relative">
-              <span className="text-muted-foreground absolute -top-5 right-0 w-full whitespace-nowrap text-xs">
+              <span className="absolute -top-5 right-0 w-full whitespace-nowrap text-xs text-muted-foreground">
                 Balance: {ethTokenBalance}
               </span>
               <ChooseTokenButton
@@ -87,7 +87,7 @@ export default function Trade({ className }: PropsWithClassName) {
         setLeverage={setLeverage}
       />
 
-      <div className="border-border flex flex-col gap-2 rounded-md border p-3">
+      <div className="flex flex-col gap-2 rounded-md border border-border p-3">
         {priceInfos.map((priceInfo, index) => (
           <PriceInfo key={index} {...priceInfo} />
         ))}
@@ -111,7 +111,7 @@ export default function Trade({ className }: PropsWithClassName) {
       </div>
 
       <h3 className="mt-8">ETH Trade</h3>
-      <div className="border-border flex flex-col gap-2 rounded-md border p-3">
+      <div className="flex flex-col gap-2 rounded-md border border-border p-3">
         {tokenPriceInfos.map((priceInfo, index) => (
           <PriceInfo key={index} {...priceInfo} />
         ))}

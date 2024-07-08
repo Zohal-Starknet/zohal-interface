@@ -24,9 +24,9 @@ const config: Config = {
         },
         background: "hsl(var(--background))",
         border: "hsl(var(--border))",
-        "btn-danger": "#FF5354",
+        "btn-danger": "#be2d2e",
         "btn-primary": "#4681f4",
-        "btn-success": "#40B68B",
+        "btn-success": "#35916f",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",

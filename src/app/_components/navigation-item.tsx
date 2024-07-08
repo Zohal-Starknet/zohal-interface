@@ -25,8 +25,8 @@ export default function NavigationItem(props: NavigationItemProps) {
     <li>
       <Link
         className={clsx(
-          "text-muted-foreground hover:bg-secondary hover:text-foreground flex items-center gap-1 rounded-md p-2 transition-colors",
-          isActiveLink && "bg-secondary text-foreground",
+          "flex items-center gap-1 rounded-md p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground",
+          isActiveLink && "bg-secondary !text-foreground",
         )}
         href={pathname}
         rel={isExternal ? "noopener noreferrer" : undefined}
