@@ -10,8 +10,8 @@ const tabItems: [TabItemType, TabItemType] = [
 
 export default function TradeSwapPanel() {
   return (
-    <Panel className="border-border flex w-full lg:min-w-[20rem] lg:max-w-[24rem] lg:overflow-y-auto lg:border-l">
-      <Tabs ariaLabel="Trade or Swap" defaultValue="swap" items={tabItems} />
+    <Panel className="flex w-full border-border lg:min-w-[20rem] lg:max-w-[24rem] lg:overflow-y-auto lg:border-l">
+      <Tabs ariaLabel="Trade or Swap" defaultValue="trade" items={tabItems} />
     </Panel>
   );
 }

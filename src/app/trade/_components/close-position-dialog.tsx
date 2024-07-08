@@ -8,10 +8,8 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@zohal/app/_ui/Modal";
-import Input from "@zohal/app/_ui/input";
-import { useState, ChangeEvent, PropsWithChildren } from "react";
+import { useState } from "react";
 
 import useUserPosition from "../_hooks/use-user-position";
 import Divider from "@zohal/app/_ui/divider";

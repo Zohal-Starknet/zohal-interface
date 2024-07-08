@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@radix-ui/react-accessible-icon": "^1.0.3",
+    "@radix-ui/react-checkbox": "^1.1.1",
     "@radix-ui/react-collapsible": "^1.0.3",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-slider": "^1.1.2",

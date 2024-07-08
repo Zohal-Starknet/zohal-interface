@@ -15,6 +15,7 @@ import PriceInfo from "./price-info";
 import TokenSwapButton from "./token-swap-button";
 import TradeLeverageInput from "./trade-leverage-input";
 import { ETH_CONTRACT_ADDRESS } from "../../_lib/addresses";
+import SlTpCheckbox, { SlTpInfos } from "./sl-tp-checkbox";
 
 export default function Trade({ className }: PropsWithClassName) {
   const [payValue, setPayValue] = useState("");
@@ -28,8 +29,11 @@ export default function Trade({ className }: PropsWithClassName) {
     marketTokenAddress: Tokens.ETH.address,
   });
   const [leverage, setLeverage] = useState(1);
+  // TODO @YohanTz: Type properly
+  const [slTpInfos, setSlTpInfos] = useState<SlTpInfos>(undefined);
 
   const { trade } = useMarketTrade();
+
   return (
     <Form className={className}>
       <Fieldset
@@ -82,9 +86,15 @@ export default function Trade({ className }: PropsWithClassName) {
       />
 
       <TradeLeverageInput
-        className="py-6"
+        className="py-4"
         leverage={leverage}
         setLeverage={setLeverage}
+      />
+
+      <SlTpCheckbox
+        className="mb-4"
+        slTpInfos={slTpInfos}
+        setSlTpInfos={setSlTpInfos}
       />
 
       <div className="flex flex-col gap-2 rounded-md border border-border p-3">
