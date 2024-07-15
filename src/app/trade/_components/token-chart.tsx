@@ -14,7 +14,7 @@ export default function TokenChart() {
       <div className="relative flex h-100 w-full flex-col border-b border-[#2A2E37] lg:h-auto lg:flex-1">
         <TradingViewChart
           symbol="ETH/USD"
-          interval="1D"
+          interval="60"
           library_path="/static/charting_library/"
           locale="en"
           charts_storage_url="https://saveload.tradingview.com"
