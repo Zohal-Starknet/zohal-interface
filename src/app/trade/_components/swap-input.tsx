@@ -2,6 +2,7 @@ import { type TokenSymbol } from "@zohal/app/_helpers/tokens";
 import Input from "@zohal/app/_ui/input";
 
 import ChooseTokenButton from "./choose-token-button";
+import { PropsWithChildren } from "react";
 
 type SwapInputProps = {
   /** Formatted balance of the current token */
@@ -14,30 +15,25 @@ type SwapInputProps = {
   label: string;
   /** Function called on input change */
   onInputChange: (newInputValue: string) => void;
-  /** Function called on token change */
-  onTokenSymbolChange: (newTokenSymbol: TokenSymbol) => void;
-  /** Symbol of the selected token */
-  tokenSymbol: TokenSymbol;
 };
 
-export default function SwapInput(props: SwapInputProps) {
+export default function SwapInput(props: PropsWithChildren<SwapInputProps>) {
   const {
+    children,
     formattedTokenBalance,
     id,
     inputValue,
     label,
     onInputChange,
-    onTokenSymbolChange,
-    tokenSymbol,
   } = props;
   return (
-    <div className="rounded-md border border-[#363636] bg-[#25272E] p-3">
+    <div className="rounded-md border border-border bg-card p-3">
       <div className="flex items-center justify-between">
         <label className="block text-xs" htmlFor={id}>
           {label}
         </label>
         {formattedTokenBalance !== undefined && (
-          <span className="text-xs text-[#BCBCBD]">
+          <span className="text-xs text-muted-foreground">
             Balance: {formattedTokenBalance}
           </span>
         )}
@@ -51,11 +47,7 @@ export default function SwapInput(props: SwapInputProps) {
           placeholder="0.00"
           value={inputValue}
         />
-        {/* TODO: Use composition and have this component as a children of SwapInput */}
-        <ChooseTokenButton
-          onTokenSymbolChange={onTokenSymbolChange}
-          tokenSymbol={tokenSymbol}
-        />
+        {children}
       </div>
     </div>
   );

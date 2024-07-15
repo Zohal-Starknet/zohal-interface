@@ -49,7 +49,7 @@ export function AccountModal(props: AccountModalProps) {
         <DialogHeader className="mb-4">
           <DialogTitle>Wallet</DialogTitle>
         </DialogHeader>
-        <div className="flex flex-col gap-4 rounded-md border border-neutral-800 p-4">
+        <div className="border-border flex flex-col gap-4 rounded-md border p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               {connectorId !== undefined && (
@@ -111,7 +111,7 @@ export function AccountModal(props: AccountModalProps) {
           </div>
         </div>
         <h3 className="mt-4">Your transactions</h3>
-        <p className="text-center text-sm text-[#A5A5A7]">
+        <p className="text-muted-foreground text-center text-sm">
           No transaction found.
         </p>
       </DialogContent>

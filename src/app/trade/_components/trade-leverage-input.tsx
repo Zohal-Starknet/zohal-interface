@@ -42,7 +42,7 @@ export default function TradeLeverageInput(props: TradeLeverageInputProps) {
             step={0.1}
             value={[leverage]}
           />
-          <div className="h-10 w-20 flex-auto items-center rounded-md border border-[#363636] bg-[#25272E]">
+          <div className="border-border bg-card h-10 w-20 flex-auto items-center rounded-md border">
             <Input
               className="h-full w-full bg-transparent px-2 text-sm"
               //@ts-ignore
@@ -56,7 +56,7 @@ export default function TradeLeverageInput(props: TradeLeverageInputProps) {
           {leverageInputs.map((leverageInput) => {
             return (
               <button
-                className="h-10 flex-shrink-0 rounded-lg border border-[#363636] bg-[#1b1d22] px-2 text-xs"
+                className="border-border bg-secondary h-10 flex-shrink-0 rounded-lg border px-2 text-xs"
                 key={leverageInput.name}
                 onClick={() => setLeverage(leverageInput.value)}
               >

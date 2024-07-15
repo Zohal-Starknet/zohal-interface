@@ -37,7 +37,7 @@ function BuyGm() {
         <p className="text-sm text-neutral-300">Balance: {ethTokenBalance}</p>
       </div>
       <Input
-        className="text-md rounded-lg border border-[#363636] bg-transparent px-3 py-2"
+        className="text-md border-border rounded-lg border bg-transparent px-3 py-2"
         id="eth-input"
         onChange={setEthInputValue}
         placeholder="0.0"
@@ -48,15 +48,15 @@ function BuyGm() {
         <p className="text-sm text-neutral-300">Balance: {usdcTokenBalance}</p>
       </div>
       <Input
-        className="text-md rounded-lg border border-[#363636] bg-transparent px-3 py-2"
+        className="text-md border-border rounded-lg border bg-transparent px-3 py-2"
         id="Close position"
         onChange={setUsdcInputValue}
         placeholder="0.0"
         value={usdcInputValue}
       />
       <button
-        className="my-4 rounded-lg border border-[#363636] bg-[#1b1d22] py-2"
-        onClick={() => deposit(ethInputValue,usdcInputValue )}
+        className="border-border bg-secondary my-4 rounded-lg border py-2"
+        onClick={() => deposit(ethInputValue, usdcInputValue)}
       >
         Deposit
       </button>
@@ -71,7 +71,7 @@ function SellGm() {
     marketTokenAddress: Tokens.ZOH.address,
   });
 
-const [zohInputValue, setZohInputValue] = useState("");
+  const [zohInputValue, setZohInputValue] = useState("");
 
   return (
     <div className="mt-4 flex flex-col gap-2 px-4">
@@ -80,14 +80,14 @@ const [zohInputValue, setZohInputValue] = useState("");
         <p className="text-sm text-neutral-300">Balance: {zohTokenBalance}</p>
       </div>
       <Input
-        className="text-md rounded-lg border border-[#363636] bg-transparent px-3 py-2"
+        className="text-md border-border rounded-lg border bg-transparent px-3 py-2"
         id="eth-input"
         onChange={setZohInputValue}
         placeholder="0.0"
         value={zohInputValue}
       />
       <button
-        className="my-4 rounded-lg border border-[#363636] bg-[#1b1d22] py-2"
+        className="border-border bg-secondary my-4 rounded-lg border py-2"
         onClick={() => withdraw()}
       >
         Withdraw
@@ -110,7 +110,7 @@ export default function MarketsPage({
 
   return (
     <main className="mx-auto mt-6 w-full max-w-xl px-4">
-      <div className="mx-auto rounded-xl border border-[#2A2E37]">
+      <div className="border-border mx-auto rounded-xl border">
         <Tabs ariaLabel="" defaultValue="buy" items={tabItems} />
       </div>
     </main>

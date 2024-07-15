@@ -5,7 +5,9 @@ import { useState } from "react";
 import ChooseTokenModal from "./choose-token-modal";
 
 type ChooseTokenButtonProps = {
+  /** Function called on token change */
   onTokenSymbolChange: (newTokenSymbol: TokenSymbol) => void;
+  /** Symbol of the selected token */
   tokenSymbol: TokenSymbol;
 };
 
@@ -27,7 +29,7 @@ export default function ChooseTokenButton(props: ChooseTokenButtonProps) {
   return (
     <>
       <button
-        className="flex flex-shrink-0 items-center gap-2 rounded-lg border border-[#363636] bg-[#1b1d22] p-1"
+        className="flex flex-shrink-0 items-center gap-2 rounded-lg bg-background p-1"
         onClick={openModal}
       >
         <img alt={`${token.name} icon`} className="h-6 w-6" src={token.icon} />

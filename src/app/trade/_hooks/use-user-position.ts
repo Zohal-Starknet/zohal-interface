@@ -39,10 +39,14 @@ export default function useUserPosition() {
   const { account, address } = useAccount();
   const { provider } = useProvider();
   const [positions, setPositions] = useState<
-    Array<Position & { base_pnl_usd: bigint} & { market_price: bigint }> | undefined
+    | Array<Position & { base_pnl_usd: bigint } & { market_price: bigint }>
+    | undefined
   >(undefined);
 
-  async function closePosition(collateral_token: bigint, collateral_amount: bigint) {
+  async function closePosition(
+    collateral_token: bigint,
+    collateral_amount: bigint,
+  ) {
     if (account === undefined || address === undefined) {
       return;
     }
@@ -53,22 +57,27 @@ export default function useUserPosition() {
       provider,
     );
 
-
     const setOrderParams = {
       acceptable_price: uint256.bnToUint256(BigInt("7000")), //TODO: Oracle price
       callback_contract: 0,
       callback_gas_limit: uint256.bnToUint256(0),
       decrease_position_swap_type: new CairoCustomEnum({ NoSwap: {} }),
       execution_fee: uint256.bnToUint256(0),
-      initial_collateral_delta_amount: uint256.bnToUint256(BigInt("1000000000000000000")),
+      initial_collateral_delta_amount: uint256.bnToUint256(
+        BigInt("1000000000000000000"),
+      ),
       initial_collateral_token: collateral_token,
       is_long: new CairoCustomEnum({ True: {} }), // Adjust as needed
       market: MARKET_TOKEN_CONTRACT_ADDRESS,
-      min_output_amount: uint256.bnToUint256(BigInt(7000000000000000000000) * collateral_amount),
+      min_output_amount: uint256.bnToUint256(
+        BigInt(7000000000000000000000) * collateral_amount,
+      ),
       order_type: new CairoCustomEnum({ MarketDecrease: {} }),
       receiver: address,
       referral_code: 0,
-      size_delta_usd: uint256.bnToUint256(collateral_amount * BigInt("7000000000000000000000")), //TODO: Oracle price * input
+      size_delta_usd: uint256.bnToUint256(
+        collateral_amount * BigInt("7000000000000000000000"),
+      ), //TODO: Oracle price * input
       swap_path: [MARKET_TOKEN_CONTRACT_ADDRESS],
       trigger_price: uint256.bnToUint256(BigInt("7000")), // TODO: Oracle price
       ui_fee_receiver: 0,
@@ -77,9 +86,7 @@ export default function useUserPosition() {
       is_frozen: false,
     };
 
-    const setOrderCall = routerContract.populate("set_order", [
-      setOrderParams,
-    ]);
+    const setOrderCall = routerContract.populate("set_order", [setOrderParams]);
 
     await account.execute(setOrderCall); // Await here
   }
@@ -103,7 +110,7 @@ export default function useUserPosition() {
         10,
       )) as Array<bigint>;
 
-       //@ts-ignore
+      //@ts-ignore
       const readerContract = new Contract(
         reader_abi.abi,
         READER_CONTRACT_ADDRESS,
@@ -123,9 +130,9 @@ export default function useUserPosition() {
             { contract_address: REFERRAL_STORAGE_CONTRACT_ADDRESS },
             positionKey,
             {
-              index_token_price: {min: 2925, max: 2925},
-              long_token_price: {min: 2925, max: 2925},
-              short_token_price: {min: 1, max: 1},
+              index_token_price: { min: 2925, max: 2925 },
+              long_token_price: { min: 2925, max: 2925 },
+              short_token_price: { min: 1, max: 1 },
             },
             0,
             0,
@@ -152,14 +159,13 @@ export default function useUserPosition() {
             return [];
           }
           const positionBasePnl = positionsInfoFromContract[index].base_pnl_usd;
-          const multiplicator = positionBasePnl.sign === false ? BigInt(1) : BigInt(-1);
+          const multiplicator =
+            positionBasePnl.sign === false ? BigInt(1) : BigInt(-1);
 
           return [
             {
               ...positionFromContract,
-              base_pnl_usd: (
-                (multiplicator * positionBasePnl.mag)
-              ),
+              base_pnl_usd: multiplicator * positionBasePnl.mag,
               market_price: BigInt(2925),
             },
           ];
@@ -172,5 +178,3 @@ export default function useUserPosition() {
 
   return { closePosition, positions };
 }
-
-

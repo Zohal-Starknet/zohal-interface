@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@radix-ui/react-accessible-icon": "^1.0.3",
+    "@radix-ui/react-checkbox": "^1.1.1",
     "@radix-ui/react-collapsible": "^1.0.3",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-slider": "^1.1.2",
@@ -24,6 +25,7 @@
     "get-starknet-core": "^3.2.0",
     "lightweight-charts": "^4.0.1",
     "next": "13.4.7",
+    "next-themes": "^0.3.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "sonner": "^1.2.0",

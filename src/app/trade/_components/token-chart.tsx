@@ -4,14 +4,22 @@ import React from "react";
 import dynamic from "next/dynamic";
 import Script from "next/script";
 
-const TradingViewChart = dynamic(() => import("./trading-view-chart"), { ssr: false });
+const TradingViewChart = dynamic(() => import("./trading-view-chart"), {
+  ssr: false,
+});
 
 export default function TokenChart() {
   return (
     <>
-      <Script src="/static/charting_library/charting_library.standalone.js" strategy="lazyOnload" />
-      <Script src="/static/datafeeds/udf/dist/bundle.js" strategy="lazyOnload" />
-      <div className="relative flex h-100 w-full flex-col border-b border-[#2A2E37] lg:h-auto lg:flex-1">
+      <Script
+        src="/static/charting_library/charting_library.standalone.js"
+        strategy="lazyOnload"
+      />
+      <Script
+        src="/static/datafeeds/udf/dist/bundle.js"
+        strategy="lazyOnload"
+      />
+      <div className="h-100 border-border relative flex w-full flex-col border-b lg:h-auto lg:flex-1">
         <TradingViewChart
           symbol="ETH/USD"
           interval="60"

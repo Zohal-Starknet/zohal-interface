@@ -14,23 +14,31 @@ import ChooseTokenButton from "./choose-token-button";
 import PriceInfo from "./price-info";
 import TokenSwapButton from "./token-swap-button";
 import TradeLeverageInput from "./trade-leverage-input";
-import { ETH_CONTRACT_ADDRESS} from "../../_lib/addresses";
-
+import { ETH_CONTRACT_ADDRESS } from "../../_lib/addresses";
+import SlTpCheckbox, { SlTpInfos } from "./sl-tp-checkbox";
 
 export default function Trade({ className }: PropsWithClassName) {
-  const [payValue, setPayValue] = useState("0");
-  const [tokenSymbol, setTokenSymbol] = useState( {
+  const [payValue, setPayValue] = useState("");
+  const [tokenSymbol, setTokenSymbol] = useState({
     address: ETH_CONTRACT_ADDRESS,
     decimals: 18,
     icon: "/tokens/ethereum.png",
     name: "Ethereum",
-  }); 
+  });
   const { marketTokenBalance: ethTokenBalance } = useMarketTokenBalance({
     marketTokenAddress: Tokens.ETH.address,
   });
   const [leverage, setLeverage] = useState(1);
+  // TODO @YohanTz: Type properly
+  const [slTpInfos, setSlTpInfos] = useState<SlTpInfos>({
+    slRoi: "",
+    slTriggerPrice: "",
+    tpRoi: "",
+    tpTriggerPrice: "",
+  });
 
   const { trade } = useMarketTrade();
+
   return (
     <Form className={className}>
       <Fieldset
@@ -43,10 +51,10 @@ export default function Trade({ className }: PropsWithClassName) {
               value={payValue}
             />
             <div className="relative">
-              <span className="absolute -top-5 right-0 w-full whitespace-nowrap text-xs text-[#BCBCBD]">
+              <span className="absolute -top-5 right-0 w-full whitespace-nowrap text-xs text-muted-foreground">
                 Balance: {ethTokenBalance}
               </span>
-              
+
               <ChooseTokenButton
                 onTokenSymbolChange={() => {}}
                 tokenSymbol={"ETH"}
@@ -69,7 +77,7 @@ export default function Trade({ className }: PropsWithClassName) {
               value={payValue}
             />
             <div className="relative">
-              <span className="absolute -top-5 right-0 w-full whitespace-nowrap text-xs text-[#BCBCBD]">
+              <span className="absolute -top-5 right-0 w-full whitespace-nowrap text-xs text-muted-foreground">
                 Balance: {ethTokenBalance}
               </span>
               <ChooseTokenButton
@@ -82,25 +90,43 @@ export default function Trade({ className }: PropsWithClassName) {
         label="Long/Short"
       />
 
-      <TradeLeverageInput className="py-6" leverage={leverage} setLeverage={setLeverage}/>
+      <TradeLeverageInput
+        className="py-4"
+        leverage={leverage}
+        setLeverage={setLeverage}
+      />
 
-      <div className="flex flex-col gap-2 rounded-md border border-[#363636] p-3">
+      <SlTpCheckbox
+        className="mb-4"
+        slTpInfos={slTpInfos}
+        setSlTpInfos={setSlTpInfos}
+      />
+
+      <div className="flex flex-col gap-2 rounded-md border border-border p-3">
         {priceInfos.map((priceInfo, index) => (
           <PriceInfo key={index} {...priceInfo} />
         ))}
       </div>
 
       <div className="mt-4 grid w-full grid-cols-2 items-center gap-2">
-        <Button onClick={() => trade(tokenSymbol, Number(payValue), true, leverage)} type="submit" variant="success">
+        <Button
+          onClick={() => trade(tokenSymbol, Number(payValue), true, leverage)}
+          type="submit"
+          variant="success"
+        >
           Buy/Long
         </Button>
-        <Button onClick={() => trade(tokenSymbol, Number(payValue), false, leverage)} type="submit" variant="danger">
+        <Button
+          onClick={() => trade(tokenSymbol, Number(payValue), false, leverage)}
+          type="submit"
+          variant="danger"
+        >
           Sell/Short
         </Button>
       </div>
 
       <h3 className="mt-8">ETH Trade</h3>
-      <div className="flex flex-col gap-2 rounded-md border border-[#363636] p-3">
+      <div className="flex flex-col gap-2 rounded-md border border-border p-3">
         {tokenPriceInfos.map((priceInfo, index) => (
           <PriceInfo key={index} {...priceInfo} />
         ))}

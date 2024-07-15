@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { cn } from "../_lib/utils";
 
 // TODO - Handle state
 type Props = {
@@ -15,7 +16,7 @@ export default function Input(props: Props) {
   return (
     <input
       autoComplete="off"
-      className={clsx("appearance-none text-lg outline-none", className)}
+      className={cn("appearance-none text-lg outline-none", className)}
       id={id}
       inputMode="decimal"
       onChange={(event) => onChange(event.target.value)}

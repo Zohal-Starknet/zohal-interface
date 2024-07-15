@@ -31,29 +31,37 @@ export function ConnectModal(props: ConnectModalProps) {
   return (
     // TODO @YohanTz: only rely on open
     <Dialog modal onOpenChange={(open) => !open && onClose()} open={open}>
-      <DialogContent>
+      <DialogContent className="max-w-sm">
         <DialogHeader>
           <DialogTitle>Connect a wallet</DialogTitle>
-          <DialogDescription>
+          {/* <DialogDescription>
             Please, connect a wallet to start using Zohal
-          </DialogDescription>
+          </DialogDescription> */}
         </DialogHeader>
         <ul className="mt-4 flex w-full flex-col gap-2">
           {connectors.map((connector) => {
             return (
               <li key={connector.id}>
                 <Button
-                  className="w-full"
+                  className="relative w-full"
                   disabled={!connector.available}
                   onClick={() => connect({ connector })}
                   variant="secondary"
                 >
+                  <img
+                    src={connector.icon.dark}
+                    className="absolute left-3 h-5"
+                  />
                   {connector_id_to_name[connector.id]}
                 </Button>
               </li>
             );
           })}
         </ul>
+
+        <p className="text-xs text-muted-foreground">
+          By using Zohal, you agree to our Terms of use and Privacy policy
+        </p>
       </DialogContent>
     </Dialog>
   );
