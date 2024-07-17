@@ -13,10 +13,10 @@ export type TabItemType = {
   value: string;
 };
 
-export interface TabsProps {
+type TabsProps = {
   ariaLabel?: string;
   defaultValue: string;
-  items: TabItemType[];
+  items: [TabItemType, TabItemType, ...TabItemType[]];
   value?: string;
   onValueChange?: (value: string) => void;
 };

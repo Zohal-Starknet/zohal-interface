@@ -24,9 +24,15 @@ export function useTokenInputs(props: Props) {
   const updatePayTokenValue = useCallback(
     function updatePayTokenValue(tokenValue: string) {
       setPayTokenValue(tokenValue);
+      if (tokenValue !== "" && x !== ""){
+        setReceiveTokenValue(
+          (Number(tokenValue) / Number(x)).toString(),
+        );
+      } else {
       setReceiveTokenValue(
         tokenValue !== "" ? (parseFloat(tokenValue) * ratio).toString() : "",
       );
+      }
     },
     [ratio],
   );
@@ -34,9 +40,13 @@ export function useTokenInputs(props: Props) {
   const updateReceiveTokenValue = useCallback(
     function updateReceiveTokenValue(tokenValue: string) {
       setReceiveTokenValue(tokenValue);
-      setPayTokenValue(
-        tokenValue !== "" ? (parseFloat(tokenValue) / ratio).toString() : "",
-      );
+      if (tokenValue !== "" && x !== "") {
+        ((parseFloat(tokenValue) / ratio) * Number(x)).toString();
+      } else {
+        setPayTokenValue(
+          tokenValue !== "" ? (parseFloat(tokenValue) / ratio).toString() : "",
+        );
+      }
     },
     [ratio],
   );

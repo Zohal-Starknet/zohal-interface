@@ -3,7 +3,7 @@ import Input from "@zohal/app/_ui/input";
 import { PropsWithChildren } from "react";
 import useEthPrice from "../_hooks/use-market-data";
 
-type SwapInputProps = {
+type SwapLimitInputProps = {
     /** Formatted balance of the current token */
     formattedTokenBalance?: string;
     /** Id used in htmlFor label and input id */
@@ -18,7 +18,7 @@ type SwapInputProps = {
     onInputChange: (newInputValue: string) => void;
 };
 
-export default function SwapInput(props: PropsWithChildren<SwapInputProps>) {
+export default function SwapLimitInput(props: PropsWithChildren<SwapLimitInputProps>) {
     const {
         children,
         formattedTokenBalance,
@@ -33,6 +33,10 @@ export default function SwapInput(props: PropsWithChildren<SwapInputProps>) {
     const { ethData } = useEthPrice();
     const ethPrice = parseFloat(ethData.currentPrice.toPrecision(4));
 
+    const handleMarkClick = () => {
+        onInputChange(ethPrice.toString());
+    };
+
     return (
         <div className="rounded-md border border-border bg-card p-3">
             <div className="flex items-center justify-between">
@@ -40,7 +44,7 @@ export default function SwapInput(props: PropsWithChildren<SwapInputProps>) {
                     {label}
                 </label>
                 {formattedTokenBalance !== undefined && (
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-xs text-muted-foreground" onClick={handleMarkClick}>
                         Mark : {ethPrice}
                     </span>
                 )}
