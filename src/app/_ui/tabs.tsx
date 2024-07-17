@@ -13,20 +13,15 @@ export type TabItemType = {
   value: string;
 };
 
-type TabsProps = {
-  /** a11y label for the Trigger buttons list */
+export interface TabsProps {
   ariaLabel?: string;
-  /**
-   * The value of the tab that will be shown first
-   * TODO @YohanTz: Type this to be a value from items
-   */
-  defaultValue?: string;
-  /** Tab items */
-  items: [TabItemType, TabItemType, ...TabItemType[]];
+  defaultValue: string;
+  items: TabItemType[];
+  value?: string;
+  onValueChange?: (value: string) => void;
 };
 
-export default function Tabs(props: TabsProps) {
-  const { ariaLabel, defaultValue, items } = props;
+export default function Tabs({ ariaLabel, defaultValue, items }: TabsProps) {
 
   return (
     <RadixTabs.Root
