@@ -20,6 +20,12 @@ export default function ChartHeader() {
     return Math.floor(new Date(dateString).getTime() / 1000);
   };
 
+  const filterLast24Hours = (data: any[]) => {
+    const now = Math.floor(Date.now() / 1000); // Current time in seconds
+    const twentyFourHoursAgo = now - 24 * 60 * 60; // 24 hours ago in seconds
+    return data.filter((d) => d.time >= twentyFourHoursAgo);
+  };
+
   const fetchData = async () => {
     try {
       const response = await fetch(apiUrl);
@@ -34,10 +40,19 @@ export default function ChartHeader() {
           close: Number(d.close) / 100000000,
         }));
 
-        const latestData = formattedData[formattedData.length - 1];
-        const previousData = formattedData[formattedData.length - 2];
-        const high24h = Math.max(...formattedData.map((d: any) => d.high));
-        const low24h = Math.min(...formattedData.map((d: any) => d.low));
+        const last24HoursData = filterLast24Hours(formattedData);
+
+        if (last24HoursData.length < 2) {
+          console.error("Not enough data for 24-hour calculations.");
+          return;
+        }
+
+        last24HoursData.sort((a, b) => a.time - b.time);
+
+        const latestData = last24HoursData[last24HoursData.length - 1];
+        const previousData = last24HoursData[last24HoursData.length - 2];
+        const high24h = Math.max(...last24HoursData.map((d: any) => d.high));
+        const low24h = Math.min(...last24HoursData.map((d: any) => d.low));
         const change24h = latestData.close - previousData.close;
         const change24hPercent = (change24h / previousData.close) * 100;
 
@@ -48,9 +63,7 @@ export default function ChartHeader() {
           high24h,
           low24h,
         });
-      } else {
-        console.log("ELSE");
-      }
+      } 
     } catch (error) {
       console.error("Failed to fetch data: ", error);
     }
@@ -58,7 +71,7 @@ export default function ChartHeader() {
 
   useEffect(() => {
     fetchData();
-    const intervalId = setInterval(fetchData, 3000); // Fetch new data every 3 seconds
+    const intervalId = setInterval(fetchData, 30000);
     return () => clearInterval(intervalId);
   }, []);
 

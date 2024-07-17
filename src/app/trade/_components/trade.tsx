@@ -27,6 +27,7 @@ export default function Trade({ className }: PropsWithClassName) {
   });
   const { marketTokenBalance: ethTokenBalance } = useMarketTokenBalance({
     marketTokenAddress: Tokens.ETH.address,
+    decimal : Tokens.ETH.decimals
   });
   const [leverage, setLeverage] = useState(1);
   // TODO @YohanTz: Type properly
@@ -84,7 +85,7 @@ export default function Trade({ className }: PropsWithClassName) {
           />
           <ChooseTokenButton
             onTokenSymbolChange={() => {}}
-            tokenSymbol={"USDC"}
+            tokenSymbol={"ETH"}
           />
         </div>
       </div>
