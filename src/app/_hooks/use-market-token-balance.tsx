@@ -5,9 +5,10 @@ import { Contract } from "starknet";
 import erc_20_abi from "../trade/abi/erc_20.json";
 
 export default function useMarketTokenBalance({
-  marketTokenAddress,
+  marketTokenAddress, decimal
 }: {
   marketTokenAddress: string;
+  decimal: number
 }) {
   const { address } = useAccount();
   const { provider } = useProvider();
@@ -31,8 +32,9 @@ export default function useMarketTokenBalance({
       const balanceOf = (await marketTokenContract.functions.balance_of(
         address,
       )) as bigint;
+
       setMarketTokenBalance(
-        new Intl.NumberFormat().format((Number(balanceOf) / 10 ** 18)),
+        new Intl.NumberFormat().format(Math.floor((Number(balanceOf) / 10 ** decimal))),
       );
     };
 

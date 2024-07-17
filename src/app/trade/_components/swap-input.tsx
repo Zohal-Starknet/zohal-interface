@@ -1,7 +1,5 @@
-import { type TokenSymbol } from "@zohal/app/_helpers/tokens";
 import Input from "@zohal/app/_ui/input";
 
-import ChooseTokenButton from "./choose-token-button";
 import { PropsWithChildren } from "react";
 
 type SwapInputProps = {
@@ -34,7 +32,7 @@ export default function SwapInput(props: PropsWithChildren<SwapInputProps>) {
         </label>
         {formattedTokenBalance !== undefined && (
           <span className="text-xs text-muted-foreground">
-            Balance: {formattedTokenBalance}
+            Balance : {formattedTokenBalance}
           </span>
         )}
       </div>

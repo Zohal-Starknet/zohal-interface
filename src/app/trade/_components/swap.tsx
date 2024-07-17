@@ -15,9 +15,17 @@ import TokenSwapButton from "./token-swap-button";
 import ChooseTokenButton from "./choose-token-button";
 
 export default function Swap({ className }: PropsWithClassName) {
-  const [ethUsdcRatio, setEthUsdcRatio] = useState<number>(0);
+  const [tokenRatio, setTokenRatio] = useState<number>(0);
+  const {
+    payTokenSymbol,
+    payTokenValue,
+    receiveTokenSymbol,
+    receiveTokenValue,
+    switchTokens,
+    updatePayTokenValue,
+    updateReceiveTokenValue,
+  } = useTokenInputs({ ratio: tokenRatio });
 
-  const { address } = useAccount();
 
   const fetchEthUsdcRatio = async () => {
     const pair = "eth/usd";
@@ -27,7 +35,8 @@ export default function Swap({ className }: PropsWithClassName) {
       if (response.ok) {
         const data = await response.json();
         const latestPrice = data.data[data.data.length - 1].close;
-        setEthUsdcRatio(latestPrice / 10 ** 8);
+        const fetchedRatio = latestPrice / 10 ** 8;
+        setTokenRatio(payTokenSymbol === "USDC" ? 1 / fetchedRatio : fetchedRatio);
       }
     } catch (error) {
       console.error("Error fetching ETH/USDC ratio:", error);
@@ -41,22 +50,15 @@ export default function Swap({ className }: PropsWithClassName) {
     return () => clearInterval(intervalId);
   }, []);
 
-  const {
-    payTokenSymbol,
-    payTokenValue,
-    receiveTokenSymbol,
-    receiveTokenValue,
-    switchTokens,
-    updatePayTokenValue,
-    updateReceiveTokenValue,
-  } = useTokenInputs({ ratio: ethUsdcRatio });
 
   const { marketTokenBalance: payTokenBalance } = useMarketTokenBalance({
     marketTokenAddress: Tokens[payTokenSymbol].address,
+    decimal: Tokens[payTokenSymbol].decimals
   });
 
   const { marketTokenBalance: receiveTokenBalance } = useMarketTokenBalance({
     marketTokenAddress: Tokens[receiveTokenSymbol].address,
+    decimal: Tokens[payTokenSymbol].decimals
   });
 
   const noEnteredAmount =
@@ -100,7 +102,7 @@ export default function Swap({ className }: PropsWithClassName) {
 
       <SwapMoreInformations
         payTokenSymbol={payTokenSymbol}
-        ratio={ethUsdcRatio}
+        ratio={tokenRatio}
         receiveTokenSymbol={receiveTokenSymbol}
       />
 
@@ -110,7 +112,7 @@ export default function Swap({ className }: PropsWithClassName) {
         payTokenSymbol={payTokenSymbol}
         payTokenValue={payTokenValue}
         //@ts-ignore
-        oraclePrice={ethUsdcRatio}
+        oraclePrice={tokenRatio}
       />
     </Form>
   );

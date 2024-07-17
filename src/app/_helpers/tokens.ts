@@ -20,7 +20,7 @@ export const Tokens: TokenList = {
   },
   ZOH: {
     address: ZOH_CONTRACT_ADDRESS,
-    decimals: 18,
+    decimals: 8,
     icon: "/tokens/zoh.png",
     name: "Zohal",
   }

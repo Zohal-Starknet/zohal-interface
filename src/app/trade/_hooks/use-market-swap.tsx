@@ -42,10 +42,10 @@ export default function useMarketSwap() {
         market: 0,
         initial_collateral_token: Tokens[selectedToken].address,
         swap_path: [MARKET_TOKEN_CONTRACT_ADDRESS],
-        size_delta_usd: uint256.bnToUint256(BigInt(oraclePrice * 10 ** 18) * BigInt(amount * (10 ** Tokens[selectedToken].decimals))),
-        initial_collateral_delta_amount: uint256.bnToUint256(BigInt(amount)),
+        size_delta_usd: uint256.bnToUint256(BigInt(amount * (10 ** Tokens[selectedToken].decimals))),
+        initial_collateral_delta_amount: uint256.bnToUint256(BigInt(amount * (10 ** Tokens[selectedToken].decimals))),
         trigger_price: uint256.bnToUint256(0),
-        acceptable_price: uint256.bnToUint256(3309),
+        acceptable_price: uint256.bnToUint256(1),
         execution_fee: uint256.bnToUint256(0),
         callback_gas_limit: uint256.bnToUint256(0),
         min_output_amount: uint256.bnToUint256(0),
@@ -54,6 +54,7 @@ export default function useMarketSwap() {
         is_long: false,
         referral_code: "0x0",
       };
+      console.log("Size delta USD:" + JSON.stringify(createOrderParams.size_delta_usd));
 
       const routerContract = new Contract(
         exchange_router_abi.abi,

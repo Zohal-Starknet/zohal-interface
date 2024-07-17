@@ -105,7 +105,7 @@ export default function useUserPosition() {
       );
 
       const positionKeys = (await dataStoreContract.get_account_position_keys(
-        "0x583eab8ae730da509e9271eb9922efd9bb802b2d4697295e8c16eabba5674b",
+        address,
         0,
         10,
       )) as Array<bigint>;

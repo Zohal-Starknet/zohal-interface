@@ -41,54 +41,53 @@ export default function Trade({ className }: PropsWithClassName) {
 
   return (
     <Form className={className}>
-      <Fieldset
-        field={
-          <div className="flex items-center justify-between">
-            <Input
-              className="bg-transparent text-lg"
-              onChange={setPayValue}
-              placeholder="0.00"
-              value={payValue}
-            />
-            <div className="relative">
-              <span className="absolute -top-5 right-0 w-full whitespace-nowrap text-xs text-muted-foreground">
-                Balance: {ethTokenBalance}
-              </span>
-
-              <ChooseTokenButton
-                onTokenSymbolChange={() => {}}
-                tokenSymbol={"ETH"}
-              />
-            </div>
-          </div>
-        }
-        label="Pay"
-      />
+      <div className="rounded-md border border-border bg-card p-3">
+        <div className="flex items-center justify-between">
+          <label className="block text-xs">
+            Pay
+          </label>
+          <span className="text-xs text-muted-foreground">
+              Balance: {ethTokenBalance}
+          </span>
+        </div>
+        <div className="mt-1 flex items-center justify-between bg-transparent">
+          <Input
+            className="w-full bg-transparent text-lg"
+            onChange={setPayValue}
+            placeholder="0.00"
+            value={payValue}
+          />
+          <ChooseTokenButton
+            onTokenSymbolChange={() => {}}
+            tokenSymbol={"ETH"}
+          />
+        </div>
+      </div>
 
       <TokenSwapButton />
 
-      <Fieldset
-        field={
-          <div className="flex items-center justify-between">
-            <Input
-              className="bg-transparent text-lg"
-              onChange={setPayValue}
-              placeholder="0.00"
-              value={payValue}
-            />
-            <div className="relative">
-              <span className="absolute -top-5 right-0 w-full whitespace-nowrap text-xs text-muted-foreground">
-                Balance: {ethTokenBalance}
-              </span>
-              <ChooseTokenButton
-                onTokenSymbolChange={() => {}}
-                tokenSymbol={"USDC"}
-              />
-            </div>
-          </div>
-        }
-        label="Long/Short"
-      />
+      <div className="rounded-md border border-border bg-card p-3">
+        <div className="flex items-center justify-between">
+          <label className="block text-xs">
+            Long/Short
+          </label>
+          <span className="text-xs text-muted-foreground">
+            Balance: {ethTokenBalance}
+          </span>
+        </div>
+        <div className="mt-1 flex items-center justify-between bg-transparent">
+          <Input
+            className="w-full bg-transparent text-lg"
+            onChange={setPayValue}
+            placeholder="0.00"
+            value={payValue}
+          />
+          <ChooseTokenButton
+            onTokenSymbolChange={() => {}}
+            tokenSymbol={"USDC"}
+          />
+        </div>
+      </div>
 
       <TradeLeverageInput
         className="py-4"

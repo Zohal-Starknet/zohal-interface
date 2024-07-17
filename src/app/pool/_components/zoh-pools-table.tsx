@@ -4,6 +4,7 @@
 import { Markets } from "@zohal/app/_helpers/markets";
 import { getPoolPath } from "@zohal/app/_helpers/routes";
 import useMarketTokenBalance from "@zohal/app/_hooks/use-market-token-balance";
+import { Tokens } from "@zohal/app/_helpers/tokens";
 import { MARKET_TOKEN_CONTRACT_ADDRESS } from "@zohal/app/_lib/addresses";
 import { type PropsWithClassName } from "@zohal/app/_lib/utils";
 import Button from "@zohal/app/_ui/button";
@@ -39,6 +40,7 @@ function ZohPoolsTableBody() {
 
   const { marketTokenBalance } = useMarketTokenBalance({
     marketTokenAddress: MARKET_TOKEN_CONTRACT_ADDRESS,
+    decimal: Tokens["ZOH"].decimals
   });
 
   if (poolData === undefined || marketTokenBalance === undefined) {
