@@ -12,6 +12,7 @@ import SwapMoreInformations from "./more-informations";
 import SwapActionButton from "./swap-action-button";
 import SwapInput from "./swap-input";
 import TokenSwapButton from "./token-swap-button";
+import LimitPriceInput from "./limit-price-input";
 
 export default function LimitSwap() {
   const [ethUsdcRatio, setEthUsdcRatio] = useState<number>(0);
@@ -82,14 +83,15 @@ export default function LimitSwap() {
         onTokenSymbolChange={switchTokens}
         tokenSymbol={receiveTokenSymbol}
       />
-            <SwapInput
+      <LimitPriceInput
         formattedTokenBalance={payTokenBalance}
         id="priceSwapInput"
         inputValue={payTokenValue}
         label="Price"
         onInputChange={updatePayTokenValue}
         onTokenSymbolChange={switchTokens}
-        tokenSymbol={payTokenSymbol}
+        tokenLeftSymbol={payTokenSymbol}
+        tokenRightSymbol={receiveTokenSymbol}
       />
 
       <SwapMoreInformations

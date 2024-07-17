@@ -13,8 +13,8 @@ export interface TabsProps {
   ariaLabel?: string;
   defaultValue: string;
   items: TabItemType[];
-  value?: string;  // Optional, for controlled components
-  onValueChange?: (value: string) => void; // Optional, for controlled components
+  value?: string;
+  onValueChange?: (value: string) => void;
 }
 
 export default function Tabs({ ariaLabel, defaultValue, items }: TabsProps) {
@@ -22,7 +22,6 @@ export default function Tabs({ ariaLabel, defaultValue, items }: TabsProps) {
     <RadixTabs.Root
       className="flex w-full flex-col"
       defaultValue={defaultValue ?? items[0].value}
-      onValueChange={newValue => console.log(`Tab changed to ${newValue}`)} // Example how to detect change
     >
       <RadixTabs.List aria-label={ariaLabel} className="flex h-[4.75rem] shrink-0 gap-2 px-4">
         {items.map((item) => (

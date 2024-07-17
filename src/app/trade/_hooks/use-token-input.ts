@@ -19,6 +19,8 @@ export function useTokenInputs(props: Props) {
   const temporaryPayTokenValueRef = useRef("");
   const temporaryPayTokenSymbolRef = useRef<TokenSymbol>("ETH");
 
+  // const [test, setTest] = useState("");
+
   const updatePayTokenValue = useCallback(
     function updatePayTokenValue(tokenValue: string) {
       setPayTokenValue(tokenValue);
@@ -28,6 +30,16 @@ export function useTokenInputs(props: Props) {
     },
     [ratio],
   );
+
+  // const updateTest = useCallback(
+  //   function updatePayTokenValue(tokenValue: string) {
+  //     setTest(tokenValue);
+  //     setReceiveTokenValue(
+  //       tokenValue !== "" ? (parseFloat(tokenValue) * ratio).toString() : "",
+  //     );
+  //   },
+  //   [ratio],
+  // );
 
   const updateReceiveTokenValue = useCallback(
     function updateReceiveTokenValue(tokenValue: string) {

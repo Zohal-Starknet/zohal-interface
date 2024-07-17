@@ -9,7 +9,7 @@ export default function Swap({ className }: PropsWithClassName) {
 
   return (
     <Form className={className}>
-      <SubPanel className="mb-4" />  {/* Sub-panel integration */}
+      <SubPanel className="mb-4" />
     </Form>
   );
 }
