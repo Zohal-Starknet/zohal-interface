@@ -15,6 +15,8 @@ export function useTokenInputs(props: Props) {
   const [receiveTokenSymbol, setReceiveTokenSymbol] =
     useState<TokenSymbol>("USDC");
   const [receiveTokenValue, setReceiveTokenValue] = useState("");
+  const [x, setX] = useState("");
+
 
   const temporaryPayTokenValueRef = useRef("");
   const temporaryPayTokenSymbolRef = useRef<TokenSymbol>("ETH");
@@ -22,9 +24,15 @@ export function useTokenInputs(props: Props) {
   const updatePayTokenValue = useCallback(
     function updatePayTokenValue(tokenValue: string) {
       setPayTokenValue(tokenValue);
+      if (tokenValue !== "" && x !== ""){
+        setReceiveTokenValue(
+          (Number(tokenValue) / Number(x)).toString(),
+        );
+      } else {
       setReceiveTokenValue(
         tokenValue !== "" ? (parseFloat(tokenValue) * ratio).toString() : "",
       );
+      }
     },
     [ratio],
   );
@@ -32,9 +40,27 @@ export function useTokenInputs(props: Props) {
   const updateReceiveTokenValue = useCallback(
     function updateReceiveTokenValue(tokenValue: string) {
       setReceiveTokenValue(tokenValue);
+      if (tokenValue !== "" && x !== "") {
+        ((parseFloat(tokenValue) / ratio) * Number(x)).toString();
+      } else {
+        setPayTokenValue(
+          tokenValue !== "" ? (parseFloat(tokenValue) / ratio).toString() : "",
+        );
+      }
+    },
+    [ratio],
+  );
+
+  const updateX = useCallback(
+    function updateX(xValue: string) {
+      setX(xValue);
       setPayTokenValue(
-        tokenValue !== "" ? (parseFloat(tokenValue) / ratio).toString() : "",
+        xValue !== "" ? (parseFloat(xValue) / ratio).toString() : "",
       );
+      const test = xValue !== "" ? (parseFloat(xValue) / ratio).toString() : "";
+      const res = Number(test) / Number(xValue);
+      setReceiveTokenValue(res.toString());
+
     },
     [ratio],
   );
@@ -57,5 +83,6 @@ export function useTokenInputs(props: Props) {
     switchTokens,
     updatePayTokenValue,
     updateReceiveTokenValue,
+    updateX,
   };
 }
