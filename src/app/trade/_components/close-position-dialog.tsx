@@ -2,16 +2,7 @@
 "use client";
 
 import { Tokens } from "@zohal/app/_helpers/tokens";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogOverlay,
-} from "@zohal/app/_ui/Modal";
 import { useState, useEffect } from "react";
-
 import useUserPosition from "../_hooks/use-user-position";
 import Divider from "@zohal/app/_ui/divider";
 import SwapInput from "./swap-input";
@@ -87,15 +78,13 @@ function ClosePositionDialogInfos() {
 interface ClosePositionDialogProps {
   collateral_amount: bigint;
   collateral_token: bigint;
-  onOpenChange(open: boolean): void;
-  open: boolean;
+  onClose: () => void;
 }
 
 export default function ClosePositionDialog({
   collateral_amount,
   collateral_token,
-  open,
-  onOpenChange,
+  onClose,
 }: ClosePositionDialogProps) {
   const [inputValue, setInputValue] = useState("");
   const { closePosition } = useUserPosition();
@@ -106,69 +95,88 @@ export default function ClosePositionDialog({
   const isCloseAction =
     parseFloat(inputValue) >= parseFloat(formattedCollateralAmount);
 
-  function onInputChange(newValue: string) {
-    setInputValue(newValue);
-  }
-
   useEffect(() => {
-    if (!open) {
-      setInputValue(""); 
-    }
-  }, [open]);
+    setInputValue("");
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
+  const handleClose = () => {
+    closePosition(collateral_token, collateral_amount);
+    onClose();
+  };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogOverlay />
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>
-            <div className="flex items-center gap-2">
-              <img alt="ETH" className="h-6 w-6" src={Tokens.ETH.icon} />
-              ETH-USDC
-            </div>
-          </DialogTitle>
-          <DialogDescription>Adjust or close your position</DialogDescription>
-        </DialogHeader>
-        <SwapInput
-          id="closePosition"
-          formattedTokenBalance={formattedCollateralAmount}
-          inputValue={inputValue}
-          label="Close"
-          onInputChange={onInputChange}
-        >
-          <Button
-            size="sm"
-            className="h-7 text-sm"
-            variant="secondary"
-            onClick={() => onInputChange(formattedCollateralAmount)}
-          >
-            Max
-          </Button>
-        </SwapInput>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ transition: "opacity 0.3s, transform 0.3s", opacity: 1, transform: "scale(1)" }}
+    >
+      <div
+        className="fixed inset-0 backdrop-blur-sm"
+        style={{ transition: "backdrop-filter 0.3s", backdropFilter: "blur(5px)" }}
+        onClick={onClose}
+      ></div>
+      <div
+        className="relative bg-background rounded-lg shadow-lg p-6 w-full max-w-md"
+        style={{ transition: "opacity 0.3s, transform 0.3s", opacity: 1, transform: "scale(1)" }}
+      >
+        <div className="flex items-center gap-2">
+          <img alt="ETH" className="h-6 w-6" src={Tokens.ETH.icon} />
+          <h2 className="text-lg font-semibold leading-none tracking-tight">
+            ETH-USDC
+          </h2>
+          <button className="ml-auto" onClick={onClose}>
+            <svg
+              className="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          </button>
+        </div>
+        <p className="text-sm text-muted-foreground">Adjust or close your position</p>
+        <div className="my-4">
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-muted-foreground">Close</label>
+            <span>Balance: {formattedCollateralAmount}</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <input
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+              type="number"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+            />
+            <Button
+              size="sm"
+              className="h-7 text-sm"
+              variant="secondary"
+              onClick={() => setInputValue(formattedCollateralAmount)}
+            >
+              Max
+            </Button>
+          </div>
+        </div>
         <ClosePositionDialogInfos />
 
-        {isCloseAction ? (
-          <button
-            className="w-full rounded-lg border border-border bg-secondary px-3 py-2 text-sm"
-            onClick={() => {
-              closePosition(collateral_token, collateral_amount);
-              onOpenChange(false); 
-            }}
-          >
-            Close Position
-          </button>
-        ) : (
-          <button
-            className="w-full rounded-lg border border-border bg-secondary px-3 py-2 text-sm"
-            onClick={() => {
-              closePosition(collateral_token, collateral_amount);
-              onOpenChange(false); 
-            }}
-          >
-            Reduce position
-          </button>
-        )}
-      </DialogContent>
-    </Dialog>
+        <button
+          className="w-full rounded-lg border border-border bg-secondary px-3 py-2 text-sm mt-4"
+          onClick={handleClose}
+        >
+          {isCloseAction ? "Close Position" : "Reduce position"}
+        </button>
+      </div>
+    </div>
   );
 }
