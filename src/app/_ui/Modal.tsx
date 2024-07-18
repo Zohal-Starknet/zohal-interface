@@ -2,7 +2,7 @@
 
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import clsx from "clsx";
-import React from "react";
+import React, { useEffect } from "react";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -13,17 +13,27 @@ const DialogTrigger = DialogPrimitive.Trigger;
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
->(({ className, ...props }, ref) => (
-  <DialogPrimitive.Overlay
-    className={clsx(
-      "bg-background-800 fixed inset-0 z-50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-      className,
-    )}
-    ref={ref}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => {
+  useEffect(() => {
+    return () => {
+      const overlays = document.querySelectorAll(".dialog-overlay");
+      overlays.forEach((overlay) => overlay.remove());
+    };
+  }, []);
+
+  return (
+    <DialogPrimitive.Overlay
+      className={clsx(
+        "dialog-overlay bg-background-800 fixed inset-0 z-50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+        className
+      )}
+      ref={ref}
+      {...props}
+    />
+  );
+});
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
+
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,

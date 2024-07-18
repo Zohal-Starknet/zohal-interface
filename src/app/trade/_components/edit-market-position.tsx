@@ -18,9 +18,16 @@ export default function EditPosition({
   collateral_amount,
   collateral_token,
 }: EditPositionProps) {
-  const [openedModal, setOpenedModal] = useState<
-    "decreaseCollateral" | undefined
-  >(undefined);
+  const [openedModal, setOpenedModal] = useState<"decreaseCollateral" | undefined>(undefined);
+
+  const handleOpenChange = (open: boolean) => {
+    console.log("Modal open change:", open);
+    if (open) {
+      setOpenedModal("decreaseCollateral");
+    } else {
+      setOpenedModal(undefined);
+    }
+  };
 
   return (
     <>
@@ -34,9 +41,7 @@ export default function EditPosition({
           <DropdownMenuItem onClick={() => setOpenedModal(undefined)}>
             Increase collateral
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => setOpenedModal("decreaseCollateral")}
-          >
+          <DropdownMenuItem onClick={() => setOpenedModal("decreaseCollateral")}>
             Decrease collateral
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpenedModal(undefined)}>
@@ -52,11 +57,7 @@ export default function EditPosition({
         collateral_amount={collateral_amount}
         collateral_token={collateral_token}
         open={openedModal === "decreaseCollateral"}
-        onOpenChange={(open) =>
-          open
-            ? setOpenedModal("decreaseCollateral")
-            : setOpenedModal(undefined)
-        }
+        onOpenChange={handleOpenChange}
       />
     </>
   );

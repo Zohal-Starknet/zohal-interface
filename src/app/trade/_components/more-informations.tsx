@@ -13,13 +13,16 @@ type SwapMoreInformationsProps = {
   payTokenSymbol: TokenSymbol;
   /** Ratio between the price of the token to be sold and the token that will be received */
   ratio: number;
+  /** Price between the oken and usd */
+  price: number;
   /** Token symbol of the token that is going to be received after the swap */
   receiveTokenSymbol: TokenSymbol;
+  liquidity : string;
 };
 
 // TODO - Export Chevron animated in its own component
 export default function SwapMoreInformations(props: SwapMoreInformationsProps) {
-  const { payTokenSymbol, ratio, receiveTokenSymbol } = props;
+  const { payTokenSymbol, ratio, price, receiveTokenSymbol, liquidity } = props;
   const [open, setOpen] = useState<boolean | undefined>(undefined);
   const [priceInfos, setPriceInfos] = useState<
     { label: string; value: string }[]
@@ -28,12 +31,12 @@ export default function SwapMoreInformations(props: SwapMoreInformationsProps) {
   useEffect(() => {
     const formattedRatio = (1 / ratio).toFixed(4);
     setPriceInfos([
-      { label: `${payTokenSymbol} Price`, value: `${ratio.toFixed(2)} $` },
+      { label: `${payTokenSymbol} Price`, value: `${price.toFixed(2)} $` },
       {
         label: `${receiveTokenSymbol} Price`,
         value: `${(1 / ratio).toFixed(4)} ${payTokenSymbol} `,
       },
-      { label: "Available Liquidity", value: "$272,569.02" },
+      { label: "Available Liquidity", value:  liquidity },
       {
         label: "Price",
         value: `${formattedRatio} ${payTokenSymbol} / ${receiveTokenSymbol}`,

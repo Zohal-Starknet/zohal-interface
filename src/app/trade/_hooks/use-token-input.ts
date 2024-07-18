@@ -4,10 +4,11 @@ import { useCallback, useRef, useState } from "react";
 type Props = {
   /** Ratio applied to the prices when modified */
   ratio: number;
+  leverage: number;
 };
 
 export function useTokenInputs(props: Props) {
-  const { ratio } = props;
+  const { ratio, leverage } = props;
 
   const [payTokenSymbol, setPayTokenSymbol] = useState<TokenSymbol>("ETH");
   const [payTokenValue, setPayTokenValue] = useState("");
@@ -65,12 +66,34 @@ export function useTokenInputs(props: Props) {
     [ratio],
   );
 
+  const updatePayTokenTradeValue = useCallback(
+    function updatePayTokenValue(tokenValue: string) {
+      setPayTokenValue(tokenValue);
+      setReceiveTokenValue(
+        tokenValue !== "" ? (parseFloat(tokenValue) * ratio * leverage).toString() : "",
+      );
+    },
+    [ratio, leverage],
+  );
+
+
+  const updateReceiveTokenTradeValue = useCallback(
+    function updateReceiveTokenValue(tokenValue: string) {
+      setReceiveTokenValue(tokenValue);
+      setPayTokenValue(
+        tokenValue !== "" ? (parseFloat(tokenValue) / ratio).toString() : "",
+      );
+    },
+    [ratio],
+  );
+
   function switchTokens() {
     temporaryPayTokenValueRef.current = payTokenValue;
-    setPayTokenValue(receiveTokenValue);
+    setPayTokenValue(0);
     setReceiveTokenValue(temporaryPayTokenValueRef.current);
 
     temporaryPayTokenSymbolRef.current = payTokenSymbol;
+    setReceiveTokenValue(0);
     setPayTokenSymbol(receiveTokenSymbol);
     setReceiveTokenSymbol(temporaryPayTokenSymbolRef.current);
   }
@@ -84,5 +107,7 @@ export function useTokenInputs(props: Props) {
     updatePayTokenValue,
     updateReceiveTokenValue,
     updateX,
+    updateReceiveTokenTradeValue,
+    updatePayTokenTradeValue
   };
 }

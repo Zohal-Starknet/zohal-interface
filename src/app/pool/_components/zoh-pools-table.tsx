@@ -67,8 +67,6 @@ function ZohPoolsTableBody() {
               ${IntlFormatter.format(Number(ethPrice))}
             </td>
             <td className="px-1 py-3">
-              {/* <p>5,623,489.29 ZOH</p>
-              <p className="text-muted-foreground">($12,776,103.40)</p> */}
               {poolData && (
                 <p className="text-muted-foreground">
                   (${IntlFormatter.format(Number(poolData.pool_value))})

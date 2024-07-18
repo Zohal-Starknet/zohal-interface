@@ -23,9 +23,11 @@ export default function ChooseTokenModal(props: ChooseTokenModalProps) {
       const lowerCaseQuery = searchQuery.toLowerCase();
 
       const shouldIncludeToken =
-        tokenSymbol.toLowerCase().includes(lowerCaseQuery) ||
+        (tokenSymbol.toLowerCase().includes(lowerCaseQuery) ||
         tokenInfo.name.toLowerCase().includes(lowerCaseQuery) ||
-        tokenInfo.address === lowerCaseQuery;
+        tokenInfo.address === lowerCaseQuery)  &&
+        tokenSymbol.toLowerCase() !== 'zoh';
+
 
       if (shouldIncludeToken) {
         return {
@@ -37,7 +39,7 @@ export default function ChooseTokenModal(props: ChooseTokenModalProps) {
       return [];
     });
   }, [searchQuery]);
-
+  
   return (
     <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent className="h-full max-h-[20rem] px-0 pb-0">

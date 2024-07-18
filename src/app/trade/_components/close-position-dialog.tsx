@@ -8,8 +8,9 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogOverlay,
 } from "@zohal/app/_ui/Modal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import useUserPosition from "../_hooks/use-user-position";
 import Divider from "@zohal/app/_ui/divider";
@@ -67,7 +68,7 @@ function ClosePositionDialogInfos() {
         </p>
       </div>
       <div className="flex items-center justify-between">
-        <p className="text-muted-foreground">Fees an Price Impact</p>
+        <p className="text-muted-foreground">Fees and Price Impact</p>
         <p>-$0.01</p>
       </div>
       <div className="flex items-center justify-between">
@@ -109,12 +110,15 @@ export default function ClosePositionDialog({
     setInputValue(newValue);
   }
 
-  if (!open) {
-    return null;
-  }
+  useEffect(() => {
+    if (!open) {
+      setInputValue(""); 
+    }
+  }, [open]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogOverlay />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
@@ -146,14 +150,20 @@ export default function ClosePositionDialog({
         {isCloseAction ? (
           <button
             className="w-full rounded-lg border border-border bg-secondary px-3 py-2 text-sm"
-            onClick={() => closePosition(collateral_token, collateral_amount)}
+            onClick={() => {
+              closePosition(collateral_token, collateral_amount);
+              onOpenChange(false); 
+            }}
           >
             Close Position
           </button>
         ) : (
           <button
             className="w-full rounded-lg border border-border bg-secondary px-3 py-2 text-sm"
-            onClick={() => closePosition(collateral_token, collateral_amount)}
+            onClick={() => {
+              closePosition(collateral_token, collateral_amount);
+              onOpenChange(false); 
+            }}
           >
             Reduce position
           </button>
