@@ -21,10 +21,14 @@ const leverageInputs = [
 export default function TradeLeverageInput(props: TradeLeverageInputProps) {
   const { className, leverage, setLeverage } = props;
 
-  function onLeverageChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const value = parseFloat(event.target.value);
-    if (!isNaN(value)) {
-      setLeverage(value);
+  function onLeverageChange(value: string) {
+    const numericValue = parseFloat(value);
+    if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= 50) {
+      setLeverage(numericValue);
+    } else if (numericValue < 1) {
+      setLeverage(1);
+    } else if (numericValue > 50) {
+      setLeverage(50);
     }
   }
 
@@ -36,7 +40,7 @@ export default function TradeLeverageInput(props: TradeLeverageInputProps) {
         <div className="flex items-center gap-4">
           <Slider
             max={50}
-            min={1.1}
+            min={1}
             //@ts-ignore
             onValueChange={(value) => setLeverage(value)}
             step={0.1}
@@ -45,7 +49,6 @@ export default function TradeLeverageInput(props: TradeLeverageInputProps) {
           <div className="border-border bg-card h-10 w-20 flex-auto items-center rounded-md border">
             <Input
               className="h-full w-full bg-transparent px-2 text-sm"
-              //@ts-ignore
               onChange={onLeverageChange}
               placeholder="0.00×"
               value={leverage.toString()}
