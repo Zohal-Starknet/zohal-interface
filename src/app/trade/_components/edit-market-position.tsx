@@ -21,7 +21,6 @@ export default function EditPosition({
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenChange = (open: boolean) => {
-    console.log("Modal open change:", open);
     setIsModalOpen(open);
   };
 

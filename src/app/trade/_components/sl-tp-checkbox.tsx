@@ -11,7 +11,7 @@ import Button from "@zohal/app/_ui/button";
 import { Checkbox } from "@zohal/app/_ui/checkbox";
 import Divider from "@zohal/app/_ui/divider";
 import Input from "@zohal/app/_ui/input";
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, useState, useEffect } from "react";
 
 export type SlTpInfos = {
   tpTriggerPrice: string;
@@ -36,7 +36,6 @@ function SlTpModal({
     useState<SlTpInfos>(slTpInfos);
 
   function onUpdateTpTriggerPrice(newTpTriggerPrice: string) {
-    // Update ROI here
     setTemporarySlTpInfos({
       ...temporarySlTpInfos,
       tpTriggerPrice: newTpTriggerPrice,
@@ -44,7 +43,6 @@ function SlTpModal({
   }
 
   function onUpdateSlTriggerPrice(newSlTriggerPrice: string) {
-    // Update ROI here
     setTemporarySlTpInfos({
       ...temporarySlTpInfos,
       slTriggerPrice: newSlTriggerPrice,
@@ -52,7 +50,6 @@ function SlTpModal({
   }
 
   function onUpdateTpRoi(newTpRoi: string) {
-    // Update Trigger price here
     setTemporarySlTpInfos({
       ...temporarySlTpInfos,
       tpRoi: newTpRoi,
@@ -60,7 +57,6 @@ function SlTpModal({
   }
 
   function onUpdateSlRoi(newSlRoi: string) {
-    // Update Trigger price here
     setTemporarySlTpInfos({
       ...temporarySlTpInfos,
       slRoi: newSlRoi,
@@ -74,10 +70,10 @@ function SlTpModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger onClick={() => setIsOpen(true)} asChild>
-        {children}
+      <DialogTrigger asChild>
+        <div onClick={() => setIsOpen(true)}>{children}</div>
       </DialogTrigger>
-      <DialogContent className=" max-w-lg">
+      <DialogContent className="max-w-lg">
         <DialogHeader>Add TP/SL</DialogHeader>
 
         <div className="mt-4 flex items-center justify-between text-sm">
@@ -101,23 +97,23 @@ function SlTpModal({
         </div>
 
         <div className="mt-4 text-sm">
-          <p className="text-muted-foreground">
-            Take Profit-Trigger by ROI (%)
-          </p>
+          <p className="text-muted-foreground">Take Profit-Trigger by ROI (%)</p>
           <div className="mt-1.5">
             <div className="grid grid-cols-[2fr_1fr] gap-4">
               <Input
                 className="h-12 w-full rounded-md bg-secondary px-2 text-xs"
                 placeholder="Trigger price"
                 value={temporarySlTpInfos.tpTriggerPrice}
-                onChange={onUpdateTpTriggerPrice}
+                //@ts-ignore
+                onChange={(e) => onUpdateTpTriggerPrice(e.target.value)}
               />
               <div className="flex h-12 w-full items-center overflow-hidden rounded-md bg-secondary pr-2">
                 <Input
                   className="h-full w-full bg-secondary px-2 text-xs"
                   placeholder="ROI"
                   value={temporarySlTpInfos.tpRoi}
-                  onChange={onUpdateTpRoi}
+                  //@ts-ignore
+                  onChange={(e) => onUpdateTpRoi(e.target.value)}
                 />
                 <span>%</span>
               </div>
@@ -135,14 +131,16 @@ function SlTpModal({
                 className="h-12 w-full rounded-md bg-secondary px-2 text-xs"
                 placeholder="Trigger price"
                 value={temporarySlTpInfos.slTriggerPrice}
-                onChange={onUpdateSlTriggerPrice}
+                //@ts-ignore
+                onChange={(e) => onUpdateSlTriggerPrice(e.target.value)}
               />
               <div className="flex h-12 w-full items-center overflow-hidden rounded-md bg-secondary pr-2">
                 <Input
                   className="h-full w-full bg-secondary px-2 text-xs"
                   placeholder="ROI"
                   value={temporarySlTpInfos.slRoi}
-                  onChange={onUpdateSlRoi}
+                  //@ts-ignore
+                  onChange={(e) => onUpdateSlRoi(e.target.value)}
                 />
                 <span>%</span>
               </div>
@@ -157,7 +155,6 @@ function SlTpModal({
           <Button
             variant="secondary"
             onClick={() => {
-              // TODO @YohanTz: Refacto
               setTemporarySlTpInfos({
                 slRoi: "",
                 slTriggerPrice: "",
@@ -186,7 +183,12 @@ export default function SlTpCheckbox({
   setSlTpInfos,
   slTpInfos,
 }: PropsWithClassName<SlTpCheckboxProps>) {
-  // TODO @YohanTz: Refacto
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const hasTpOrSlInfo =
     slTpInfos.slRoi.length > 0 ||
     slTpInfos.slTriggerPrice.length > 0 ||
@@ -196,10 +198,10 @@ export default function SlTpCheckbox({
   return (
     <div className={cn("", className)}>
       <SlTpModal setSlTpInfos={setSlTpInfos} slTpInfos={slTpInfos}>
-        <button className="flex items-center gap-2">
-          <Checkbox checked={hasTpOrSlInfo} />
+        <div className="flex items-center gap-2">
+          {isClient && <Checkbox checked={hasTpOrSlInfo} />}
           <p className="text-sm">TP / SL (Entire position)</p>
-        </button>
+        </div>
       </SlTpModal>
     </div>
   );

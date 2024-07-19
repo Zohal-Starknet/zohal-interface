@@ -15,7 +15,7 @@ export type TabItemType = {
 
 type TabsProps = {
   ariaLabel?: string;
-  defaultValue: string;
+  defaultValue?: string;
   items: [TabItemType, TabItemType, ...TabItemType[]];
   value?: string;
   onValueChange?: (value: string) => void;

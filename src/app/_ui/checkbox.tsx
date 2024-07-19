@@ -16,6 +16,7 @@ const Checkbox = React.forwardRef<
       className,
     )}
     {...props}
+    suppressHydrationWarning={true}
   >
     <CheckboxPrimitive.Indicator
       className={cn("flex items-center justify-center text-current")}

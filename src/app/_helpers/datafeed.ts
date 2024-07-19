@@ -122,6 +122,7 @@ const datafeed = {
                 }];
             });
 
+            //@ts-ignore
             bars.sort((a, b) => a.time - b.time);
 
             //@ts-ignore
@@ -140,7 +141,6 @@ const datafeed = {
     ) => {
         const ws = new WebSocket('wss://ws.dev.pragma.build/node/v1/onchain/ohlc/subscribe');
         ws.onopen = () => {
-            console.log('[subscribeBars]: WebSocket connection opened with subscriberUID:', subscriberUID);
             const subscribeMessage = {
                 msg_type: 'subscribe',
                 pair: symbolInfo.ticker,
@@ -153,7 +153,6 @@ const datafeed = {
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            console.log("Data websocket: " + JSON.stringify(data))
 
             if (Array.isArray(data)) {
                 data.forEach(barData => {
@@ -169,7 +168,7 @@ const datafeed = {
                             open: parseFloat(barData.open) / 10 ** 8,
                             close: parseFloat(barData.close) / 10 ** 8,
                         };
-                        onRealtimeCallback(bar);
+                        //onRealtimeCallback(bar);
                     } catch (error) {
                         console.error('[subscribeBars]: Error parsing bar data', error);
                     }
@@ -189,7 +188,6 @@ const datafeed = {
         (this as any)._ws = ws;
     },
     unsubscribeBars: (subscriberUID: string) => {
-        console.log('[unsubscribeBars]: Method call with subscriberUID:', subscriberUID);
         const ws = (this as any)._ws;
         if (ws) {
             ws.close();

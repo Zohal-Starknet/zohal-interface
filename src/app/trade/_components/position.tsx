@@ -47,10 +47,10 @@ export default function Position({ className }: PropsWithClassName) {
           </tr>
         </thead>
         <tbody>
-          {positions.map((position) => {
+          {positions.map((position, index) => {
             const decimals = BigInt(Math.pow(10, 18));
             return (
-              <tr className="border-b border-border text-sm" key={position.key}>
+              <tr className="border-b border-border text-sm" key={position.key || index}>
                 <td className="flex gap-4 py-4">
                   <div className="flex-shrink-0 rounded-full border border-border p-1">
                     <img
@@ -80,18 +80,6 @@ export default function Position({ className }: PropsWithClassName) {
                     </span>
                   </div>
                 </td>
-                {/* <td className="py-4">
-                  {data.netValue.price}
-                  <br />
-                  <span
-                    className={clsx(
-                      "text-sm",
-                      position.is_long ? "text-[#40B68B]" : "text-[#FF5354]",
-                    )}
-                  >
-                    {data.netValue.purcentage}
-                  </span>
-                </td> */}
                 <td>
                   <div>
                     $
@@ -124,7 +112,6 @@ export default function Position({ className }: PropsWithClassName) {
                 </td>
                 <td>$3500</td>
                 <td>${ethData.currentPrice.toFixed(2)}</td>
-                {/* <td>{data.liquidationPrice}</td> */}
                 <td className="text-right">
                   <EditMarketPosition
                     collateral_amount={position.collateral_amount}

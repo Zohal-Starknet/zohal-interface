@@ -20,6 +20,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = (props) => {
 
   useEffect(() => {
     const checkIfScriptsLoaded = () => {
+      //@ts-ignore
       if (window.TradingView && window.TradingView.widget) {
         setIsScriptLoaded(true);
       } else {
@@ -48,6 +49,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = (props) => {
         theme: 'dark'
       };
 
+      //@ts-ignore
       const tvWidget = new window.TradingView.widget(widgetOptions);
 
       tvWidget.onChartReady(() => {

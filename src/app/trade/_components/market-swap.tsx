@@ -28,10 +28,10 @@ export default function MarketSwap({ className }: PropsWithClassName) {
     switchTokens,
     updatePayTokenValue,
     updateReceiveTokenValue,
-  } = useTokenInputs({ ratio: tokenRatio });
+  } = useTokenInputs({ ratio: tokenRatio, leverage:1 });
   const { ethData } = useEthPrice();
 
-  const fetchPrice = async (token) => {
+  const fetchPrice = async (token: any) => {
     const pair = token+"/usd";
     const apiUrl = `/api/fetch-price?pair=${pair}`;
     try {

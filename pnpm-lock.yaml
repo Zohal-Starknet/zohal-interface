@@ -39,10 +39,10 @@ importers:
         specifier: ^1.0.4
         version: 1.0.4(@types/react-dom@18.2.23)(@types/react@18.2.73)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@starknet-react/chains':
-        specifier: ^0.1.6
+        specifier: ^0.1.7
         version: 0.1.7
       '@starknet-react/core':
-        specifier: ^2.2.4
+        specifier: ^2.5.0
         version: 2.5.0(get-starknet-core@3.2.0(starknet@5.29.0))(react@18.2.0)(starknet@5.29.0)
       class-variance-authority:
         specifier: ^0.7.0
@@ -69,10 +69,10 @@ importers:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
       sonner:
-        specifier: ^1.2.0
+        specifier: ^1.2.2
         version: 1.2.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       starknet:
-        specifier: ^5.25.5
+        specifier: ^5.29.0
         version: 5.29.0
       tailwind-merge:
         specifier: ^2.0.0
@@ -85,7 +85,7 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@types/eslint':
-        specifier: ^8.44.6
+        specifier: ^8.56.6
         version: 8.56.6
       '@types/jest':
         specifier: ^29.5.6
@@ -100,10 +100,10 @@ importers:
         specifier: 18.2.23
         version: 18.2.23
       '@typescript-eslint/eslint-plugin':
-        specifier: ^7.0.0
+        specifier: ^7.0.1
         version: 7.0.1(@typescript-eslint/parser@7.0.1(eslint@8.57.0)(typescript@5.3.2))(eslint@8.57.0)(typescript@5.3.2)
       '@typescript-eslint/parser':
-        specifier: ^7.0.0
+        specifier: ^7.0.1
         version: 7.0.1(eslint@8.57.0)(typescript@5.3.2)
       autoprefixer:
         specifier: 10.4.16
@@ -115,7 +115,7 @@ importers:
         specifier: 14.0.3
         version: 14.0.3(eslint@8.57.0)(typescript@5.3.2)
       eslint-plugin-perfectionist:
-        specifier: ^2.0.0
+        specifier: ^2.4.0
         version: 2.4.0(eslint@8.57.0)(typescript@5.3.2)
       jest:
         specifier: ^29.7.0
@@ -136,7 +136,7 @@ importers:
         specifier: 3.3.5
         version: 3.3.5
       ts-jest:
-        specifier: ^29.1.1
+        specifier: ^29.1.2
         version: 29.1.2(@babel/core@7.23.2)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.23.2))(jest@29.7.0(@types/node@20.10.1))(typescript@5.3.2)
       typescript:
         specifier: 5.3.2
@@ -1625,8 +1625,8 @@ packages:
     resolution: {integrity: sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==}
     engines: {node: '>=10'}
 
-  caniuse-lite@1.0.30001561:
-    resolution: {integrity: sha512-NTt0DNoKe958Q0BE0j0c1V9jbUzhBxHIEJy7asmGrpE0yG63KTV7PLHPnK2E1O9RsQrQ081I3NLuXGS6zht3cw==}
+  caniuse-lite@1.0.30001642:
+    resolution: {integrity: sha512-3XQ0DoRgLijXJErLSl+bLnJ+Et4KqV1PY6JJBGAFlsNsz31zeAIncyeZfLCabHK/jtSh+671RM9YMldxjUPZtA==}
 
   cardinal@2.1.1:
     resolution: {integrity: sha512-JSr5eOgoEymtYHBjNWyjrMqet9Am2miJhlfKNdqLp6zoeAh0KN5dRAcxlecj5mAJrmQomgiOBj35xHLrFjqBpw==}
@@ -5212,7 +5212,7 @@ snapshots:
   autoprefixer@10.4.16(postcss@8.4.31):
     dependencies:
       browserslist: 4.21.10
-      caniuse-lite: 1.0.30001561
+      caniuse-lite: 1.0.30001642
       fraction.js: 4.3.6
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -5298,7 +5298,7 @@ snapshots:
 
   browserslist@4.21.10:
     dependencies:
-      caniuse-lite: 1.0.30001561
+      caniuse-lite: 1.0.30001642
       electron-to-chromium: 1.4.513
       node-releases: 2.0.13
       update-browserslist-db: 1.0.11(browserslist@4.21.10)
@@ -5330,7 +5330,7 @@ snapshots:
 
   camelcase@6.3.0: {}
 
-  caniuse-lite@1.0.30001561: {}
+  caniuse-lite@1.0.30001642: {}
 
   cardinal@2.1.1:
     dependencies:
@@ -6825,7 +6825,7 @@ snapshots:
       '@next/env': 13.4.7
       '@swc/helpers': 0.5.1
       busboy: 1.6.0
-      caniuse-lite: 1.0.30001561
+      caniuse-lite: 1.0.30001642
       postcss: 8.4.14
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)

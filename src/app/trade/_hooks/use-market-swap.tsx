@@ -54,8 +54,6 @@ export default function useMarketSwap() {
         is_long: false,
         referral_code: "0x0",
       };
-      console.log("Size delta USD:" + JSON.stringify(createOrderParams.size_delta_usd));
-
       const routerContract = new Contract(
         exchange_router_abi.abi,
         EXCHANGE_ROUTER_CONTRACT_ADDRESS,

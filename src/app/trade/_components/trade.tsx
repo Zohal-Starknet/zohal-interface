@@ -71,7 +71,7 @@ export default function Trade({ className }: PropsWithClassName) {
   const priceInfos = [
     { label: "Pool", value: "ETH-USDC" },
     { label: "Collateral in", value: payTokenSymbol },
-    { label: "Leverage", value: leverage },
+    { label: "Leverage", value: ""+leverage },
     { label: "Liq. Price", value: "-" },
     { label: "Fees", value: "$0" },
   ];

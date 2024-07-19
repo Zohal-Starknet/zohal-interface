@@ -89,11 +89,11 @@ export function useTokenInputs(props: Props) {
 
   function switchTokens() {
     temporaryPayTokenValueRef.current = payTokenValue;
-    setPayTokenValue(0);
+    setPayTokenValue(""+0);
     setReceiveTokenValue(temporaryPayTokenValueRef.current);
 
     temporaryPayTokenSymbolRef.current = payTokenSymbol;
-    setReceiveTokenValue(0);
+    setReceiveTokenValue(""+0);
     setPayTokenSymbol(receiveTokenSymbol);
     setReceiveTokenSymbol(temporaryPayTokenSymbolRef.current);
   }

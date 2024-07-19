@@ -83,7 +83,6 @@ export default function useEthPrice() {
           low24h,
         });
       } else {
-        console.log("ELSE");
         setError(new Error("Failed to fetch data"));
       }
     } catch (error) {
