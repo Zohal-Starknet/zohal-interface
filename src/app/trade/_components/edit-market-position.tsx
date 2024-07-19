@@ -18,15 +18,15 @@ export default function EditPosition({
   collateral_amount,
   collateral_token,
 }: EditPositionProps) {
-  const [openedModal, setOpenedModal] = useState<"decreaseCollateral" | undefined>(undefined);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenChange = (open: boolean) => {
     console.log("Modal open change:", open);
-    if (open) {
-      setOpenedModal("decreaseCollateral");
-    } else {
-      setOpenedModal(undefined);
-    }
+    setIsModalOpen(open);
+  };
+
+  const openDecreaseCollateral = () => {
+    setIsModalOpen(true);
   };
 
   return (
@@ -38,27 +38,28 @@ export default function EditPosition({
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="space-y-1">
-          <DropdownMenuItem onClick={() => setOpenedModal(undefined)}>
+          <DropdownMenuItem onClick={() => openDecreaseCollateral}/* Change after*/>
             Increase collateral
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpenedModal("decreaseCollateral")}>
+          <DropdownMenuItem onClick={openDecreaseCollateral}>
             Decrease collateral
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpenedModal(undefined)}>
+          <DropdownMenuItem onClick={() => openDecreaseCollateral}/* Change after*/>
             Increase position
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpenedModal(undefined)}>
+          <DropdownMenuItem onClick={() => openDecreaseCollateral}/* Change after*/>
             Decrease position
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <ClosePositionDialog
-        collateral_amount={collateral_amount}
-        collateral_token={collateral_token}
-        open={openedModal === "decreaseCollateral"}
-        onOpenChange={handleOpenChange}
-      />
+      {isModalOpen && (
+        <ClosePositionDialog
+          collateral_amount={collateral_amount}
+          collateral_token={collateral_token}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </>
   );
 }
