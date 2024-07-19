@@ -23,8 +23,8 @@ export default function Header() {
           <Navigation />
         </div>
         <div className="items-cneter flex gap-2">
+          <button  className="flex h-10 items-center rounded-xl bg-secondary px-4 transition-colors hover:bg-neutral-800"> Faucet </button>
           <ConnectButton />
-          {/* <ThemeToggle /> */}
         </div>
       </header>
       <Divider />

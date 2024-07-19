@@ -12,6 +12,7 @@ import { CairoCustomEnum, Contract, uint256 } from "starknet";
 import reader_abi from "../../pool/_abi/reader_abi.json";
 import exchange_router_abi from "../abi/exchange_router.json";
 import datastore_abi from "../abi/datastore.json";
+import useEthPrice from "./use-market-data";
 
 export type Position = {
   account: bigint;
@@ -31,6 +32,7 @@ export type Position = {
 };
 
 export default function useUserPosition() {
+  const {ethData} = useEthPrice();
   const { account, address } = useAccount();
   const { provider } = useProvider();
   const [positions, setPositions] = useState<
@@ -119,8 +121,8 @@ export default function useUserPosition() {
             { contract_address: REFERRAL_STORAGE_CONTRACT_ADDRESS },
             positionKey,
             {
-              index_token_price: { min: 2925, max: 2925 },
-              long_token_price: { min: 2925, max: 2925 },
+              index_token_price: { min: parseInt(""+ethData.currentPrice), max: parseInt(""+ethData.currentPrice) },
+              long_token_price: { min: parseInt(""+ethData.currentPrice), max: parseInt(""+ethData.currentPrice)},
               short_token_price: { min: 1, max: 1 },
             },
             0,

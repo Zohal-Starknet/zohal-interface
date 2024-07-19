@@ -17,7 +17,7 @@ export default function Position({ className }: PropsWithClassName) {
   if (positions === undefined) {
     return (
       <div className="mt-4 flex justify-center text-neutral-400">
-        Connect your wallet to see your positions
+         No Positions
       </div>
     );
   }
