@@ -6,7 +6,7 @@ import clsx from "clsx";
 
 import useUserPosition from "../_hooks/use-user-position";
 import useEthPrice from "../_hooks/use-market-data";
-import EditMarketPosition from "./edit-market-position";
+import ClosePositionDialog from "./close-position-dialog";
 
 /* eslint-disable @next/next/no-img-element */
 export default function Position({ className }: PropsWithClassName) {
@@ -113,7 +113,8 @@ export default function Position({ className }: PropsWithClassName) {
                 <td>$3500</td>
                 <td>${ethData.currentPrice.toFixed(2)}</td>
                 <td className="text-right">
-                  <EditMarketPosition
+                  <ClosePositionDialog
+                    position={position}
                     collateral_amount={position.collateral_amount}
                     collateral_token={position.collateral_token}
                   />
