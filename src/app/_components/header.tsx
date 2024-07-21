@@ -6,6 +6,7 @@ import Divider from "../_ui/divider";
 import { ConnectButton } from "../zohal-modal";
 import Navigation from "./navigation";
 import { ThemeToggle } from "./theme-toggle";
+import {FaucetButton} from "@zohal/app/ui/FaucetButton"
 
 /* eslint-disable @next/next/no-img-element */
 export default function Header() {
@@ -23,7 +24,7 @@ export default function Header() {
           <Navigation />
         </div>
         <div className="items-cneter flex gap-2">
-          <button  className="flex h-10 items-center rounded-xl bg-secondary px-4 transition-colors hover:bg-neutral-800"> Faucet </button>
+          <FaucetButton/>
           <ConnectButton />
         </div>
       </header>
