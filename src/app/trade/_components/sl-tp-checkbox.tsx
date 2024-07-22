@@ -211,7 +211,7 @@ export default function SlTpCheckbox({
           {isClient && (
             <Checkbox checked={hasTpOrSlInfo} className="pointer-events-none" />
           )}
-          <p className="text-sm">TP / SL (Entire position)</p>
+          <p className="text-sm">TP / SL (Coming Soon)</p>
         </div>
       </SlTpModal>
     </div>

@@ -16,11 +16,6 @@ export default function Navigation() {
         <NavigationItem label="Portfolio" pathname={getPortfolioPath()} />
         <NavigationItem label="Dashboard" pathname={getDashboardPath()} />
         <NavigationItem label="Rewards" pathname={getRewardsPath()} />
-        <NavigationItem
-          isExternal
-          label="Docs"
-          pathname="https://book.satoru.run/"
-        />
       </ul>
     </nav>
   );

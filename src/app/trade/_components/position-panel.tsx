@@ -9,15 +9,13 @@ type PositionPanelProps = {
 };
 
 export default function PositionPanel(props: PositionPanelProps) {
-  const tabItems: [TabItemType, TabItemType, TabItemType, TabItemType] = [
+  const tabItems: [TabItemType, TabItemType] = [
     {
       content: <Position className="p-4" />,
       label: "Positions",
       value: "trade",
     },
-    { content: <></>, label: "Orders", value: "orders" },
-    { content: <></>, label: "Trades", value: "trades" },
-    { content: <></>, label: "Claims", value: "claims" },
+    { content: <></>, label: "Orders", value: "orders" }
   ];
 
   const { className } = props;
