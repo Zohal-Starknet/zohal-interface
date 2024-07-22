@@ -17,7 +17,7 @@ export default function Position({ className }: PropsWithClassName) {
   if (positions === undefined) {
     return (
       <div className="mt-4 flex justify-center text-neutral-400">
-         No Positions
+        No Positions
       </div>
     );
   }
@@ -49,8 +49,16 @@ export default function Position({ className }: PropsWithClassName) {
         <tbody>
           {positions.map((position, index) => {
             const decimals = BigInt(Math.pow(10, 18));
+            const positionLeverage =
+              position.size_in_usd /
+              (BigInt(position.market_price) *
+                BigInt(position.collateral_amount));
+
             return (
-              <tr className="border-b border-border text-sm" key={position.key || index}>
+              <tr
+                className="border-b border-border text-sm"
+                key={position.key || index}
+              >
                 <td className="flex gap-4 py-4">
                   <div className="flex-shrink-0 rounded-full border border-border p-1">
                     <img
@@ -71,12 +79,7 @@ export default function Position({ className }: PropsWithClassName) {
                     </span>
                     <br />
                     <span className="text-sm text-muted-foreground">
-                      {(
-                        position.size_in_usd /
-                        (BigInt(position.market_price) *
-                          BigInt(position.collateral_amount))
-                      ).toString()}
-                      ×
+                      {positionLeverage.toString()}×
                     </span>
                   </div>
                 </td>
@@ -110,7 +113,13 @@ export default function Position({ className }: PropsWithClassName) {
                   ETH
                   <br />
                 </td>
-                <td>$3500</td>
+                <td>
+                  {(
+                    BigInt(position.size_in_usd / decimals) /
+                    (BigInt(position.collateral_amount / decimals) *
+                      positionLeverage)
+                  ).toString()}
+                </td>
                 <td>${ethData.currentPrice.toFixed(2)}</td>
                 <td className="text-right">
                   <ClosePositionDialog

@@ -1,6 +1,6 @@
 "use client";
 
-import {TokenSymbol, Tokens } from "@zohal/app/_helpers/tokens";
+import { TokenSymbol, Tokens } from "@zohal/app/_helpers/tokens";
 import useMarketTokenBalance from "@zohal/app/_hooks/use-market-token-balance";
 import { type PropsWithClassName } from "@zohal/app/_lib/utils";
 import { useEffect, useState } from "react";
@@ -36,18 +36,17 @@ export default function Trade({ className }: PropsWithClassName) {
     receiveTokenValue,
     updateReceiveTokenValue,
     updatePayTokenTradeValue,
-    switchTokens
+    switchTokens,
   } = useTokenInputs({ ratio: tokenRatio, leverage: leverage });
 
-  
   const { marketTokenBalance: payTokenBalance } = useMarketTokenBalance({
-    marketTokenAddress:  Tokens[payTokenSymbol].address,
-    decimal : Tokens[payTokenSymbol].decimals
+    marketTokenAddress: Tokens[payTokenSymbol].address,
+    decimal: Tokens[payTokenSymbol].decimals,
   });
 
   const { marketTokenBalance: ethTokenBalance } = useMarketTokenBalance({
     marketTokenAddress: Tokens.ETH.address,
-    decimal : Tokens.ETH.decimals
+    decimal: Tokens.ETH.decimals,
   });
   // TODO @YohanTz: Type properly
   const [slTpInfos, setSlTpInfos] = useState<SlTpInfos>({
@@ -57,11 +56,8 @@ export default function Trade({ className }: PropsWithClassName) {
     tpTriggerPrice: "",
   });
 
-
-
   const { trade } = useMarketTrade();
   const onTokenSymbolChange = (_tokenSymbol: TokenSymbol) => switchTokens();
-
 
   useEffect(() => {
     const fetchedRatio = ethData.currentPrice;
@@ -71,7 +67,7 @@ export default function Trade({ className }: PropsWithClassName) {
   const priceInfos = [
     { label: "Pool", value: "ETH-USDC" },
     { label: "Collateral in", value: payTokenSymbol },
-    { label: "Leverage", value: ""+leverage },
+    { label: "Leverage", value: "" + leverage },
     { label: "Liq. Price", value: "-" },
     { label: "Fees", value: "$0" },
   ];
@@ -80,11 +76,9 @@ export default function Trade({ className }: PropsWithClassName) {
     <Form className={className}>
       <div className="rounded-md border border-border bg-card p-3">
         <div className="flex items-center justify-between">
-          <label className="block text-xs">
-            Pay
-          </label>
+          <label className="block text-xs">Pay</label>
           <span className="text-xs text-muted-foreground">
-              Balance: {payTokenBalance}
+            Balance: {payTokenBalance}
           </span>
         </div>
         <div className="mt-1 flex items-center justify-between bg-transparent">
@@ -105,9 +99,7 @@ export default function Trade({ className }: PropsWithClassName) {
 
       <div className="rounded-md border border-border bg-card p-3">
         <div className="flex items-center justify-between">
-          <label className="block text-xs">
-            Long/Short
-          </label>
+          <label className="block text-xs">Long/Short</label>
           <span className="text-xs text-muted-foreground">
             Balance: {ethTokenBalance}
           </span>
@@ -133,7 +125,7 @@ export default function Trade({ className }: PropsWithClassName) {
       />
 
       <SlTpCheckbox
-        className="mb-4"
+        className="mb-4 cursor-not-allowed"
         slTpInfos={slTpInfos}
         setSlTpInfos={setSlTpInfos}
       />
@@ -146,14 +138,18 @@ export default function Trade({ className }: PropsWithClassName) {
 
       <div className="mt-4 grid w-full grid-cols-2 items-center gap-2">
         <Button
-          onClick={() => trade(tokenSymbol, Number(payTokenValue), true, leverage)}
+          onClick={() =>
+            trade(tokenSymbol, Number(payTokenValue), true, leverage)
+          }
           type="submit"
           variant="success"
         >
           Buy/Long
         </Button>
         <Button
-          onClick={() => trade(tokenSymbol, Number(payTokenValue), false, leverage)}
+          onClick={() =>
+            trade(tokenSymbol, Number(payTokenValue), false, leverage)
+          }
           type="submit"
           variant="danger"
         >
