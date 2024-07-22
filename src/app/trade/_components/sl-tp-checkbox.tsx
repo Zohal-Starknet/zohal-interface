@@ -69,9 +69,16 @@ function SlTpModal({
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog
+      open={isOpen}
+      // onOpenChange={setIsOpen}
+    >
       <DialogTrigger asChild>
-        <div onClick={() => setIsOpen(true)}>{children}</div>
+        <div
+        // onClick={() => setIsOpen(true)}
+        >
+          {children}
+        </div>
       </DialogTrigger>
       <DialogContent className="max-w-lg">
         <DialogHeader>Add TP/SL</DialogHeader>
@@ -97,7 +104,9 @@ function SlTpModal({
         </div>
 
         <div className="mt-4 text-sm">
-          <p className="text-muted-foreground">Take Profit-Trigger by ROI (%)</p>
+          <p className="text-muted-foreground">
+            Take Profit-Trigger by ROI (%)
+          </p>
           <div className="mt-1.5">
             <div className="grid grid-cols-[2fr_1fr] gap-4">
               <Input
@@ -198,8 +207,10 @@ export default function SlTpCheckbox({
   return (
     <div className={cn("", className)}>
       <SlTpModal setSlTpInfos={setSlTpInfos} slTpInfos={slTpInfos}>
-        <div className="flex items-center gap-2">
-          {isClient && <Checkbox checked={hasTpOrSlInfo} />}
+        <div className="pointer-events-none flex items-center gap-2">
+          {isClient && (
+            <Checkbox checked={hasTpOrSlInfo} className="pointer-events-none" />
+          )}
           <p className="text-sm">TP / SL (Entire position)</p>
         </div>
       </SlTpModal>

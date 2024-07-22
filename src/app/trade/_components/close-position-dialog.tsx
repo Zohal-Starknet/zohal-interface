@@ -2,6 +2,7 @@
 "use client";
 
 import { Tokens } from "@zohal/app/_helpers/tokens";
+import { X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -27,7 +28,9 @@ export default function ClosePositionDialog({
   collateral_token,
 }: ClosePositionDialogProps) {
   const decimals = BigInt(Math.pow(10, 18));
-  const [inputValue, setInputValue] = useState(""+(position.collateral_amount/ decimals).toString());
+  const [inputValue, setInputValue] = useState(
+    "" + (position.collateral_amount / decimals).toString(),
+  );
   const { closePosition } = useUserPosition();
 
   const formattedCollateralAmount = (collateral_amount / decimals).toString();
@@ -43,7 +46,7 @@ export default function ClosePositionDialog({
     <Dialog>
       <DialogTrigger asChild>
         <button className="rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2">
-          X
+          <X size={18} />
         </button>
       </DialogTrigger>
       <DialogContent>
@@ -71,14 +74,18 @@ export default function ClosePositionDialog({
         {isCloseAction ? (
           <button
             className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
-            onClick={() => closePosition(position, collateral_token, collateral_amount)}
+            onClick={() =>
+              closePosition(position, collateral_token, collateral_amount)
+            }
           >
             Close Position
           </button>
         ) : (
           <button
             className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
-            onClick={() => closePosition(position, collateral_token, collateral_amount)}
+            onClick={() =>
+              closePosition(position, collateral_token, collateral_amount)
+            }
           >
             Reduce position
           </button>
