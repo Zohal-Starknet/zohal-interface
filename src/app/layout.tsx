@@ -7,6 +7,7 @@ import Header from "./_components/header";
 import "./globals.css";
 import Providers from "./providers";
 import { ThemeProvider } from "./_components/theme-provider";
+import { Toast } from "./_ui/toast";
 
 export const metadata: Metadata = {
   description:
@@ -35,6 +36,7 @@ export default function RootLayout({
               <Toaster position="bottom-right" />
             </Providers>
           </div>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
