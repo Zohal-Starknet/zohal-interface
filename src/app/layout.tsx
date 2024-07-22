@@ -36,7 +36,6 @@ export default function RootLayout({
               <Toaster position="bottom-right" />
             </Providers>
           </div>
-          <Toaster />
         </ThemeProvider>
       </body>
     </html>

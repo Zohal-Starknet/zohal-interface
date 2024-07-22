@@ -19,6 +19,7 @@ import { useTokenInputs } from "../_hooks/use-token-input";
 import useEthPrice from "@zohal/app/trade/_hooks/use-market-data";
 
 import SlTpCheckbox, { SlTpInfos } from "./sl-tp-checkbox";
+import { useToast } from "@zohal/app/_ui/use-toast";
 
 export default function Trade({ className }: PropsWithClassName) {
   const [tokenSymbol, setTokenSymbol] = useState({
@@ -57,6 +58,8 @@ export default function Trade({ className }: PropsWithClassName) {
   });
 
   const { trade } = useMarketTrade();
+  const { toast } = useToast(); 
+
   const onTokenSymbolChange = (_tokenSymbol: TokenSymbol) => switchTokens();
 
   useEffect(() => {
@@ -71,6 +74,14 @@ export default function Trade({ className }: PropsWithClassName) {
     { label: "Liq. Price", value: "-" },
     { label: "Fees", value: "$0" },
   ];
+
+  const handleTrade = (isBuy: boolean) => {
+    trade(tokenSymbol, Number(payTokenValue), isBuy, leverage);
+    toast({
+      title: `Trade Executed`,
+      description: `You have ${isBuy ? "long" : "short"} ${payTokenValue} ${tokenSymbol.name}`,
+    });
+  };
 
   return (
     <Form className={className}>
@@ -138,18 +149,14 @@ export default function Trade({ className }: PropsWithClassName) {
 
       <div className="mt-4 grid w-full grid-cols-2 items-center gap-2">
         <Button
-          onClick={() =>
-            trade(tokenSymbol, Number(payTokenValue), true, leverage)
-          }
+          onClick={() => handleTrade(true)}
           type="submit"
           variant="success"
         >
           Buy/Long
         </Button>
         <Button
-          onClick={() =>
-            trade(tokenSymbol, Number(payTokenValue), false, leverage)
-          }
+          onClick={() => handleTrade(false)}
           type="submit"
           variant="danger"
         >
