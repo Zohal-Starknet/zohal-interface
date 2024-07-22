@@ -1,20 +1,16 @@
 import { useAccount, useProvider } from "@starknet-react/core";
 import {
   DATA_STORE_CONTRACT_ADDRESS,
-  ETH_CONTRACT_ADDRESS,
   MARKET_TOKEN_CONTRACT_ADDRESS,
-  ORACLE_CONTRACT_ADDRESS,
-  ORDER_HANDLER_CONTRACT_ADDRESS,
   READER_CONTRACT_ADDRESS,
   REFERRAL_STORAGE_CONTRACT_ADDRESS,
-  USDC_CONTRACT_ADDRESS,
+  EXCHANGE_ROUTER_CONTRACT_ADDRESS
 } from "@zohal/app/_lib/addresses";
 import { useEffect, useState } from "react";
 import { CairoCustomEnum, Contract, uint256 } from "starknet";
 
 import reader_abi from "../../pool/_abi/reader_abi.json";
-import router_abi from "../abi/router.json";
-import oracle_abi from "../abi/oracle.json";
+import exchange_router_abi from "../abi/exchange_router.json";
 import datastore_abi from "../abi/datastore.json";
 import useEthPrice from "./use-market-data";
 
@@ -36,6 +32,7 @@ export type Position = {
 };
 
 export default function useUserPosition() {
+  const {ethData} = useEthPrice();
   const { account, address } = useAccount();
   const { provider } = useProvider();
   const [positions, setPositions] = useState<
@@ -44,6 +41,7 @@ export default function useUserPosition() {
   >(undefined);
 
   async function closePosition(
+    position: Position,
     collateral_token: bigint,
     collateral_amount: bigint,
   ) {
@@ -51,44 +49,37 @@ export default function useUserPosition() {
       return;
     }
 
-    const routerContract = new Contract(
-      router_abi.abi,
-      ORDER_HANDLER_CONTRACT_ADDRESS,
+    const createOrderParams = {
+      receiver: address,
+      callback_contract: 0,
+      ui_fee_receiver: 0,
+      market: MARKET_TOKEN_CONTRACT_ADDRESS,
+      initial_collateral_token: collateral_token,
+      swap_path: [],
+      size_delta_usd: uint256.bnToUint256(position.size_in_usd),
+      initial_collateral_delta_amount: uint256.bnToUint256(BigInt(collateral_amount)),
+      trigger_price: uint256.bnToUint256(0),
+      acceptable_price: position.is_long ? uint256.bnToUint256(BigInt(3000)) : uint256.bnToUint256(BigInt(5000)),
+      execution_fee: uint256.bnToUint256(0),
+      callback_gas_limit: uint256.bnToUint256(0),
+      min_output_amount: uint256.bnToUint256(BigInt(0)),
+      order_type: new CairoCustomEnum({ MarketDecrease: {} }),
+      decrease_position_swap_type: new CairoCustomEnum({ NoSwap: {} }),
+      is_long: position.is_long ? true : false,
+      referral_code: "0x0"
+    };
+
+    const exchangeRouterContract = new Contract(
+      exchange_router_abi.abi,
+      EXCHANGE_ROUTER_CONTRACT_ADDRESS,
       provider,
     );
 
-    const setOrderParams = {
-      acceptable_price: uint256.bnToUint256(BigInt("7000")), //TODO: Oracle price
-      callback_contract: 0,
-      callback_gas_limit: uint256.bnToUint256(0),
-      decrease_position_swap_type: new CairoCustomEnum({ NoSwap: {} }),
-      execution_fee: uint256.bnToUint256(0),
-      initial_collateral_delta_amount: uint256.bnToUint256(
-        BigInt("1000000000000000000"),
-      ),
-      initial_collateral_token: collateral_token,
-      is_long: new CairoCustomEnum({ True: {} }), // Adjust as needed
-      market: MARKET_TOKEN_CONTRACT_ADDRESS,
-      min_output_amount: uint256.bnToUint256(
-        BigInt(7000000000000000000000) * collateral_amount,
-      ),
-      order_type: new CairoCustomEnum({ MarketDecrease: {} }),
-      receiver: address,
-      referral_code: 0,
-      size_delta_usd: uint256.bnToUint256(
-        collateral_amount * BigInt("7000000000000000000000"),
-      ), //TODO: Oracle price * input
-      swap_path: [MARKET_TOKEN_CONTRACT_ADDRESS],
-      trigger_price: uint256.bnToUint256(BigInt("7000")), // TODO: Oracle price
-      ui_fee_receiver: 0,
-      //@ts-ignore
-      updated_at_block: BigInt(await provider.getBlockNumber()),
-      is_frozen: false,
-    };
+    const createOrderCall = exchangeRouterContract.populate("create_order", [
+      createOrderParams,
+    ]);
 
-    const setOrderCall = routerContract.populate("set_order", [setOrderParams]);
-
-    await account.execute(setOrderCall); // Await here
+    await account.execute(createOrderCall);
   }
 
   useEffect(() => {
@@ -130,8 +121,8 @@ export default function useUserPosition() {
             { contract_address: REFERRAL_STORAGE_CONTRACT_ADDRESS },
             positionKey,
             {
-              index_token_price: { min: 2925, max: 2925 },
-              long_token_price: { min: 2925, max: 2925 },
+              index_token_price: { min: parseInt(""+ethData.currentPrice), max: parseInt(""+ethData.currentPrice) },
+              long_token_price: { min: parseInt(""+ethData.currentPrice), max: parseInt(""+ethData.currentPrice)},
               short_token_price: { min: 1, max: 1 },
             },
             0,
