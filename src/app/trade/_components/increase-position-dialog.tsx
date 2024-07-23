@@ -92,7 +92,7 @@ export default function IncreasePositionDialog({
               closePosition(position, collateral_token, collateral_amount)
             }
           >
-            Reduce position
+            Increase position
           </button>
         )}
       </DialogContent>

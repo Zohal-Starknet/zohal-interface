@@ -92,7 +92,7 @@ export default function DecreaseCollateralDialog({
               closePosition(position, collateral_token, collateral_amount)
             }
           >
-            Reduce position
+            Reduce collateral
           </button>
         )}
       </DialogContent>
