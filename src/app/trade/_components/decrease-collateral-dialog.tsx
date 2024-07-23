@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from "@zohal/app/_ui/Modal";
 import Input from "@zohal/app/_ui/input";
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 
 import useUserPosition, { Position } from "../_hooks/use-user-position";
 
@@ -20,16 +20,20 @@ interface ClosePositionDialogProps {
   position: Position;
   collateral_amount: bigint;
   collateral_token: bigint;
+  onOpenChange(open: boolean): void;
+  open: boolean;
 }
 
-export default function ClosePositionDialog({
+export default function DecreaseCollateralDialog({
   position,
   collateral_amount,
   collateral_token,
+  onOpenChange,
+  open,
 }: ClosePositionDialogProps) {
   const decimals = BigInt(Math.pow(10, 18));
   const [inputValue, setInputValue] = useState(
-    "" + (position.collateral_amount / decimals).toString(),
+    "" + (collateral_amount / decimals).toString(),
   );
   const { closePosition } = useUserPosition();
 
@@ -42,13 +46,14 @@ export default function ClosePositionDialog({
     setInputValue(newValue);
   }
 
+  useEffect(() => {
+    if (!open) {
+      setInputValue("");
+    }
+  }, [open]);
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <button className="rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2">
-          <X size={18} />
-        </button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
@@ -57,7 +62,7 @@ export default function ClosePositionDialog({
               ETH-USDC
             </div>
           </DialogTitle>
-          <DialogDescription>Adjust or close your position</DialogDescription>
+          <DialogDescription>Decrease your collateral</DialogDescription>
         </DialogHeader>
         <div className="-mb-3">
           <p className="w-full text-right text-sm text-neutral-300">

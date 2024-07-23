@@ -6,7 +6,9 @@ import clsx from "clsx";
 
 import useUserPosition from "../_hooks/use-user-position";
 import useEthPrice from "../_hooks/use-market-data";
-import ClosePositionDialog from "./close-position-dialog";
+import ClosePositionDialog from "./decrease-position-dialog";
+import { DropdownMenu } from "@zohal/app/_ui/dropdown-menu";
+import EditMarketPositionDialog from "./edit-market-position-dialog";
 
 /* eslint-disable @next/next/no-img-element */
 export default function Position({ className }: PropsWithClassName) {
@@ -49,11 +51,14 @@ export default function Position({ className }: PropsWithClassName) {
         <tbody>
           {positions.map((position, index) => {
             const decimals = BigInt(10 ** 18);
-            const marketPriceBigInt = BigInt(Math.round(position.market_price * 10 ** 18));
+            const marketPriceBigInt = BigInt(
+              Math.round(position.market_price * 10 ** 18),
+            );
             const collateralAmountBigInt = BigInt(position.collateral_amount);
-            const positionLeverage = 
+            const positionLeverage =
               Number(position.size_in_usd) /
-              (Number(position.collateral_amount) * Number(position.market_price));
+              (Number(position.collateral_amount) *
+                Number(position.market_price));
 
             return (
               <tr
@@ -116,16 +121,12 @@ export default function Position({ className }: PropsWithClassName) {
                 <td>
                   {(
                     BigInt(position.size_in_usd) /
-                    (collateralAmountBigInt * marketPriceBigInt / decimals)
+                    ((collateralAmountBigInt * marketPriceBigInt) / decimals)
                   ).toString()}
                 </td>
                 <td>${ethData.currentPrice.toFixed(2)}</td>
                 <td className="text-right">
-                  <ClosePositionDialog
-                    position={position}
-                    collateral_amount={position.collateral_amount}
-                    collateral_token={position.collateral_token}
-                  />
+                  <EditMarketPositionDialog position={position} />
                 </td>
               </tr>
             );
