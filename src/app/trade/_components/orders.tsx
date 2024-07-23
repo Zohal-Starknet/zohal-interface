@@ -72,6 +72,7 @@ export default function Orders({ className }: PropsWithClassName) {
     );
   }
 
+  //@ts-ignore
   const formatOrderType = (orderType) => {
     switch (orderType) {
       case 'MarketSwap':
@@ -85,6 +86,7 @@ export default function Orders({ className }: PropsWithClassName) {
     }
   };
 
+    //@ts-ignore
   const formatMarket = (market) => {
     if (market === '0000000000000000000000000000000000000000000000000000000000000000' ||
         market === '0122cd6989d2429f580a0bff5e70cdb84b2bff4f8d19cee6b30a15d08c447e85') {
@@ -93,6 +95,7 @@ export default function Orders({ className }: PropsWithClassName) {
     return market;
   };
 
+    //@ts-ignore
   const formatSizeDeltaUSD = (sizeDeltaUSD) => {
     if (sizeDeltaUSD) {
       return (parseFloat(sizeDeltaUSD) / 10**18).toFixed(2);
