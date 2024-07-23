@@ -48,11 +48,12 @@ export default function Position({ className }: PropsWithClassName) {
         </thead>
         <tbody>
           {positions.map((position, index) => {
-            const decimals = BigInt(Math.pow(10, 18));
-            const positionLeverage =
-              position.size_in_usd /
-              (BigInt(position.market_price) *
-                BigInt(position.collateral_amount));
+            const decimals = BigInt(10 ** 18);
+            const marketPriceBigInt = BigInt(Math.round(position.market_price * 10 ** 18));
+            const collateralAmountBigInt = BigInt(position.collateral_amount);
+            const positionLeverage = 
+              Number(position.size_in_usd) /
+              (Number(position.collateral_amount) * Number(position.market_price));
 
             return (
               <tr
@@ -79,7 +80,7 @@ export default function Position({ className }: PropsWithClassName) {
                     </span>
                     <br />
                     <span className="text-sm text-muted-foreground">
-                      {positionLeverage.toString()}×
+                      {positionLeverage.toFixed(2)}×
                     </span>
                   </div>
                 </td>
@@ -87,7 +88,7 @@ export default function Position({ className }: PropsWithClassName) {
                   <div>
                     $
                     {(
-                      (position.collateral_amount *
+                      (collateralAmountBigInt *
                         BigInt(ethData.currentPrice.toFixed(0)) +
                         BigInt(position.base_pnl_usd)) /
                       decimals
@@ -101,23 +102,21 @@ export default function Position({ className }: PropsWithClassName) {
                       )}
                     >
                       {position.base_pnl_usd > 0 ? "+" : ""}
-                      {(position.base_pnl_usd / decimals).toString()}$
+                      {(BigInt(position.base_pnl_usd) / decimals).toString()}$
                     </span>
                   </div>
                 </td>
                 <td className="pr-6">
-                  ${(position.size_in_usd / decimals).toString()}
+                  ${(BigInt(position.size_in_usd) / decimals).toString()}
                 </td>
                 <td>
-                  {(BigInt(position.collateral_amount) / decimals).toString()}{" "}
-                  ETH
+                  {(collateralAmountBigInt / decimals).toString()} ETH
                   <br />
                 </td>
                 <td>
                   {(
-                    BigInt(position.size_in_usd / decimals) /
-                    (BigInt(position.collateral_amount / decimals) *
-                      positionLeverage)
+                    BigInt(position.size_in_usd) /
+                    (collateralAmountBigInt * marketPriceBigInt / decimals)
                   ).toString()}
                 </td>
                 <td>${ethData.currentPrice.toFixed(2)}</td>

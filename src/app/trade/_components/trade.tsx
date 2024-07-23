@@ -77,6 +77,7 @@ export default function Trade({ className }: PropsWithClassName) {
 
   const handleTrade = (isBuy: boolean) => {
     trade(tokenSymbol, Number(payTokenValue), isBuy, leverage);
+    
     toast({
       title: `Trade Executed`,
       description: `You have ${isBuy ? "long" : "short"} ${payTokenValue} ${tokenSymbol.name}`,
