@@ -10,7 +10,7 @@ export default function Home() {
   const [activePanel, setActivePanel] = useState("chart");
 
   return (
-    <>
+    <div className="flex flex-col h-full">
       <main className="hidden lg:flex flex-auto flex-col lg:flex-row lg:overflow-hidden h-full">
         <div className="flex flex-auto flex-col h-full">
           <ChartPanel />
@@ -20,40 +20,13 @@ export default function Home() {
       </main>
 
       {/* Mobile View */}
-      <div className="lg:hidden">
-        <div className="flex justify-around bg-gray-800 p-2">
-          <button
-            onClick={() => setActivePanel("chart")}
-            className={`px-4 py-2 ${
-              activePanel === "chart" ? "bg-blue-500" : "bg-gray-700"
-            }`}
-          >
-            Chart
-          </button>
-          <button
-            onClick={() => setActivePanel("position")}
-            className={`px-4 py-2 ${
-              activePanel === "position" ? "bg-blue-500" : "bg-gray-700"
-            }`}
-          >
-            Position
-          </button>
-          <button
-            onClick={() => setActivePanel("trade")}
-            className={`px-4 py-2 ${
-              activePanel === "trade" ? "bg-blue-500" : "bg-gray-700"
-            }`}
-          >
-            Trade
-          </button>
-        </div>
-
+      <div className="flex-auto lg:hidden">
         {activePanel === "chart" && <ChartPanel />}
         {activePanel === "position" && <PositionPanel />}
         {activePanel === "trade" && <TradeSwapPanel />}
       </div>
 
-      <Footer />
-    </>
+      <Footer activePanel={activePanel} setActivePanel={setActivePanel} />
+    </div>
   );
 }
