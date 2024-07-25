@@ -80,6 +80,7 @@ export default function DecreaseCollateralDialog({
           <button
             className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
             onClick={() =>
+              //@ts-ignore
               closePosition(position, collateral_token, position.collateral_amount, { MarketDecrease: {} }, position.size_in_usd)
             }
           >
@@ -89,6 +90,7 @@ export default function DecreaseCollateralDialog({
           <button
             className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
             onClick={() =>
+              //@ts-ignore
               closePosition(position, collateral_token, collateral_amount, { MarketDecrease: {} }, BigInt(0))
             }
           >

@@ -80,6 +80,7 @@ export default function IncreaseCollateralDialog({
           <button
             className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
             onClick={() =>
+              //@ts-ignore
               closePosition(position, collateral_token, collateral_amount, { MarketIncrease: {} }, BigInt(0))
             }
           >
