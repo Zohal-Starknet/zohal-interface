@@ -15,7 +15,7 @@ export default function Footer({ activePanel, setActivePanel }) {
         </div>
       </div>
 
-      <div className="flex justify-around bg-gray-800 p-2 lg:hidden w-full h-16">
+      <div className="flex justify-around p-2 lg:hidden w-full h-16">
         <button
           onClick={() => setActivePanel("chart")}
           className={`px-4 py-2 ${
