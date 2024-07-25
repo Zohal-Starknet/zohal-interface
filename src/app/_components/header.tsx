@@ -26,6 +26,7 @@ export default function Header() {
         <div className="items-cneter flex gap-2">
           <FaucetButton/>
           <ConnectButton />
+          <ThemeToggle/>
         </div>
       </header>
       <Divider />
