@@ -76,25 +76,15 @@ export default function IncreaseCollateralDialog({
           placeholder="Collateral amount to add"
           value={inputValue}
         />
-        {isCloseAction ? (
+
           <button
             className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
             onClick={() =>
-              closePosition(position, collateral_token, collateral_amount)
-            }
-          >
-            Close Position
-          </button>
-        ) : (
-          <button
-            className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
-            onClick={() =>
-              closePosition(position, collateral_token, collateral_amount)
+              closePosition(position, collateral_token, collateral_amount, { MarketIncrease: {} }, BigInt(0))
             }
           >
             Increase collateral
           </button>
-        )}
       </DialogContent>
     </Dialog>
   );

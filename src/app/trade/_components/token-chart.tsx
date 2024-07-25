@@ -19,7 +19,7 @@ export default function TokenChart() {
         src="/static/datafeeds/udf/dist/bundle.js"
         strategy="lazyOnload"
       />
-      <div className="h-100 border-border relative flex w-full flex-col border-b lg:h-auto lg:flex-1">
+      <div className="flex flex-auto h-full border-border relative w-full flex-col border-b lg:h-auto lg:flex-1">
         <TradingViewChart
           symbol="ETH/USD"
           interval="15"

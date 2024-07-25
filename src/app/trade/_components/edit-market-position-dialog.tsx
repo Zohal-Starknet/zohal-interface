@@ -11,7 +11,6 @@ import { Position } from "../_hooks/use-user-position";
 import { Dialog } from "@zohal/app/_ui/Modal";
 import DecreasePositionDialog from "./decrease-position-dialog";
 import IncreaseCollateralDialog from "./increase-collateral-dialog";
-import IncreasePositionDialog from "./increase-position-dialog";
 import DecreaseCollateralDialog from "./decrease-collateral-dialog";
 interface EditPositionProps {
   position: Position;
@@ -21,7 +20,6 @@ export default function EditPosition({ position }: EditPositionProps) {
     | "decreaseCollateral"
     | "decreasePosition"
     | "increaseCollateral"
-    | "increasePosition"
     | undefined
   >(undefined);
 
@@ -52,9 +50,6 @@ export default function EditPosition({ position }: EditPositionProps) {
           >
             Decrease collateral
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpenedModal("increasePosition")}>
-            Increase position
-          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpenedModal("decreasePosition")}>
             Decrease position
           </DropdownMenuItem>
@@ -73,13 +68,6 @@ export default function EditPosition({ position }: EditPositionProps) {
         collateral_amount={position.collateral_amount}
         collateral_token={position.collateral_token}
         open={openedModal === "decreaseCollateral"}
-        onOpenChange={handleOpenChange}
-      />
-      <IncreasePositionDialog
-        position={position}
-        collateral_amount={position.collateral_amount}
-        collateral_token={position.collateral_token}
-        open={openedModal === "increasePosition"}
         onOpenChange={handleOpenChange}
       />
       <IncreaseCollateralDialog

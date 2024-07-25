@@ -32,15 +32,14 @@ export default function DecreasePositionDialog({
   open,
 }: ClosePositionDialogProps) {
   const decimals = BigInt(Math.pow(10, 18));
-  const [inputValue, setInputValue] = useState(
-    "" + (collateral_amount / decimals).toString(),
-  );
+  const [inputValue, setInputValue] = useState("1");
+  const [collateralAmountNew, setCollateralAmountNew] = useState(BigInt(0));
   const { closePosition } = useUserPosition();
 
-  const formattedCollateralAmount = (collateral_amount / decimals).toString();
+  const formattedSizeInUsdAmount = (position.size_in_usd / decimals).toString();
 
   const isCloseAction =
-    parseFloat(inputValue) >= parseFloat(formattedCollateralAmount);
+    parseFloat(inputValue) >= parseFloat(formattedSizeInUsdAmount);
 
   function onInputChange(newValue: string) {
     setInputValue(newValue);
@@ -49,6 +48,7 @@ export default function DecreasePositionDialog({
   useEffect(() => {
     if (!open) {
       setInputValue("");
+      setCollateralAmountNew((position.size_in_usd / BigInt(inputValue)) * position.collateral_amount);
     }
   }, [open]);
 
@@ -66,21 +66,21 @@ export default function DecreasePositionDialog({
         </DialogHeader>
         <div className="-mb-3">
           <p className="w-full text-right text-sm text-neutral-300">
-            Max: {formattedCollateralAmount} ETH
+            Max: {formattedSizeInUsdAmount} $
           </p>
         </div>
         <Input
           className="rounded-lg border border-[#363636] bg-transparent px-3 py-3 text-sm"
           id="Close position"
           onChange={onInputChange}
-          placeholder="Collateral amount to remove"
+          placeholder="Size in USD to remove"
           value={inputValue}
         />
         {isCloseAction ? (
           <button
             className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
             onClick={() =>
-              closePosition(position, collateral_token, collateral_amount)
+              closePosition(position, collateral_token, collateral_amount, { MarketDecrease: {} }, position.size_in_usd)
             }
           >
             Close Position
@@ -89,7 +89,7 @@ export default function DecreasePositionDialog({
           <button
             className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
             onClick={() =>
-              closePosition(position, collateral_token, collateral_amount)
+              closePosition(position, collateral_token, collateralAmountNew,  { MarketDecrease: {} }, BigInt(inputValue))
             }
           >
             Reduce position

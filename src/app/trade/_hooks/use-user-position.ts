@@ -44,6 +44,9 @@ export default function useUserPosition() {
     position: Position,
     collateral_token: bigint,
     collateral_amount: bigint,
+    order_type: CairoCustomEnum, 
+    size_delta_usd: bigint,
+
   ) {
     if (account === undefined || address === undefined) {
       return;
@@ -56,7 +59,7 @@ export default function useUserPosition() {
       market: MARKET_TOKEN_CONTRACT_ADDRESS,
       initial_collateral_token: collateral_token,
       swap_path: [],
-      size_delta_usd: uint256.bnToUint256(position.size_in_usd),
+      size_delta_usd: uint256.bnToUint256(size_delta_usd),
       initial_collateral_delta_amount: uint256.bnToUint256(
         BigInt(collateral_amount),
       ),
@@ -67,7 +70,7 @@ export default function useUserPosition() {
       execution_fee: uint256.bnToUint256(0),
       callback_gas_limit: uint256.bnToUint256(0),
       min_output_amount: uint256.bnToUint256(BigInt(0)),
-      order_type: new CairoCustomEnum({ MarketDecrease: {} }),
+      order_type: new CairoCustomEnum(order_type),
       decrease_position_swap_type: new CairoCustomEnum({ NoSwap: {} }),
       is_long: position.is_long ? true : false,
       referral_code: "0x0",
