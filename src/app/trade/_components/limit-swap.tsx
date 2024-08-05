@@ -22,11 +22,11 @@ export default function LimitSwap({ className }: PropsWithClassName) {
         payTokenValue,
         receiveTokenSymbol,
         receiveTokenValue,
-        x,
+        pricePerToken,
         switchTokens,
         updatePayTokenValue,
         updateReceiveTokenValue,
-        updateX,
+        updatePricePerToken,
     } = useTokenInputs({ ratio: tokenRatio });
 
 
@@ -108,9 +108,9 @@ export default function LimitSwap({ className }: PropsWithClassName) {
                 payTokenSymbol={payTokenSymbol}
                 receiveTokenSymbol={receiveTokenSymbol}
                 id="PriceLimitSwapInput"
-                inputValue={x}
+                inputValue={pricePerToken}
                 label="Price"
-                onInputChange={updateX}
+                onInputChange={updatePricePerToken}
             >
             </SwapLimitInput>
 

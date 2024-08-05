@@ -15,7 +15,7 @@ export function useTokenInputs(props: Props) {
   const [receiveTokenSymbol, setReceiveTokenSymbol] =
     useState<TokenSymbol>("USDC");
   const [receiveTokenValue, setReceiveTokenValue] = useState("");
-  const [x, setX] = useState("");
+  const [pricePerToken, setPricePerToken] = useState("");
 
 
   const temporaryPayTokenValueRef = useRef("");
@@ -24,9 +24,9 @@ export function useTokenInputs(props: Props) {
   const updatePayTokenValue = useCallback(
     function updatePayTokenValue(tokenValue: string) {
       setPayTokenValue(tokenValue);
-      if (tokenValue !== "" && x !== ""){
+      if (tokenValue !== "" && pricePerToken !== ""){
         setReceiveTokenValue(
-          (Number(tokenValue) / Number(x)).toString(),
+          (Number(tokenValue) / Number(pricePerToken)).toString(),
         );
       } else {
       setReceiveTokenValue(
@@ -40,8 +40,8 @@ export function useTokenInputs(props: Props) {
   const updateReceiveTokenValue = useCallback(
     function updateReceiveTokenValue(tokenValue: string) {
       setReceiveTokenValue(tokenValue);
-      if (tokenValue !== "" && x !== "") {
-        setPayTokenValue(((parseFloat(tokenValue)) * Number(x)).toString());
+      if (tokenValue !== "" && pricePerToken !== "") {
+        setPayTokenValue(((parseFloat(tokenValue)) * Number(pricePerToken)).toString());
       } else {
         setPayTokenValue(
           tokenValue !== "" ? (parseFloat(tokenValue) / ratio).toString() : "",
@@ -51,27 +51,27 @@ export function useTokenInputs(props: Props) {
     [ratio],
   );
 
-  const updateX = useCallback(
-    function updateX(xValue: string) {
-      setX(xValue);
-      const tmp = xValue !== "" ? (parseFloat(xValue)).toString() : "";
-      const res = Number(tmp) / Number(xValue);
+  const updatePricePerToken = useCallback(
+    function updatePricePerToken(pricePerTokenValue: string) {
+      setPricePerToken(pricePerTokenValue);
+      const tmp = pricePerTokenValue !== "" ? (parseFloat(pricePerTokenValue)).toString() : "";
+      const res = Number(tmp) / Number(pricePerTokenValue);
       setReceiveTokenValue(res.toString());
     },
     [ratio],
   );
 
   useEffect(() => {
-    if (payTokenValue !== "" && x !== "") {
+    if (payTokenValue !== "" && pricePerToken !== "") {
       setReceiveTokenValue(
-        (Number(payTokenValue) / Number(x)).toString()
+        (Number(payTokenValue) / Number(pricePerToken)).toString()
       );
     } else {
       setReceiveTokenValue(
         payTokenValue !== "" ? (parseFloat(payTokenValue) * ratio).toString() : ""
       );
     }
-  }, [payTokenValue, x, ratio]);
+  }, [payTokenValue, pricePerToken, ratio]);
 
   function switchTokens() {
     temporaryPayTokenValueRef.current = payTokenValue;
@@ -91,6 +91,6 @@ export function useTokenInputs(props: Props) {
     switchTokens,
     updatePayTokenValue,
     updateReceiveTokenValue,
-    updateX,
+    updatePricePerToken,
   };
 }
