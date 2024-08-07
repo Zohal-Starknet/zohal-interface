@@ -6,6 +6,7 @@ import {
   getPortfolioPath,
   getRewardsPath,
   getTradePath,
+  getMarketPath
 } from "../_helpers/routes";
 import NavigationItem from "./navigation-item";
 
@@ -52,6 +53,7 @@ export default function Navigation() {
       {/* Desktop menu */}
       <ul className="hidden lg:flex gap-2">
         <NavigationItem label="Trade" pathname={getTradePath()} />
+        <NavigationItem label="Market" pathname={getMarketPath()} />
         <NavigationItem label="Earn" pathname={getPoolsPath()} />
         <NavigationItem label="Portfolio" pathname={getPortfolioPath()} />
         <NavigationItem label="Dashboard" pathname={getDashboardPath()} />

@@ -21,3 +21,7 @@ export function getPoolsPath() {
 export function getPoolPath(market: string) {
   return `/pool/${market}`;
 }
+
+export function getMarketPath() {
+  return "/market";
+}
