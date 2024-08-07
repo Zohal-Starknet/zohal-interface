@@ -20,6 +20,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = (props) => {
 
   useEffect(() => {
     const checkIfScriptsLoaded = () => {
+      //@ts-ignore
       if (window.TradingView && window.TradingView.widget) {
         setIsScriptLoaded(true);
       } else {
@@ -34,7 +35,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = (props) => {
       const widgetOptions = {
         symbol: props.symbol || "ETH/USD",
         datafeed: datafeed,
-        interval: props.interval || "60",
+        interval: props.interval || "15",
         container: chartContainerRef.current,
         library_path: props.library_path || "/static/charting_library/",
         locale: props.locale || "en",
@@ -48,6 +49,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = (props) => {
         theme: 'dark'
       };
 
+      //@ts-ignore
       const tvWidget = new window.TradingView.widget(widgetOptions);
 
       tvWidget.onChartReady(() => {

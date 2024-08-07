@@ -33,6 +33,16 @@ export default function useEthPrice() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
+  const convertToUnixTimestamp = (dateString: string): number => {
+    return Math.floor(new Date(dateString).getTime() / 1000);
+  };
+
+  const filterLast24Hours = (data: any[]) => {
+    const now = Math.floor(Date.now() / 1000); // Current time in seconds
+    const twentyFourHoursAgo = now - 24 * 60 * 60; // 24 hours ago in seconds
+    return data.filter((d) => d.time >= twentyFourHoursAgo);
+  };
+
   const fetchData = async () => {
     setLoading(true);
     setError(null);
@@ -49,10 +59,19 @@ export default function useEthPrice() {
           close: Number(d.close) / 100000000,
         }));
 
-        const latestData = formattedData[formattedData.length - 1];
-        const previousData = formattedData[formattedData.length - 2];
-        const high24h = Math.max(...formattedData.map((d: any) => d.high));
-        const low24h = Math.min(...formattedData.map((d: any) => d.low));
+        const last24HoursData = filterLast24Hours(formattedData);
+
+        if (last24HoursData.length < 2) {
+          console.error("Not enough data for 24-hour calculations.");
+          return;
+        }
+
+        last24HoursData.sort((a, b) => a.time - b.time);
+
+        const latestData = last24HoursData[last24HoursData.length - 1];
+        const previousData = last24HoursData[last24HoursData.length - 2];
+        const high24h = Math.max(...last24HoursData.map((d: any) => d.high));
+        const low24h = Math.min(...last24HoursData.map((d: any) => d.low));
         const change24h = latestData.close - previousData.close;
         const change24hPercent = (change24h / previousData.close) * 100;
 
@@ -64,7 +83,6 @@ export default function useEthPrice() {
           low24h,
         });
       } else {
-        console.log("ELSE");
         setError(new Error("Failed to fetch data"));
       }
     } catch (error) {

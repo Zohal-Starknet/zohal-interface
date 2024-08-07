@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-
 import { robotoMono } from "@zohal/app/_helpers/fonts";
 import { Toaster } from "sonner";
-
 import Header from "./_components/header";
 import "./globals.css";
 import Providers from "./providers";
 import { ThemeProvider } from "./_components/theme-provider";
+import { Toast } from "./_ui/toast";
 
 export const metadata: Metadata = {
   description:
@@ -21,17 +20,22 @@ export default function RootLayout({
 }) {
   return (
     <html className={robotoMono.className} lang="en">
-      <body className="lg:overflow-hidden">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body className="lg:overflow-hidden bg-black text-white">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex h-full flex-col">
+          <div className="flex h-full flex-col min-h-screen">
             <Providers>
               <Header />
-              {children}
+              <div className="flex-auto">
+                {children}
+              </div>
               <Toaster position="bottom-right" />
             </Providers>
           </div>

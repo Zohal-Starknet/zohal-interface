@@ -63,7 +63,7 @@ export default function ChartHeader() {
           high24h,
           low24h,
         });
-      } 
+      }
     } catch (error) {
       console.error("Failed to fetch data: ", error);
     }
@@ -77,7 +77,8 @@ export default function ChartHeader() {
 
   return (
     <div className="flex h-[4.75rem] items-center pl-4">
-      <div className="border-border flex h-full items-center gap-4 border-r pr-10">
+      {/* Mobile View */}
+      <div className="block lg:hidden border-border flex h-full items-center gap-4 border-r pr-10">
         <img
           alt={`${Tokens.ETH.name} icon`}
           className="w-8"
@@ -85,7 +86,38 @@ export default function ChartHeader() {
         />
         <span className="whitespace-nowrap">ETH-USD</span>
       </div>
-      <div className="flex h-full flex-1 items-center gap-8 overflow-auto">
+      <div className="block lg:hidden flex h-full flex-1 items-center gap-8 overflow-auto">
+        <div className="flex items-center gap-4 pl-5">
+          <div className="flex flex-col">
+            <span className="text-foreground">
+              ${ethData.currentPrice.toFixed(2)}
+            </span>
+            <span className="text-muted-foreground text-sm">
+              ${ethData.currentPrice.toFixed(2)}
+            </span>
+          </div>
+          <span
+            className={`text-xxs rounded-md px-2 py-1 text-sm font-semibold ${
+              ethData.change24h >= 0
+                ? "text-background bg-[#40B68B]"
+                : "text-foreground bg-[#FF0000]"
+            }`}
+          >
+            {ethData.change24hPercent.toFixed(2)}%
+          </span>
+        </div>
+      </div>
+
+      {/* Default View for larger screens */}
+      <div className="hidden lg:flex h-full flex-1 items-center gap-8 overflow-auto">
+        <div className="border-border flex h-full items-center gap-4 border-r pr-10">
+          <img
+            alt={`${Tokens.ETH.name} icon`}
+            className="w-8"
+            src={Tokens.ETH.icon}
+          />
+          <span className="whitespace-nowrap">ETH-USD</span>
+        </div>
         <div className="flex items-center gap-4 pl-5">
           <div className="flex flex-col">
             <span className="text-foreground">

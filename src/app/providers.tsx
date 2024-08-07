@@ -4,6 +4,7 @@ import { sepolia } from "@starknet-react/chains";
 import {
   InjectedConnector,
   StarknetConfig,
+  blastProvider,
   publicProvider,
 } from "@starknet-react/core";
 import { type PropsWithChildren } from "react";
@@ -19,6 +20,10 @@ export const connectors = [
   }),
 ];
 
+const provider = blastProvider({
+  apiKey: "9b95b6b2-ba0f-4fc8-b110-a87d2bda503b",
+});
+
 export default function Providers(props: PropsWithChildren) {
   const { children } = props;
 
@@ -27,7 +32,7 @@ export default function Providers(props: PropsWithChildren) {
       autoConnect
       chains={[sepolia]}
       connectors={connectors}
-      provider={publicProvider()}
+      provider={provider}
     >
       <ZohalKitProvider>{children}</ZohalKitProvider>
     </StarknetConfig>

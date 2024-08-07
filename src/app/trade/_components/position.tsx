@@ -6,7 +6,9 @@ import clsx from "clsx";
 
 import useUserPosition from "../_hooks/use-user-position";
 import useEthPrice from "../_hooks/use-market-data";
-import EditMarketPosition from "./edit-market-position";
+import ClosePositionDialog from "./decrease-position-dialog";
+import { DropdownMenu } from "@zohal/app/_ui/dropdown-menu";
+import EditMarketPositionDialog from "./edit-market-position-dialog";
 
 /* eslint-disable @next/next/no-img-element */
 export default function Position({ className }: PropsWithClassName) {
@@ -17,7 +19,7 @@ export default function Position({ className }: PropsWithClassName) {
   if (positions === undefined) {
     return (
       <div className="mt-4 flex justify-center text-neutral-400">
-        Connect your wallet to see your positions
+        No Positions
       </div>
     );
   }
@@ -47,10 +49,22 @@ export default function Position({ className }: PropsWithClassName) {
           </tr>
         </thead>
         <tbody>
-          {positions.map((position) => {
-            const decimals = BigInt(Math.pow(10, 18));
+          {positions.map((position, index) => {
+            const decimals = BigInt(10 ** 18);
+            const marketPriceBigInt = BigInt(
+              Math.round(position.market_price * 10 ** 18),
+            );
+            const collateralAmountBigInt = BigInt(position.collateral_amount);
+            const positionLeverage =
+              Number(position.size_in_usd) /
+              (Number(position.collateral_amount) *
+                Number(position.market_price));
+
             return (
-              <tr className="border-b border-border text-sm" key={position.key}>
+              <tr
+                className="border-b border-border text-sm"
+                key={position.key || index}
+              >
                 <td className="flex gap-4 py-4">
                   <div className="flex-shrink-0 rounded-full border border-border p-1">
                     <img
@@ -71,32 +85,15 @@ export default function Position({ className }: PropsWithClassName) {
                     </span>
                     <br />
                     <span className="text-sm text-muted-foreground">
-                      {(
-                        position.size_in_usd /
-                        (BigInt(position.market_price) *
-                          BigInt(position.collateral_amount))
-                      ).toString()}
-                      ×
+                      {positionLeverage.toFixed(2)}×
                     </span>
                   </div>
                 </td>
-                {/* <td className="py-4">
-                  {data.netValue.price}
-                  <br />
-                  <span
-                    className={clsx(
-                      "text-sm",
-                      position.is_long ? "text-[#40B68B]" : "text-[#FF5354]",
-                    )}
-                  >
-                    {data.netValue.purcentage}
-                  </span>
-                </td> */}
                 <td>
                   <div>
                     $
                     {(
-                      (position.collateral_amount *
+                      (collateralAmountBigInt *
                         BigInt(ethData.currentPrice.toFixed(0)) +
                         BigInt(position.base_pnl_usd)) /
                       decimals
@@ -110,26 +107,26 @@ export default function Position({ className }: PropsWithClassName) {
                       )}
                     >
                       {position.base_pnl_usd > 0 ? "+" : ""}
-                      {(position.base_pnl_usd / decimals).toString()}$
+                      {(BigInt(position.base_pnl_usd) / decimals).toString()}$
                     </span>
                   </div>
                 </td>
                 <td className="pr-6">
-                  ${(position.size_in_usd / decimals).toString()}
+                  ${(BigInt(position.size_in_usd) / decimals).toString()}
                 </td>
                 <td>
-                  {(BigInt(position.collateral_amount) / decimals).toString()}{" "}
-                  ETH
+                  {(collateralAmountBigInt / decimals).toString()} ETH
                   <br />
                 </td>
-                <td>$3500</td>
+                <td>
+                  {(
+                    BigInt(position.size_in_usd) /
+                    ((collateralAmountBigInt * marketPriceBigInt) / decimals)
+                  ).toString()}
+                </td>
                 <td>${ethData.currentPrice.toFixed(2)}</td>
-                {/* <td>{data.liquidationPrice}</td> */}
                 <td className="text-right">
-                  <EditMarketPosition
-                    collateral_amount={position.collateral_amount}
-                    collateral_token={position.collateral_token}
-                  />
+                  <EditMarketPositionDialog position={position} />
                 </td>
               </tr>
             );

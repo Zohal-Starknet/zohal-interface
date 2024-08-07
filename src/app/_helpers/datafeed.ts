@@ -7,7 +7,7 @@ interface DatafeedConfiguration {
 }
 
 const configurationData: DatafeedConfiguration = {
-    supported_resolutions: ['15', '60', '1D', '1W', '1M'],
+    supported_resolutions: ['15'],
     exchanges: [
         { value: 'Pragma', name: 'Pragma', desc: 'Pragma' },
     ],
@@ -82,7 +82,7 @@ const datafeed = {
             exchange: symbolItem.exchange,
             minmov: 1,
             pricescale: 100,
-            has_intraday: false,
+            has_intraday: true,
             visible_plots_set: 'ohlc',
             has_weekly_and_monthly: false,
             supported_resolutions: configurationData.supported_resolutions,
@@ -122,6 +122,7 @@ const datafeed = {
                 }];
             });
 
+            //@ts-ignore
             bars.sort((a, b) => a.time - b.time);
 
             //@ts-ignore
@@ -138,10 +139,60 @@ const datafeed = {
         subscriberUID: string,
         onResetCacheNeededCallback: () => void
     ) => {
-        console.log('[subscribeBars]: Method call with subscriberUID:', subscriberUID);
+        const ws = new WebSocket('wss://ws.dev.pragma.build/node/v1/onchain/ohlc/subscribe');
+        ws.onopen = () => {
+            const subscribeMessage = {
+                msg_type: 'subscribe',
+                pair: symbolInfo.ticker,
+                network: 'testnet',
+                interval: '15min',
+                candles_to_get: 1
+            };
+            ws.send(JSON.stringify(subscribeMessage));
+        };
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+
+            if (Array.isArray(data)) {
+                data.forEach(barData => {
+                    try {
+                        const time = new Date(barData.time).getTime();
+                        if (isNaN(time)) {
+                            throw new Error(`Invalid time value: ${barData.time}`);
+                        }
+                        const bar = {
+                            time: time,
+                            low: parseFloat(barData.low) / 10 ** 8,
+                            high: parseFloat(barData.high) / 10 ** 8,
+                            open: parseFloat(barData.open) / 10 ** 8,
+                            close: parseFloat(barData.close) / 10 ** 8,
+                        };
+                        //onRealtimeCallback(bar);
+                    } catch (error) {
+                        console.error('[subscribeBars]: Error parsing bar data', error);
+                    }
+                });
+            }
+
+        };
+
+        ws.onclose = () => {
+            console.log('[subscribeBars]: WebSocket connection closed with subscriberUID:', subscriberUID);
+        };
+
+        ws.onerror = (error) => {
+            console.error('[subscribeBars]: WebSocket error', error);
+        };
+
+        (this as any)._ws = ws;
     },
     unsubscribeBars: (subscriberUID: string) => {
-        console.log('[unsubscribeBars]: Method call with subscriberUID:', subscriberUID);
+        const ws = (this as any)._ws;
+        if (ws) {
+            ws.close();
+            delete (this as any)._ws;
+        }
     },
 };
 

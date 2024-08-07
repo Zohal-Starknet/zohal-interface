@@ -24,10 +24,12 @@ function BuyGm() {
 
   const { marketTokenBalance: ethTokenBalance } = useMarketTokenBalance({
     marketTokenAddress: Tokens.ETH.address,
+    decimal: Tokens.ETH.decimals
   });
 
   const { marketTokenBalance: usdcTokenBalance } = useMarketTokenBalance({
     marketTokenAddress: Tokens.USDC.address,
+    decimal: Tokens.ETH.decimals
   });
 
   return (
@@ -69,6 +71,7 @@ function SellGm() {
 
   const { marketTokenBalance: zohTokenBalance } = useMarketTokenBalance({
     marketTokenAddress: Tokens.ZOH.address,
+    decimal: Tokens.ZOH.decimals
   });
 
   const [zohInputValue, setZohInputValue] = useState("");

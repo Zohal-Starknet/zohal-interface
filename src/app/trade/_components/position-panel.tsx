@@ -3,21 +3,23 @@ import clsx from "clsx";
 import Panel from "../../_ui/panel";
 import Tabs, { type TabItemType } from "../../_ui/tabs";
 import Position from "./position";
+import Orders from "./orders";
+
 
 type PositionPanelProps = {
   className?: string;
 };
 
 export default function PositionPanel(props: PositionPanelProps) {
-  const tabItems: [TabItemType, TabItemType, TabItemType, TabItemType] = [
+  const tabItems: [TabItemType, TabItemType] = [
     {
       content: <Position className="p-4" />,
       label: "Positions",
       value: "trade",
     },
-    { content: <></>, label: "Orders", value: "orders" },
-    { content: <></>, label: "Trades", value: "trades" },
-    { content: <></>, label: "Claims", value: "claims" },
+    { content: <Orders className="p-4" />,
+      label: "Orders",
+      value: "orders" }
   ];
 
   const { className } = props;

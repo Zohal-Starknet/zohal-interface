@@ -1,13 +1,15 @@
 import { type TokenSymbol } from "@zohal/app/_helpers/tokens";
-import { useCallback, useEffect, useRef, useState } from "react";
+
+import { useCallback, useRef, useState, useEffect } from "react";
 
 type Props = {
   /** Ratio applied to the prices when modified */
   ratio: number;
+  leverage: number;
 };
 
 export function useTokenInputs(props: Props) {
-  const { ratio } = props;
+  const { ratio, leverage } = props;
 
   const [payTokenSymbol, setPayTokenSymbol] = useState<TokenSymbol>("ETH");
   const [payTokenValue, setPayTokenValue] = useState("");
@@ -15,7 +17,7 @@ export function useTokenInputs(props: Props) {
   const [receiveTokenSymbol, setReceiveTokenSymbol] =
     useState<TokenSymbol>("USDC");
   const [receiveTokenValue, setReceiveTokenValue] = useState("");
-  const [pricePerToken, setPricePerToken] = useState("");
+  const [x, setX] = useState("");
 
 
   const temporaryPayTokenValueRef = useRef("");
@@ -24,20 +26,68 @@ export function useTokenInputs(props: Props) {
   const updatePayTokenValue = useCallback(
     function updatePayTokenValue(tokenValue: string) {
       setPayTokenValue(tokenValue);
-      if (tokenValue !== "" && pricePerToken !== ""){
+      if (tokenValue !== "" && x !== ""){
         setReceiveTokenValue(
-          (Number(tokenValue) / Number(pricePerToken)).toString(),
+          (Number(tokenValue) / Number(x)).toString(),
         );
       } else {
-      setReceiveTokenValue(
-        tokenValue !== "" ? (parseFloat(tokenValue) * ratio).toString() : "",
-      );
+        setReceiveTokenValue(
+          tokenValue !== "" ? (parseFloat(tokenValue) * ratio * leverage).toString() : "",
+        );
       }
+    },
+    [ratio, leverage, x],
+  );
+
+  useEffect(() => {
+    if (payTokenValue !== "") {
+      setReceiveTokenValue(
+        (parseFloat(payTokenValue) * ratio * leverage).toString()
+      );
+    }
+  }, [payTokenValue, leverage, ratio]);
+
+  const updateReceiveTokenValue = useCallback(
+    function updateReceiveTokenValue(tokenValue: string) {
+      setReceiveTokenValue(tokenValue);
+      if (tokenValue !== "" && x !== "") {
+        setPayTokenValue(
+          ((parseFloat(tokenValue) / ratio) * Number(x)).toString()
+        );
+      } else {
+        setPayTokenValue(
+          tokenValue !== "" ? (parseFloat(tokenValue) / ratio).toString() : "",
+        );
+      }
+    },
+    [ratio, x],
+  );
+
+  const updateX = useCallback(
+    function updateX(xValue: string) {
+      setX(xValue);
+      setPayTokenValue(
+        xValue !== "" ? (parseFloat(xValue) / ratio).toString() : "",
+      );
+      const test = xValue !== "" ? (parseFloat(xValue) / ratio).toString() : "";
+      const res = Number(test) / Number(xValue);
+      setReceiveTokenValue(res.toString());
     },
     [ratio],
   );
 
-  const updateReceiveTokenValue = useCallback(
+  const updatePayTokenTradeValue = useCallback(
+    function updatePayTokenValue(tokenValue: string) {
+      setPayTokenValue(tokenValue);
+      setReceiveTokenValue(
+        tokenValue !== "" ? (parseFloat(tokenValue) * ratio * leverage).toString() : "",
+      );
+    },
+    [ratio, leverage],
+  );
+
+
+  const updateReceiveTokenTradeValue = useCallback(
     function updateReceiveTokenValue(tokenValue: string) {
       setReceiveTokenValue(tokenValue);
       if (tokenValue !== "" && pricePerToken !== "") {
@@ -75,10 +125,11 @@ export function useTokenInputs(props: Props) {
 
   function switchTokens() {
     temporaryPayTokenValueRef.current = payTokenValue;
-    setPayTokenValue(receiveTokenValue);
+    setPayTokenValue(""+0);
     setReceiveTokenValue(temporaryPayTokenValueRef.current);
 
     temporaryPayTokenSymbolRef.current = payTokenSymbol;
+    setReceiveTokenValue(""+0);
     setPayTokenSymbol(receiveTokenSymbol);
     setReceiveTokenSymbol(temporaryPayTokenSymbolRef.current);
   }
@@ -91,6 +142,8 @@ export function useTokenInputs(props: Props) {
     switchTokens,
     updatePayTokenValue,
     updateReceiveTokenValue,
-    updatePricePerToken,
+    updateX,
+    updateReceiveTokenTradeValue,
+    updatePayTokenTradeValue
   };
 }
