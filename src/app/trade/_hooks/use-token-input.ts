@@ -1,4 +1,5 @@
 import { type TokenSymbol } from "@zohal/app/_helpers/tokens";
+
 import { useCallback, useRef, useState, useEffect } from "react";
 
 type Props = {
@@ -89,12 +90,38 @@ export function useTokenInputs(props: Props) {
   const updateReceiveTokenTradeValue = useCallback(
     function updateReceiveTokenValue(tokenValue: string) {
       setReceiveTokenValue(tokenValue);
-      setPayTokenValue(
-        tokenValue !== "" ? (parseFloat(tokenValue) / ratio).toString() : "",
-      );
+      if (tokenValue !== "" && pricePerToken !== "") {
+        setPayTokenValue(((parseFloat(tokenValue)) * Number(pricePerToken)).toString());
+      } else {
+        setPayTokenValue(
+          tokenValue !== "" ? (parseFloat(tokenValue) / ratio).toString() : "",
+        );
+      }
     },
     [ratio],
   );
+
+  const updatePricePerToken = useCallback(
+    function updatePricePerToken(pricePerTokenValue: string) {
+      setPricePerToken(pricePerTokenValue);
+      const tmp = pricePerTokenValue !== "" ? (parseFloat(pricePerTokenValue)).toString() : "";
+      const res = Number(tmp) / Number(pricePerTokenValue);
+      setReceiveTokenValue(res.toString());
+    },
+    [ratio],
+  );
+
+  useEffect(() => {
+    if (payTokenValue !== "" && pricePerToken !== "") {
+      setReceiveTokenValue(
+        (Number(payTokenValue) / Number(pricePerToken)).toString()
+      );
+    } else {
+      setReceiveTokenValue(
+        payTokenValue !== "" ? (parseFloat(payTokenValue) * ratio).toString() : ""
+      );
+    }
+  }, [payTokenValue, pricePerToken, ratio]);
 
   function switchTokens() {
     temporaryPayTokenValueRef.current = payTokenValue;
