@@ -10,13 +10,16 @@ type Props = {
 export function useTokenInputs(props: Props) {
   const { ratio, leverage } = props;
 
+  const [tmpRatio, setTmpRatio] = useState(ratio);
+
   const [payTokenSymbol, setPayTokenSymbol] = useState<TokenSymbol>("ETH");
   const [payTokenValue, setPayTokenValue] = useState("");
 
   const [receiveTokenSymbol, setReceiveTokenSymbol] =
     useState<TokenSymbol>("USDC");
-  const [receiveTokenValue, setReceiveTokenValue] = useState("");
-  const [x, setX] = useState("");
+  const [receiveTokenValue, setReceiveTokenValue] = useState(""); 
+
+  const [pricePerToken, setPricePerToken] = useState("");
 
 
   const temporaryPayTokenValueRef = useRef("");
@@ -25,17 +28,11 @@ export function useTokenInputs(props: Props) {
   const updatePayTokenValue = useCallback(
     function updatePayTokenValue(tokenValue: string) {
       setPayTokenValue(tokenValue);
-      if (tokenValue !== "" && x !== ""){
-        setReceiveTokenValue(
-          (Number(tokenValue) / Number(x)).toString(),
-        );
-      } else {
-        setReceiveTokenValue(
-          tokenValue !== "" ? (parseFloat(tokenValue) * ratio * leverage).toString() : "",
-        );
-      }
+      setReceiveTokenValue(
+        tokenValue !== "" ? (parseFloat(tokenValue) * tmpRatio * leverage).toString() : "",
+      );
     },
-    [ratio, leverage, x],
+    [tmpRatio, leverage],
   );
 
   useEffect(() => {
@@ -49,40 +46,33 @@ export function useTokenInputs(props: Props) {
   const updateReceiveTokenValue = useCallback(
     function updateReceiveTokenValue(tokenValue: string) {
       setReceiveTokenValue(tokenValue);
-      if (tokenValue !== "" && x !== "") {
-        setPayTokenValue(
-          ((parseFloat(tokenValue) / ratio) * Number(x)).toString()
-        );
-      } else {
-        setPayTokenValue(
-          tokenValue !== "" ? (parseFloat(tokenValue) / ratio).toString() : "",
-        );
-      }
+      setPayTokenValue(
+        tokenValue !== "" ? (parseFloat(tokenValue) / tmpRatio).toString() : "",
+      );
     },
-    [ratio, x],
+    [tmpRatio],
   );
 
-  const updateX = useCallback(
-    function updateX(xValue: string) {
-      setX(xValue);
-      setPayTokenValue(
-        xValue !== "" ? (parseFloat(xValue) / ratio).toString() : "",
-      );
-      const test = xValue !== "" ? (parseFloat(xValue) / ratio).toString() : "";
-      const res = Number(test) / Number(xValue);
-      setReceiveTokenValue(res.toString());
+  const updatePricePerToken = useCallback(
+    function updatePricePerToken(pricePerToken: string) {
+      setPricePerToken(pricePerToken);
+      if (pricePerToken !== "") {
+        setTmpRatio(payTokenSymbol === "USDC" ? 1 / Number(pricePerToken) : Number(pricePerToken))
+      } else {
+        setTmpRatio(ratio)
+      }
     },
-    [ratio],
+    [tmpRatio],
   );
 
   const updatePayTokenTradeValue = useCallback(
     function updatePayTokenValue(tokenValue: string) {
       setPayTokenValue(tokenValue);
       setReceiveTokenValue(
-        tokenValue !== "" ? (parseFloat(tokenValue) * ratio * leverage).toString() : "",
+        tokenValue !== "" ? (parseFloat(tokenValue) * tmpRatio * leverage).toString() : "",
       );
     },
-    [ratio, leverage],
+    [tmpRatio, leverage],
   );
 
 
@@ -90,17 +80,16 @@ export function useTokenInputs(props: Props) {
     function updateReceiveTokenValue(tokenValue: string) {
       setReceiveTokenValue(tokenValue);
       setPayTokenValue(
-        tokenValue !== "" ? (parseFloat(tokenValue) / ratio).toString() : "",
+        tokenValue !== "" ? (parseFloat(tokenValue) / tmpRatio).toString() : "",
       );
     },
-    [ratio],
+    [tmpRatio],
   );
 
   function switchTokens() {
     temporaryPayTokenValueRef.current = payTokenValue;
     setPayTokenValue(""+0);
     setReceiveTokenValue(temporaryPayTokenValueRef.current);
-
     temporaryPayTokenSymbolRef.current = payTokenSymbol;
     setReceiveTokenValue(""+0);
     setPayTokenSymbol(receiveTokenSymbol);
@@ -112,10 +101,11 @@ export function useTokenInputs(props: Props) {
     payTokenValue,
     receiveTokenSymbol,
     receiveTokenValue,
+    pricePerToken,
     switchTokens,
     updatePayTokenValue,
     updateReceiveTokenValue,
-    updateX,
+    updatePricePerToken,
     updateReceiveTokenTradeValue,
     updatePayTokenTradeValue
   };

@@ -15,6 +15,7 @@ import TokenSwapButton from "./token-swap-button";
 import ChooseTokenButton from "./choose-token-button";
 import SwapLimitInput from "./swap-limit-input";
 import usePoolData from "@zohal/app/pool/_hooks/use-pool-data";
+import useEthPrice from "../_hooks/use-market-data";
 
 export default function LimitSwap({ className }: PropsWithClassName) {
     const IntlFormatter = new Intl.NumberFormat();
@@ -26,34 +27,39 @@ export default function LimitSwap({ className }: PropsWithClassName) {
         payTokenValue,
         receiveTokenSymbol,
         receiveTokenValue,
+        pricePerToken,
         switchTokens,
         updatePayTokenValue,
         updateReceiveTokenValue,
+        updatePricePerToken,
       } = useTokenInputs({ ratio: tokenRatio, leverage:1 });
+      const { ethData } = useEthPrice();
 
 
-    const fetchEthUsdcRatio = async () => {
-        const pair = "eth/usd";
-        const apiUrl = `/api/fetch-candlestick?pair=${pair}`;
+    const fetchPrice = async (token: any) => {
+        const pair = token+"/usd";
+        const apiUrl = `/api/fetch-price?pair=${pair}`;
         try {
-            const response = await fetch(apiUrl);
-            if (response.ok) {
-                const data = await response.json();
-                const latestPrice = data.data[data.data.length - 1].close;
-                const fetchedRatio = latestPrice / 10 ** 8;
-                setTokenRatio(payTokenSymbol === "USDC" ? 1 / fetchedRatio : fetchedRatio);
-            }
+          const response = await fetch(apiUrl);
+          if (response.ok) {
+            const data = await response.json();
+            let price = data.price; 
+            const decimal = data.decimals;
+            price = parseInt(price, 16) / 10 ** decimal;
+            console.log("Price fetched for " + token + ":", price);
+            setTokenPrice(price);
+          }
         } catch (error) {
-            console.error("Error fetching ETH/USDC ratio:", error);
-            throw error;
+          console.error("Error fetching price " + token +":", error);
+          throw error;
         }
-    };
+      };
 
     useEffect(() => {
-        fetchEthUsdcRatio();
-        const intervalId = setInterval(fetchEthUsdcRatio, 15 * 60 * 1000);
-        return () => clearInterval(intervalId);
-    }, []);
+        const fetchedRatio = ethData.currentPrice;
+        setTokenRatio(payTokenSymbol === "USDC" ? 1 / fetchedRatio : fetchedRatio);
+        fetchPrice(payTokenSymbol)
+      }, [switchTokens]);
 
 
     const { marketTokenBalance: payTokenBalance } = useMarketTokenBalance({
@@ -110,9 +116,9 @@ export default function LimitSwap({ className }: PropsWithClassName) {
                 payTokenSymbol={payTokenSymbol}
                 receiveTokenSymbol={receiveTokenSymbol}
                 id="PriceLimitSwapInput"
-                inputValue={receiveTokenValue}
+                inputValue={pricePerToken}
                 label="Price"
-                onInputChange={updateReceiveTokenValue}
+                onInputChange={updatePricePerToken}
             >
             </SwapLimitInput>
 

@@ -59,7 +59,7 @@ export default function SwapLimitInput(props: PropsWithChildren<SwapLimitInputPr
                     value={inputValue}
                 />
                 {children}
-                {payTokenSymbol} per {receiveTokenSymbol}
+                USDC per ETH
             </div>
         </div>
     );
