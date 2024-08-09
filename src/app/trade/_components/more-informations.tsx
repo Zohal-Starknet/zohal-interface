@@ -30,6 +30,7 @@ export default function SwapMoreInformations(props: SwapMoreInformationsProps) {
 
   useEffect(() => {
     const formattedRatio = (1 / ratio).toFixed(4);
+    console.log("Price:", price);
     setPriceInfos([
       { label: `${payTokenSymbol} Price`, value: `${price.toFixed(2)} $` },
       {
