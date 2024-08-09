@@ -18,7 +18,8 @@ import { ETH_CONTRACT_ADDRESS } from "../../_lib/addresses";
 import { useTokenInputs } from "../_hooks/use-token-input";
 import useEthPrice from "@zohal/app/trade/_hooks/use-market-data";
 
-import SlTpCheckbox, { SlTpInfos } from "./sl-tp-checkbox";
+import SlTpCheckbox from "./sl-tp-checkbox";
+import { SlTpInfos } from "./sl-tp-modal";
 import { useToast } from "@zohal/app/_ui/use-toast";
 
 export default function Trade({ className }: PropsWithClassName) {
@@ -51,10 +52,10 @@ export default function Trade({ className }: PropsWithClassName) {
   });
   // TODO @YohanTz: Type properly
   const [slTpInfos, setSlTpInfos] = useState<SlTpInfos>({
-    slRoi: "",
-    slTriggerPrice: "",
-    tpRoi: "",
-    tpTriggerPrice: "",
+    sl: "",
+    slTriggerPrice: ""+ethData.currentPrice,
+    tp: "",
+    tpTriggerPrice: ""+ethData.currentPrice,
   });
 
   const { trade } = useMarketTrade();
@@ -76,7 +77,7 @@ export default function Trade({ className }: PropsWithClassName) {
   ];
 
   const handleTrade = (isBuy: boolean) => {
-    trade(tokenSymbol, Number(payTokenValue), isBuy, leverage);
+    trade(tokenSymbol, Number(payTokenValue), isBuy, leverage, slTpInfos.tpTriggerPrice, slTpInfos.slTriggerPrice);
     
     toast({
       title: `Trade Executed`,
@@ -140,6 +141,8 @@ export default function Trade({ className }: PropsWithClassName) {
         className="mb-4 cursor-not-allowed"
         slTpInfos={slTpInfos}
         setSlTpInfos={setSlTpInfos}
+        orderPrice={ethData.currentPrice}
+        qty={parseInt(receiveTokenValue)}
       />
 
       <div className="flex flex-col gap-2 rounded-md border border-border p-3">
