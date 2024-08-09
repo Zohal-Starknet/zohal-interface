@@ -17,7 +17,7 @@ export default function useMarketTrade() {
   const {ethData} = useEthPrice();
 
   //@ts-ignore
-  async function trade(tokenSymbol, tokenAmount, isLong, leverage) {
+  async function trade(tokenSymbol, tokenAmount, isLong, leverage, tpPrice, slPrice) {
     if (account === undefined || address === undefined) {
       return;
     }
@@ -43,7 +43,7 @@ export default function useMarketTrade() {
       size_delta_usd: uint256.bnToUint256(BigInt(leverage) * BigInt(ethData.currentPrice.toPrecision(4)) * BigInt(tokenAmount * (10 ** tokenSymbol.decimals))),
       initial_collateral_delta_amount: uint256.bnToUint256(BigInt(tokenAmount * (10 ** tokenSymbol.decimals))),
       trigger_price: uint256.bnToUint256(0),
-      acceptable_price: uint256.bnToUint256(BigInt(ethData.currentPrice.toPrecision(4))),
+      acceptable_price: isLong ? uint256.bnToUint256(BigInt(10000)) : uint256.bnToUint256(BigInt(3000)),
       execution_fee: uint256.bnToUint256(0),
       callback_gas_limit: uint256.bnToUint256(0),
       min_output_amount: uint256.bnToUint256(0),
@@ -62,8 +62,35 @@ export default function useMarketTrade() {
     const createOrderCall = exchangeRouterContract.populate("create_order", [
       createOrderParams,
     ]);
+    
 
-    await account.execute([transferCall, createOrderCall]);
+    const calls = [transferCall, createOrderCall];
+
+    if (tpPrice) {
+      const tpOrderParams = {
+        ...createOrderParams,
+        trigger_price: uint256.bnToUint256(BigInt(tpPrice)),
+        order_type: new CairoCustomEnum({ LimitDecrease: {} }),
+      };
+      const createTpOrderCall = exchangeRouterContract.populate("create_order", [
+        tpOrderParams,
+      ]);
+      calls.push(createTpOrderCall);
+    }
+
+    if (slPrice) {
+      const slOrderParams = {
+        ...createOrderParams,
+        trigger_price: uint256.bnToUint256(BigInt(slPrice)),
+        order_type: new CairoCustomEnum({ LimitDecrease: {} }),
+      };
+      const createSlOrderCall = exchangeRouterContract.populate("create_order", [
+        slOrderParams,
+      ]);
+      calls.push(createSlOrderCall);
+    }
+
+    await account.execute(calls);
   }
 
   return { trade };

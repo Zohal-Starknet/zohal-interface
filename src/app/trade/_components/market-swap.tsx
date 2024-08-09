@@ -14,62 +14,75 @@ import SwapInput from "./swap-input";
 import TokenSwapButton from "./token-swap-button";
 import ChooseTokenButton from "./choose-token-button";
 
+import useEthPrice from "@zohal/app/trade/_hooks/use-market-data";
+import usePoolData from "@zohal/app/pool/_hooks/use-pool-data";
+
+
 export default function MarketSwap({ className }: PropsWithClassName) {
-    const [tokenRatio, setTokenRatio] = useState<number>(0);
-    const {
-        payTokenSymbol,
-        payTokenValue,
-        receiveTokenSymbol,
-        receiveTokenValue,
-        switchTokens,
-        updatePayTokenValue,
-        updateReceiveTokenValue,
-    } = useTokenInputs({ ratio: tokenRatio });
+  const { poolData } = usePoolData();
+  const [tokenPrice, setTokenPrice] = useState<number>(0.0);
+  const [tokenRatio, setTokenRatio] = useState<number>(0);
+  const {
+    payTokenSymbol,
+    payTokenValue,
+    receiveTokenSymbol,
+    receiveTokenValue,
+    switchTokens,
+    updatePayTokenValue,
+    updateReceiveTokenValue,
+  } = useTokenInputs({ ratio: tokenRatio, leverage:1 });
+
+  const { ethData } = useEthPrice();
+
+  console.log("receiveTokenValue",receiveTokenValue)
+
+  const fetchPrice = async (token: any) => {
+    const pair = token+"/usd";
+    const apiUrl = `/api/fetch-price?pair=${pair}`;
+    try {
+      const response = await fetch(apiUrl);
+      if (response.ok) {
+        const data = await response.json();
+        let price = data.price; 
+        const decimal = data.decimals;
+        price = parseInt(price, 16) / 10 ** decimal;
+        console.log("Price fetched for " + token + ":", price);
+        setTokenPrice(price);
+      }
+    } catch (error) {
+      console.error("Error fetching price " + token +":", error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    const fetchedRatio = ethData.currentPrice;
+    setTokenRatio(payTokenSymbol === "USDC" ? 1 / fetchedRatio : fetchedRatio);
+    fetchPrice(payTokenSymbol)
+  }, [switchTokens]);
 
 
-    const fetchEthUsdcRatio = async () => {
-        const pair = "eth/usd";
-        const apiUrl = `/api/fetch-candlestick?pair=${pair}`;
-        try {
-            const response = await fetch(apiUrl);
-            if (response.ok) {
-                const data = await response.json();
-                const latestPrice = data.data[data.data.length - 1].close;
-                const fetchedRatio = latestPrice / 10 ** 8;
-                setTokenRatio(payTokenSymbol === "USDC" ? 1 / fetchedRatio : fetchedRatio);
-            }
-        } catch (error) {
-            console.error("Error fetching ETH/USDC ratio:", error);
-            throw error;
-        }
-    };
+  const { marketTokenBalance: payTokenBalance } = useMarketTokenBalance({
+    marketTokenAddress: Tokens[payTokenSymbol].address,
+    decimal: Tokens[payTokenSymbol].decimals
+  });
 
-    useEffect(() => {
-        fetchEthUsdcRatio();
-        const intervalId = setInterval(fetchEthUsdcRatio, 15 * 60 * 1000);
-        return () => clearInterval(intervalId);
-    }, []);
+  const { marketTokenBalance: receiveTokenBalance } = useMarketTokenBalance({
+    marketTokenAddress: Tokens[receiveTokenSymbol].address,
+    decimal: Tokens[payTokenSymbol].decimals
+  });
 
 
-    const { marketTokenBalance: payTokenBalance } = useMarketTokenBalance({
-        marketTokenAddress: Tokens[payTokenSymbol].address,
-        decimal: Tokens[payTokenSymbol].decimals
-    });
-
-    const { marketTokenBalance: receiveTokenBalance } = useMarketTokenBalance({
-        marketTokenAddress: Tokens[receiveTokenSymbol].address,
-        decimal: Tokens[payTokenSymbol].decimals
-    });
-
-    const noEnteredAmount =
-        payTokenValue.length === 0 && receiveTokenValue.length === 0;
+  const noEnteredAmount =
+    payTokenValue.length === 0 && receiveTokenValue.length === 0;
 
     const insufficientBalance = payTokenBalance
-        ? parseFloat(payTokenBalance) < parseFloat(payTokenValue)
-        : true;
+    ? parseFloat(payTokenBalance) < parseFloat(payTokenValue)
+    : true;
 
     const onTokenSymbolChange = (_tokenSymbol: TokenSymbol) => switchTokens();
-
+    const IntlFormatter = new Intl.NumberFormat();
+  
     return (
         <Form className={className}>
             <SwapInput
@@ -86,7 +99,6 @@ export default function MarketSwap({ className }: PropsWithClassName) {
             </SwapInput>
 
             <TokenSwapButton onClick={switchTokens} />
-
             <SwapInput
                 formattedTokenBalance={receiveTokenBalance}
                 id="receiveSwapInput"
@@ -100,12 +112,17 @@ export default function MarketSwap({ className }: PropsWithClassName) {
                 />
             </SwapInput>
 
-            <SwapMoreInformations
-                payTokenSymbol={payTokenSymbol}
-                ratio={tokenRatio}
-                receiveTokenSymbol={receiveTokenSymbol}
-            />
-
+            {poolData && (
+          <SwapMoreInformations
+          payTokenSymbol={payTokenSymbol}
+          ratio={tokenRatio}
+          price={payTokenSymbol !== "USDC" ? tokenPrice : 1}
+          receiveTokenSymbol={receiveTokenSymbol}
+          //@ts-ignore
+          liquidity={IntlFormatter.format(Number(poolData.pool_value))}
+        />
+        )
+      }
             <SwapActionButton
                 insufficientBalance={insufficientBalance}
                 noEnteredAmount={noEnteredAmount}

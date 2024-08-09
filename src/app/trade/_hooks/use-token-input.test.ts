@@ -4,7 +4,7 @@ import { useTokenInputs } from "./use-token-input";
 
 describe("Token Input Hook", () => {
   it("should apply ratio on receive state when updating pay token value", () => {
-    const { result } = renderHook(() => useTokenInputs({ ratio: 2 }));
+    const { result } = renderHook(() => useTokenInputs({ ratio: 2, leverage: 1 }));
 
     act(() => {
       result.current.updatePayTokenValue("2");
@@ -15,7 +15,7 @@ describe("Token Input Hook", () => {
   });
 
   it("should apply values and then erase it when user clean the pay token value", () => {
-    const { result } = renderHook(() => useTokenInputs({ ratio: 2 }));
+    const { result } = renderHook(() => useTokenInputs({ ratio: 2, leverage:1 }));
 
     act(() => {
       result.current.updatePayTokenValue("2");
@@ -33,7 +33,7 @@ describe("Token Input Hook", () => {
   });
 
   it("should apply ratio on pay state when updating receive token value", () => {
-    const { result } = renderHook(() => useTokenInputs({ ratio: 2 }));
+    const { result } = renderHook(() => useTokenInputs({ ratio: 2 , leverage: 1}));
 
     act(() => {
       result.current.updateReceiveTokenValue("2");
@@ -44,7 +44,7 @@ describe("Token Input Hook", () => {
   });
 
   it("should swap token values and symbols", () => {
-    const { result } = renderHook(() => useTokenInputs({ ratio: 2 }));
+    const { result } = renderHook(() => useTokenInputs({ ratio: 2, leverage: 1 }));
 
     act(() => {
       result.current.updatePayTokenValue("2");

@@ -14,9 +14,13 @@ import SwapInput from "./swap-input";
 import TokenSwapButton from "./token-swap-button";
 import ChooseTokenButton from "./choose-token-button";
 import SwapLimitInput from "./swap-limit-input";
+import usePoolData from "@zohal/app/pool/_hooks/use-pool-data";
 
 export default function LimitSwap({ className }: PropsWithClassName) {
+    const IntlFormatter = new Intl.NumberFormat();
+    const { poolData } = usePoolData();
     const [tokenRatio, setTokenRatio] = useState<number>(0);
+    const [tokenPrice, setTokenPrice] = useState<number>(0.0);
     const {
         payTokenSymbol,
         payTokenValue,
@@ -27,8 +31,7 @@ export default function LimitSwap({ className }: PropsWithClassName) {
         updatePayTokenValue,
         updateReceiveTokenValue,
         updatePricePerToken,
-    } = useTokenInputs({ ratio: tokenRatio });
-
+      } = useTokenInputs({ ratio: tokenRatio, leverage:1 });
 
     const fetchEthUsdcRatio = async () => {
         const pair = "eth/usd";
@@ -114,11 +117,18 @@ export default function LimitSwap({ className }: PropsWithClassName) {
             >
             </SwapLimitInput>
 
-            <SwapMoreInformations
-                payTokenSymbol={payTokenSymbol}
-                ratio={tokenRatio}
-                receiveTokenSymbol={receiveTokenSymbol}
-            />
+
+            {poolData && (
+                <SwapMoreInformations
+                    payTokenSymbol={payTokenSymbol}
+                    ratio={tokenRatio}
+                    price={payTokenSymbol !== "USDC" ? tokenPrice : 1}
+                    receiveTokenSymbol={receiveTokenSymbol}
+                    //@ts-ignore
+                    liquidity={IntlFormatter.format(Number(poolData.pool_value))}
+                />
+                )
+            }
 
             <SwapActionButton
                 insufficientBalance={insufficientBalance}

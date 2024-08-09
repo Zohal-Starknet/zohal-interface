@@ -67,6 +67,7 @@ export default function usePoolData() {
       const poolData = tokenPriceResponse[1];
       const decimals = BigInt(Math.pow(10, 18));
 
+
       setPoolData({
         ...poolData,
         long_token_amount: (BigInt(poolData.long_token_amount) / decimals).toString(),

@@ -24,6 +24,8 @@ export default function SwapInput(props: PropsWithChildren<SwapInputProps>) {
     label,
     onInputChange,
   } = props;
+
+  console.log("formattedTokenBalance",formattedTokenBalance)
   return (
     <div className="rounded-md border border-border bg-card p-3">
       <div className="flex items-center justify-between">
