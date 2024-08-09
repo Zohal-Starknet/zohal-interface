@@ -1,4 +1,3 @@
-// File: /src/MarketCreate.tsx
 import React, { useState } from 'react';
 import PoolCard from './poolCard';
 import './marketScreen.css';
@@ -11,18 +10,16 @@ const MarketCreate: React.FC = () => {
         e.preventDefault();
         if (poolAddress) {
             setPoolAddresses([...poolAddresses, poolAddress]);
-            setPoolAddress(''); // Clear input after adding
+            setPoolAddress(''); 
         }
     };
 
     const handleAddLiquidity = (address: string) => {
         console.log(`Adding liquidity to ${address}`);
-        // Add logic for adding liquidity
     };
 
     const handleRemoveLiquidity = (address: string) => {
         console.log(`Removing liquidity from ${address}`);
-        // Add logic for removing liquidity
     };
 
     return (

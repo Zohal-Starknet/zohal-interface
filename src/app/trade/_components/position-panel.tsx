@@ -26,7 +26,7 @@ export default function PositionPanel(props: PositionPanelProps) {
 
   return (
     <Panel className={clsx("lg:h-80 lg:overflow-y-auto", className)}>
-      <Tabs ariaLabel="Manage position" items={tabItems} />
+      <Tabs ariaLabel="Manage position" items={tabItems} defaultValue=""/>
     </Panel>
   );
 }

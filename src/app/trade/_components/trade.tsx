@@ -142,7 +142,7 @@ export default function Trade({ className }: PropsWithClassName) {
         slTpInfos={slTpInfos}
         setSlTpInfos={setSlTpInfos}
         orderPrice={ethData.currentPrice}
-        qty={receiveTokenValue}
+        qty={parseInt(receiveTokenValue)}
       />
 
       <div className="flex flex-col gap-2 rounded-md border border-border p-3">

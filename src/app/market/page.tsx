@@ -1,11 +1,11 @@
 "use client";
 import React from 'react';
-import MarketScreen from './_components/marketCreate';
+import MarketCreate from './_components/marketCreate';
 
 export default function DashboardPage() {
   return (
     <main >
-      <MarketScreen />
+      <MarketCreate />
     </main>
   );
 }
