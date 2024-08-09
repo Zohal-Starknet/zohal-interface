@@ -68,8 +68,7 @@ export default function useMarketTrade() {
     
 
     const calls = [transferCall, createOrderCall];
-
-    /** 
+    /**
     if (tpPrice) {
       const tpOrderParams = {
         ...createOrderParams,
