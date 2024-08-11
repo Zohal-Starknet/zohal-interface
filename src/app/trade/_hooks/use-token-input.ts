@@ -1,5 +1,5 @@
 import { type TokenSymbol } from "@zohal/app/_helpers/tokens";
-import { useCallback, useRef, useState, useEffect } from "react";
+import { useCallback, useState, useEffect } from "react";
 
 type Props = {
   /** Ratio applied to the prices when modified */
@@ -7,106 +7,106 @@ type Props = {
   leverage: number;
 };
 
-export function useTokenInputs(props: Props) {
-  const { ratio, leverage } = props;
-
-  const [tmpRatio, setTmpRatio] = useState(ratio);
-
+export function useTokenInputs({ ratio, leverage }: Props) {
   const [payTokenSymbol, setPayTokenSymbol] = useState<TokenSymbol>("ETH");
-  const [payTokenValue, setPayTokenValue] = useState("");
+  const [payTokenValue, setPayTokenValue] = useState("0");
+  const [payTokenLimitValue, setPayTokenLimitValue] = useState("0");
 
   const [receiveTokenSymbol, setReceiveTokenSymbol] =
     useState<TokenSymbol>("USDC");
-  const [receiveTokenValue, setReceiveTokenValue] = useState(""); 
+  const [receiveTokenValue, setReceiveTokenValue] = useState("0");
+  const [receiveTokenLimitValue, setReceiveTokenLimitValue] = useState("0");
 
   const [pricePerToken, setPricePerToken] = useState("");
+  const [tokenRatio, setTokenRatio] = useState(ratio);
 
-
-  const temporaryPayTokenValueRef = useRef("");
-  const temporaryPayTokenSymbolRef = useRef<TokenSymbol>("ETH");
-
-  const updatePayTokenValue = useCallback(
-    function updatePayTokenValue(tokenValue: string) {
-      setPayTokenValue(tokenValue);
-      setReceiveTokenValue(
-        tokenValue !== "" ? (parseFloat(tokenValue) * tmpRatio * leverage).toString() : "",
-      );
-    },
-    [tmpRatio, leverage],
-  );
 
   useEffect(() => {
     if (payTokenValue !== "") {
       setReceiveTokenValue(
-        (parseFloat(payTokenValue) * ratio * leverage).toString()
+        (parseFloat(payTokenValue) * tokenRatio * leverage).toString()
       );
     }
-  }, [payTokenValue, leverage, ratio]);
+  }, [payTokenValue, leverage, tokenRatio]);
 
-  const updateReceiveTokenValue = useCallback(
-    function updateReceiveTokenValue(tokenValue: string) {
-      setReceiveTokenValue(tokenValue);
-      setPayTokenValue(
-        tokenValue !== "" ? (parseFloat(tokenValue) / tmpRatio).toString() : "",
-      );
-    },
-    [tmpRatio],
-  );
 
-  const updatePricePerToken = useCallback(
-    function updatePricePerToken(pricePerToken: string) {
-      setPricePerToken(pricePerToken);
-      if (pricePerToken !== "") {
-        setTmpRatio(payTokenSymbol === "USDC" ? 1 / Number(pricePerToken) : Number(pricePerToken))
-      } else {
-        setTmpRatio(ratio)
-      }
-    },
-    [tmpRatio],
-  );
-
-  const updatePayTokenTradeValue = useCallback(
-    function updatePayTokenValue(tokenValue: string) {
+  const updatePayTokenValue = useCallback(
+    (tokenValue: string) => {
       setPayTokenValue(tokenValue);
       setReceiveTokenValue(
-        tokenValue !== "" ? (parseFloat(tokenValue) * tmpRatio * leverage).toString() : "",
+        tokenValue !== ""
+          ? (parseFloat(tokenValue) * tokenRatio * leverage).toString()
+          : ""
       );
     },
-    [tmpRatio, leverage],
+    [tokenRatio, leverage]
   );
 
 
-  const updateReceiveTokenTradeValue = useCallback(
-    function updateReceiveTokenValue(tokenValue: string) {
+  const updateReceiveTokenValue = useCallback(
+    (tokenValue: string) => {
       setReceiveTokenValue(tokenValue);
       setPayTokenValue(
-        tokenValue !== "" ? (parseFloat(tokenValue) / tmpRatio).toString() : "",
+        tokenValue !== ""
+          ? (parseFloat(tokenValue) / (tokenRatio * leverage)).toString()
+          : ""
       );
     },
-    [tmpRatio],
+    [tokenRatio, leverage]
+  );
+
+  const updatePayTokenLimitValue = useCallback(
+    (tokenValue: string) => {
+      setPayTokenLimitValue(tokenValue);
+      setReceiveTokenLimitValue(tokenValue !== ""? (parseFloat(tokenValue) * parseFloat(pricePerToken) ).toString(): "");
+    },
+    [pricePerToken]
+  );
+
+  const updateReceiveTokenLimitValue = useCallback(
+    (tokenValue: string) => {
+      setReceiveTokenValue(tokenValue);
+      setPayTokenLimitValue(tokenValue !== ""? (parseFloat(tokenValue) / parseFloat(pricePerToken) ).toString(): "");
+    },
+    []
+  );
+
+  const updateLimitPrice = useCallback(
+    (inputValue: string) => {
+      if (inputValue !== "") {
+        setPricePerToken(inputValue);
+        setReceiveTokenLimitValue(""+(parseFloat(payTokenLimitValue)* parseFloat(inputValue)));
+      }
+    },
+    [payTokenLimitValue]
   );
 
   function switchTokens() {
-    temporaryPayTokenValueRef.current = payTokenValue;
-    setPayTokenValue(""+0);
-    setReceiveTokenValue(temporaryPayTokenValueRef.current);
-    temporaryPayTokenSymbolRef.current = payTokenSymbol;
-    setReceiveTokenValue(""+0);
+    const tempPayTokenSymbol = payTokenSymbol;
+    const tempPayTokenValue = payTokenValue;
+    
     setPayTokenSymbol(receiveTokenSymbol);
-    setReceiveTokenSymbol(temporaryPayTokenSymbolRef.current);
+    setReceiveTokenSymbol(tempPayTokenSymbol);
+    
+    setPayTokenValue(receiveTokenValue);
+    setReceiveTokenValue(tempPayTokenValue);
   }
 
   return {
     payTokenSymbol,
     payTokenValue,
+    payTokenLimitValue,
     receiveTokenSymbol,
     receiveTokenValue,
+    receiveTokenLimitValue,
     pricePerToken,
+    tokenRatio,
+    setTokenRatio,
     switchTokens,
     updatePayTokenValue,
+    updatePayTokenLimitValue,
     updateReceiveTokenValue,
-    updatePricePerToken,
-    updateReceiveTokenTradeValue,
-    updatePayTokenTradeValue
+    updateReceiveTokenLimitValue,
+    updateLimitPrice,
   };
 }

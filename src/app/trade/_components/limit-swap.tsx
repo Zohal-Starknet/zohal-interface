@@ -20,19 +20,21 @@ import useEthPrice from "../_hooks/use-market-data";
 export default function LimitSwap({ className }: PropsWithClassName) {
     const IntlFormatter = new Intl.NumberFormat();
     const { poolData } = usePoolData();
-    const [tokenRatio, setTokenRatio] = useState<number>(0);
+    const initialRatio = 1;
     const [tokenPrice, setTokenPrice] = useState<number>(0.0);
     const {
         payTokenSymbol,
-        payTokenValue,
+        payTokenLimitValue,
         receiveTokenSymbol,
-        receiveTokenValue,
+        receiveTokenLimitValue,
         pricePerToken,
+        tokenRatio,
+        setTokenRatio,
         switchTokens,
-        updatePayTokenValue,
-        updateReceiveTokenValue,
-        updatePricePerToken,
-      } = useTokenInputs({ ratio: tokenRatio, leverage:1 });
+        updatePayTokenLimitValue,
+        updateReceiveTokenLimitValue,
+        updateLimitPrice,
+      } = useTokenInputs({ ratio: initialRatio, leverage: 1 });
       const { ethData } = useEthPrice();
 
 
@@ -46,7 +48,6 @@ export default function LimitSwap({ className }: PropsWithClassName) {
             let price = data.price; 
             const decimal = data.decimals;
             price = parseInt(price, 16) / 10 ** decimal;
-            console.log("Price fetched for " + token + ":", price);
             setTokenPrice(price);
           }
         } catch (error) {
@@ -73,10 +74,10 @@ export default function LimitSwap({ className }: PropsWithClassName) {
     });
 
     const noEnteredAmount =
-        payTokenValue.length === 0 && receiveTokenValue.length === 0;
+        payTokenLimitValue.length === 0 && receiveTokenLimitValue.length === 0;
 
     const insufficientBalance = payTokenBalance
-        ? parseFloat(payTokenBalance) < parseFloat(payTokenValue)
+        ? parseFloat(payTokenBalance) < parseFloat(payTokenLimitValue)
         : true;
 
     const onTokenSymbolChange = (_tokenSymbol: TokenSymbol) => switchTokens();
@@ -86,9 +87,9 @@ export default function LimitSwap({ className }: PropsWithClassName) {
             <SwapInput
                 formattedTokenBalance={payTokenBalance}
                 id="paySwapInput"
-                inputValue={payTokenValue}
+                inputValue={payTokenLimitValue}
                 label="Pay"
-                onInputChange={updatePayTokenValue}
+                onInputChange={updatePayTokenLimitValue}
             >
                 <ChooseTokenButton
                     onTokenSymbolChange={onTokenSymbolChange}
@@ -101,9 +102,9 @@ export default function LimitSwap({ className }: PropsWithClassName) {
             <SwapInput
                 formattedTokenBalance={receiveTokenBalance}
                 id="receiveSwapInput"
-                inputValue={receiveTokenValue}
+                inputValue={receiveTokenLimitValue}
                 label="Receive"
-                onInputChange={updateReceiveTokenValue}
+                onInputChange={updateReceiveTokenLimitValue}
             >
                 <ChooseTokenButton
                     onTokenSymbolChange={onTokenSymbolChange}
@@ -118,9 +119,8 @@ export default function LimitSwap({ className }: PropsWithClassName) {
                 id="PriceLimitSwapInput"
                 inputValue={pricePerToken}
                 label="Price"
-                onInputChange={updatePricePerToken}
-            >
-            </SwapLimitInput>
+                onInputChange={updateLimitPrice} 
+            />
 
             {poolData && (
                 <SwapMoreInformations
@@ -138,7 +138,7 @@ export default function LimitSwap({ className }: PropsWithClassName) {
                 insufficientBalance={insufficientBalance}
                 noEnteredAmount={noEnteredAmount}
                 payTokenSymbol={payTokenSymbol}
-                payTokenValue={payTokenValue}
+                payTokenValue={payTokenLimitValue}
                 //@ts-ignore
                 oraclePrice={tokenRatio}
             />

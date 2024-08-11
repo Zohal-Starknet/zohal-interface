@@ -18,17 +18,19 @@ import usePoolData from "@zohal/app/pool/_hooks/use-pool-data";
 
 export default function MarketSwap({ className }: PropsWithClassName) {
   const { poolData } = usePoolData();
-  const [tokenRatio, setTokenRatio] = useState<number>(0);
+  const initialRatio = 1;
   const [tokenPrice, setTokenPrice] = useState<number>(0.0);
   const {
     payTokenSymbol,
     payTokenValue,
     receiveTokenSymbol,
     receiveTokenValue,
+    tokenRatio,
+    setTokenRatio,
     switchTokens,
     updatePayTokenValue,
     updateReceiveTokenValue,
-  } = useTokenInputs({ ratio: tokenRatio, leverage:1 });
+  } = useTokenInputs({ ratio: initialRatio, leverage:1 });
   const { ethData } = useEthPrice();
 
   const fetchPrice = async (token: any) => {
@@ -41,7 +43,6 @@ export default function MarketSwap({ className }: PropsWithClassName) {
         let price = data.price; 
         const decimal = data.decimals;
         price = parseInt(price, 16) / 10 ** decimal;
-        console.log("Price fetched for " + token + ":", price);
         setTokenPrice(price);
       }
     } catch (error) {

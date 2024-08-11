@@ -33,6 +33,9 @@ export default function useMarketTrade() {
       uint256.bnToUint256(BigInt(parseInt(tokenAmount)) * BigInt(10 ** tokenSymbol.decimals)),
     ]);
 
+    console.log("Eth data: ", ethData.currentPrice.toPrecision(4));
+    console.log("Lev: ", leverage);
+
     const createOrderParams = {
       receiver: address,
       callback_contract: 0,
@@ -43,7 +46,7 @@ export default function useMarketTrade() {
       size_delta_usd: uint256.bnToUint256(BigInt(leverage) * BigInt(ethData.currentPrice.toPrecision(4)) * BigInt(tokenAmount * (10 ** tokenSymbol.decimals))),
       initial_collateral_delta_amount: uint256.bnToUint256(BigInt(tokenAmount * (10 ** tokenSymbol.decimals))),
       trigger_price: uint256.bnToUint256(0),
-      acceptable_price: isLong ? uint256.bnToUint256(BigInt(10000)) : uint256.bnToUint256(BigInt(3000)),
+      acceptable_price: isLong ? uint256.bnToUint256(BigInt((Number(ethData.currentPrice.toPrecision(4)) + 1000)*(10 ** tokenSymbol.decimals))) : uint256.bnToUint256(BigInt((Number(ethData.currentPrice.toPrecision(4))-1000)*(10 ** tokenSymbol.decimals))),
       execution_fee: uint256.bnToUint256(0),
       callback_gas_limit: uint256.bnToUint256(0),
       min_output_amount: uint256.bnToUint256(0),
@@ -66,6 +69,7 @@ export default function useMarketTrade() {
 
     const calls = [transferCall, createOrderCall];
 
+    /** 
     if (tpPrice) {
       const tpOrderParams = {
         ...createOrderParams,
@@ -89,7 +93,7 @@ export default function useMarketTrade() {
       ]);
       calls.push(createSlOrderCall);
     }
-
+    */
     await account.execute(calls);
   }
 
