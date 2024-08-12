@@ -29,17 +29,18 @@ export default function Trade({ className }: PropsWithClassName) {
     icon: "/tokens/ethereum.png",
     name: "Ethereum",
   });
-  const [tokenRatio, setTokenRatio] = useState<number>(0);
+  const initialRatio = 1;
   const [leverage, setLeverage] = useState(1);
   const { ethData } = useEthPrice();
   const {
     payTokenSymbol,
     payTokenValue,
     receiveTokenValue,
+    setTokenRatio,
     updateReceiveTokenValue,
     updatePayTokenTradeValue,
     switchTokens,
-  } = useTokenInputs({ ratio: tokenRatio, leverage: leverage });
+  } = useTokenInputs({ ratio: initialRatio, leverage: leverage });
 
   const { marketTokenBalance: payTokenBalance } = useMarketTokenBalance({
     marketTokenAddress: Tokens[payTokenSymbol].address,

@@ -81,15 +81,14 @@ export function useTokenInputs({ ratio, leverage }: Props) {
     [payTokenLimitValue]
   );
 
-
   const updatePayTokenTradeValue = useCallback(
     function updatePayTokenValue(tokenValue: string) {
       setPayTokenValue(tokenValue);
       setReceiveTokenValue(
-        tokenValue !== "" ? (parseFloat(tokenValue) * ratio * leverage).toString() : "",
+        tokenValue !== "" ? (parseFloat(tokenValue) * tokenRatio * leverage).toString() : "",
       );
     },
-    [ratio, leverage],
+    [tokenRatio, leverage],
   );
 
   function switchTokens() {
