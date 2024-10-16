@@ -18,12 +18,12 @@ import {
 import { ec, hash } from 'starknet';
 
 // Function to convert string to BigInt
-const stringToBigInt = (str) => {
+const stringToBigInt = (str : String) => {
   return BigInt('0x' + Buffer.from(str).toString('hex'));
 };
 
 // Convert ISO string timestamp to BigInt using Unix timestamp
-const timestampToBigInt = (timestamp) => {
+const timestampToBigInt = (timestamp : any) => {
   return BigInt(Math.floor(new Date(timestamp).getTime() / 1000));
 };
 
