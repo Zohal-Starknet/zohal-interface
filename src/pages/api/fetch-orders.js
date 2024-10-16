@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
     const { address } = req.query;
-    const apiUrl = 'http://127.0.0.1:8080/orders';
+    const apiUrl = 'https://api.zohal.xyz/orders';
   
     try {
       const response = await fetch(apiUrl, {

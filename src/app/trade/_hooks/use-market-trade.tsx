@@ -28,9 +28,10 @@ export default function useMarketTrade() {
       provider,
     );
 
+    console.log("Token amount: ", tokenAmount);
     const transferCall = tokenContract.populate("transfer", [
       ORDER_VAULT_CONTRACT_ADDRESS,
-      uint256.bnToUint256(BigInt(parseInt(tokenAmount)) * BigInt(10 ** tokenSymbol.decimals)),
+      uint256.bnToUint256(BigInt(tokenAmount * 10 ** tokenSymbol.decimals)),
     ]);
 
     console.log("Eth data: ", ethData.currentPrice.toPrecision(4));
@@ -46,7 +47,7 @@ export default function useMarketTrade() {
       size_delta_usd: uint256.bnToUint256(BigInt(leverage) * BigInt(ethData.currentPrice.toPrecision(4)) * BigInt(tokenAmount * (10 ** tokenSymbol.decimals))),
       initial_collateral_delta_amount: uint256.bnToUint256(BigInt(tokenAmount * (10 ** tokenSymbol.decimals))),
       trigger_price: uint256.bnToUint256(0),
-      acceptable_price: isLong ? uint256.bnToUint256(BigInt((Number(ethData.currentPrice.toPrecision(4)) + 1000)*(10 ** tokenSymbol.decimals))) : uint256.bnToUint256(BigInt((Number(ethData.currentPrice.toPrecision(4))-1000)*(10 ** tokenSymbol.decimals))),
+      acceptable_price: isLong ? uint256.bnToUint256(BigInt((Number(ethData.currentPrice.toPrecision(4)) + 1000))) : uint256.bnToUint256(BigInt((Number(ethData.currentPrice.toPrecision(4))-1000))),
       execution_fee: uint256.bnToUint256(0),
       callback_gas_limit: uint256.bnToUint256(0),
       min_output_amount: uint256.bnToUint256(0),

@@ -139,7 +139,7 @@ export default function Trade({ className }: PropsWithClassName) {
       />
 
       <SlTpCheckbox
-        className="mb-4 cursor-not-allowed"
+        className="mb-4"
         slTpInfos={slTpInfos}
         setSlTpInfos={setSlTpInfos}
         orderPrice={ethData.currentPrice}

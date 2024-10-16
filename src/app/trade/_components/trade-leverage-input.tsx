@@ -13,9 +13,7 @@ type TradeLeverageInputProps = {
 
 const leverageInputs = [
   { name: "5×", value: 5 },
-  { name: "10×", value: 10 },
-  { name: "25×", value: 25 },
-  { name: "50×", value: 50 },
+  { name: "10×", value: 10 }
 ];
 
 export default function TradeLeverageInput(props: TradeLeverageInputProps) {
@@ -23,12 +21,12 @@ export default function TradeLeverageInput(props: TradeLeverageInputProps) {
 
   function onLeverageChange(value: string) {
     const numericValue = parseFloat(value);
-    if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= 50) {
+    if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= 10) {
       setLeverage(numericValue);
     } else if (numericValue < 1) {
       setLeverage(1);
-    } else if (numericValue > 50) {
-      setLeverage(50);
+    } else if (numericValue > 10) {
+      setLeverage(10);
     }
   }
 
@@ -55,7 +53,7 @@ export default function TradeLeverageInput(props: TradeLeverageInputProps) {
             />
           </div>
         </div>
-        <div className="grid w-full grid-cols-4 items-center gap-3">
+        <div className="grid w-full grid-cols-2 items-center gap-3">
           {leverageInputs.map((leverageInput) => {
             return (
               <button
