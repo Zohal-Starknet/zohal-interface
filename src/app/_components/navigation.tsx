@@ -45,7 +45,7 @@ export default function Navigation() {
           <NavigationItem label="Trade" pathname={getTradePath()} />
           <NavigationItem label="Earn" pathname={getPoolsPath()} />
           <NavigationItem label="Portfolio" pathname={getPortfolioPath()} />
-          <NavigationItem label="Dashboard" pathname={getDashboardPath()} />
+          {/* <NavigationItem label="Dashboard" pathname={getDashboardPath()} /> */}
           <NavigationItem label="Rewards" pathname={getRewardsPath()} />
         </ul>
       )}
