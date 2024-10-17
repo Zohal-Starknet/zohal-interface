@@ -72,6 +72,7 @@ export default function Home() {
         // Successfully saved, hide the modal
         setShowRiskModal(false);
       } else {
+        setShowRiskModal(false);
         console.error("Failed to save acceptance.");
       }
     } catch (error) {
