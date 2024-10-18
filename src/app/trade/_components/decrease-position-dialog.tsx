@@ -48,7 +48,7 @@ export default function DecreasePositionDialog({
   useEffect(() => {
     if (!open) {
       setInputValue("");
-      setCollateralAmountNew((position.size_in_usd / BigInt(inputValue)) * position.collateral_amount);
+      //setCollateralAmountNew((position.size_in_usd / BigInt(inputValue)) * position.collateral_amount);
     }
   }, [open]);
 

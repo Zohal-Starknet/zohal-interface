@@ -113,7 +113,7 @@ export default function Position({ className }: PropsWithClassName) {
                 </td>
                 <td>
                   {(
-                    Number((BigInt(position.size_in_usd) /  BigInt(position.collateral_amount)) / BigInt(10**16))).toFixed(2).toString()}
+                    (Number((BigInt(position.size_in_usd) / BigInt(position.collateral_amount)) / BigInt(10**16))) / positionLeverage).toFixed(2).toString()}
                 </td>
                 <td>${ethData.currentPrice.toFixed(2)}</td>
                 <td className="text-right">
