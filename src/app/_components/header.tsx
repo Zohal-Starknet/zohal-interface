@@ -19,7 +19,7 @@ export default function Header() {
               alt="Zohal"
               className="w-10 rotate-[-35deg] rounded-lg"
               src="/logo.png"
-            />
+            /> 
           </Link>
           <Navigation />
         </div>

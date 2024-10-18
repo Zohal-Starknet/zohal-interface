@@ -38,7 +38,7 @@ export default function Position({ className }: PropsWithClassName) {
         <thead className="border-b border-border text-left">
           <tr className="text-muted-foreground">
             <th className={tableHeaderCommonStyles}>Position</th>
-            <th className={tableHeaderCommonStyles}>Net Value</th>
+            <th className={tableHeaderCommonStyles}>P&L</th>
             <th className={tableHeaderCommonStyles}>Size</th>
             <th className={tableHeaderCommonStyles}>Collateral</th>
             <th className={tableHeaderCommonStyles}>Entry Price</th>
@@ -51,14 +51,7 @@ export default function Position({ className }: PropsWithClassName) {
         <tbody>
           {positions.map((position, index) => {
             const decimals = BigInt(10 ** 18);
-            const marketPriceBigInt = BigInt(
-              Math.round(position.market_price * 10 ** 18),
-            );
             const collateralAmountBigInt = BigInt(position.collateral_amount);
-            console.log("Position base pnl usd: ", position.base_pnl_usd);
-            const netValue = (Number(collateralAmountBigInt) * ethData.currentPrice + (Number(BigInt(position.base_pnl_usd) / decimals) /10**16).toFixed(2) );
-            const formattedNetValue = netValue.toString();
-            
             const ethAmount = Number(collateralAmountBigInt) / Number(decimals);
             const formattedEthAmount = ethAmount.toFixed(4).toString();
 
@@ -100,20 +93,15 @@ export default function Position({ className }: PropsWithClassName) {
                   </div>
                 </td>
                 <td>
-                  <div>
-                    $
-                    {formattedNetValue.toString()}
-                    <br />
-                    <span
-                      className={clsx(
+                  <div className={clsx(
                         position.base_pnl_usd > 0
                           ? "text-sm text-[#40B68B]"
                           : "text-sm text-[#FF5354]",
-                      )}
-                    >
-                      {position.base_pnl_usd > 0 ? "+" : ""}
+                      )}>
+                    $
+                    {position.base_pnl_usd > 0 ? "+" : ""}
                       {(Number((BigInt(position.base_pnl_usd)/ decimals).toString()) / 10**16).toFixed(2)}$
-                    </span>
+                    <br />
                   </div>
                 </td>
                 <td className="pr-6">
