@@ -41,7 +41,6 @@ export default function Navigation() {
         <ul className="block lg:hidden absolute bg-white shadow-md rounded-md p-4">
           <NavigationItem label="Trade" pathname={getTradePath()} />
           <NavigationItem label="Earn" pathname={getPoolsPath()} />
-          <NavigationItem label="Rewards" pathname={getRewardsPath()} />
         </ul>
       )}
 
@@ -49,7 +48,6 @@ export default function Navigation() {
       <ul className="hidden lg:flex gap-2">
         <NavigationItem label="Trade" pathname={getTradePath()} />
         <NavigationItem label="Earn" pathname={getPoolsPath()} />
-        <NavigationItem label="Rewards" pathname={getRewardsPath()} />
       </ul>
     </nav>
   );
