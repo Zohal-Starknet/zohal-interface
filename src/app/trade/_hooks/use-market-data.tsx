@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 type PriceData = {
+  pragmaPrice: number;
   currentPrice: number;
   change24h: number;
   change24hPercent: number;
@@ -24,6 +25,7 @@ const getLastTwoDaysData = (data: any[]): any[] => {
 
 export default function useEthPrice() {
   const [ethData, setEthData] = useState<PriceData>({
+    pragmaPrice: 0,
     currentPrice: 0,
     change24h: 0,
     change24hPercent: 0,
@@ -76,6 +78,7 @@ export default function useEthPrice() {
         const change24hPercent = (change24h / previousData.close) * 100;
 
         setEthData({
+          pragmaPrice: latestData.close * 100000000,
           currentPrice: latestData.close,
           change24h,
           change24hPercent,

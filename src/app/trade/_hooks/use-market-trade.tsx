@@ -36,6 +36,17 @@ export default function useMarketTrade() {
 
     console.log("Eth data: ", ethData.currentPrice.toPrecision(4));
     console.log("Lev: ", leverage);
+    const pragma_decimals =  tokenSymbol.name  == "Ethereum" ?  8  : 6 ;
+    console.log("Pragma Decimals: ", pragma_decimals);
+    console.log("Pragma Price : ", ethData.pragmaPrice.toFixed(0));
+    console.log("Token decimals: ", tokenSymbol.decimals);
+    let price = BigInt(ethData.pragmaPrice.toFixed(0)) * BigInt(10**(30)) / BigInt(10**(pragma_decimals - 4)) / BigInt(10**(tokenSymbol.decimals));
+   
+    console.log("Price: ", price);
+    let acceptable_price = isLong ? uint256.bnToUint256(BigInt((price * (BigInt(105) / BigInt(100))))) : uint256.bnToUint256(BigInt((price * (BigInt(95) / BigInt(100)))));
+
+    
+    console.log("Acceptable price : ", acceptable_price);
 
     const createOrderParams = {
       receiver: address,
@@ -44,10 +55,10 @@ export default function useMarketTrade() {
       market: MARKET_TOKEN_CONTRACT_ADDRESS,
       initial_collateral_token: tokenSymbol.address,
       swap_path: [], 
-      size_delta_usd: uint256.bnToUint256(BigInt(leverage) * BigInt(ethData.currentPrice.toPrecision(4)) * BigInt(tokenAmount * (10 ** tokenSymbol.decimals))),
+      size_delta_usd: uint256.bnToUint256(BigInt(leverage) * price * BigInt(tokenAmount * (10 ** tokenSymbol.decimals))),
       initial_collateral_delta_amount: uint256.bnToUint256(BigInt(tokenAmount * (10 ** tokenSymbol.decimals))),
       trigger_price: uint256.bnToUint256(0),
-      acceptable_price: isLong ? uint256.bnToUint256(BigInt((Number(ethData.currentPrice.toPrecision(4)) + 1000))) : uint256.bnToUint256(BigInt((Number(ethData.currentPrice.toPrecision(4))-1000))),
+      acceptable_price: isLong ? uint256.bnToUint256(BigInt((price * (BigInt(105) / BigInt(100))))) : uint256.bnToUint256(BigInt((price * (BigInt(95) / BigInt(100))))),
       execution_fee: uint256.bnToUint256(0),
       callback_gas_limit: uint256.bnToUint256(0),
       min_output_amount: uint256.bnToUint256(0),
@@ -57,6 +68,9 @@ export default function useMarketTrade() {
       referral_code: "0x0",
     };
 
+    console.log("Create order params SIZE DELTA USD: ", createOrderParams.size_delta_usd);
+    console.log("Create order params INITIAL COLLATERAL DELTA AMOUNT: ", createOrderParams.initial_collateral_delta_amount);
+    console.log("Create order params ACCEPTABLE PRICE: ", createOrderParams.acceptable_price);
     const exchangeRouterContract = new Contract(
       exchange_router_abi.abi,
       EXCHANGE_ROUTER_CONTRACT_ADDRESS,
@@ -70,11 +84,13 @@ export default function useMarketTrade() {
 
     const calls = [transferCall, createOrderCall];
 
-    /** 
+    
     if (tpPrice) {
+      tpPrice =  BigInt(tpPrice) * BigInt(10 ** pragma_decimals);
       const tpOrderParams = {
         ...createOrderParams,
         trigger_price: uint256.bnToUint256(BigInt(tpPrice)),
+        acceptable_price : isLong ? uint256.bnToUint256(BigInt((tpPrice * BigInt(95) / BigInt(100)))) : uint256.bnToUint256(BigInt((tpPrice * BigInt(105) / BigInt(100)))),
         order_type: new CairoCustomEnum({ LimitDecrease: {} }),
       };
       const createTpOrderCall = exchangeRouterContract.populate("create_order", [
@@ -84,9 +100,11 @@ export default function useMarketTrade() {
     }
 
     if (slPrice) {
+      slPrice =  BigInt(slPrice) * BigInt(10 ** pragma_decimals);
       const slOrderParams = {
         ...createOrderParams,
         trigger_price: uint256.bnToUint256(BigInt(slPrice)),
+        acceptable_price : isLong ? uint256.bnToUint256(BigInt((slPrice * BigInt(95) / BigInt(100)))) : uint256.bnToUint256(BigInt((slPrice * BigInt(105) / BigInt(100)))),
         order_type: new CairoCustomEnum({ LimitDecrease: {} }),
       };
       const createSlOrderCall = exchangeRouterContract.populate("create_order", [
@@ -94,7 +112,7 @@ export default function useMarketTrade() {
       ]);
       calls.push(createSlOrderCall);
     }
-    */
+  
     await account.execute(calls);
   }
 

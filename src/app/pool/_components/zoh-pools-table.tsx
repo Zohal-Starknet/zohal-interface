@@ -77,7 +77,7 @@ function ZohPoolsTableBody() {
               {poolData && (
                 <>
                   <p>
-                    {IntlFormatter.format(Number(poolData.long_token_amount))}{" "}
+                    {(Number(poolData.long_token_amount) / Math.pow(10, 18) ).toPrecision(1)}{" "}
                     ETH
                   </p>
                   <p className="text-muted-foreground">

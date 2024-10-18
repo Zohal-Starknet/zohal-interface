@@ -40,18 +40,8 @@ export default function EditPosition({ position }: EditPositionProps) {
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="space-y-1">
-          <DropdownMenuItem
-            onClick={() => setOpenedModal("increaseCollateral")}
-          >
-            Increase collateral
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => setOpenedModal("decreaseCollateral")}
-          >
-            Decrease collateral
-          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpenedModal("decreasePosition")}>
-            Decrease position
+            Close position
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -61,20 +51,6 @@ export default function EditPosition({ position }: EditPositionProps) {
         collateral_amount={position.collateral_amount}
         collateral_token={position.collateral_token}
         open={openedModal === "decreasePosition"}
-        onOpenChange={handleOpenChange}
-      />
-      <DecreaseCollateralDialog
-        position={position}
-        collateral_amount={position.collateral_amount}
-        collateral_token={position.collateral_token}
-        open={openedModal === "decreaseCollateral"}
-        onOpenChange={handleOpenChange}
-      />
-      <IncreaseCollateralDialog
-        position={position}
-        collateral_amount={position.collateral_amount}
-        collateral_token={position.collateral_token}
-        open={openedModal === "increaseCollateral"}
         onOpenChange={handleOpenChange}
       />
     </>

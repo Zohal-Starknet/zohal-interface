@@ -9,11 +9,13 @@ import { Tokens } from "@zohal/app/_helpers/tokens";
 import { CairoCustomEnum, Contract, uint256 } from "starknet";
 import erc_20_abi from "../abi/erc_20.json";
 import exchange_router_abi from "../abi/exchange_router.json";
+import useEthPrice from "./use-market-data";
 
 type TransactionStatus = "idle" | "loading" | "rejected";
 
 export default function useMarketSwap() {
   const { account, address } = useAccount();
+  const { ethData } = useEthPrice();
   const { provider } = useProvider();
   const [status, setStatus] = useState<TransactionStatus>("idle");
 
@@ -35,6 +37,13 @@ export default function useMarketSwap() {
         uint256.bnToUint256(BigInt(amount * (10 ** Tokens[selectedToken].decimals))),
       ]);
 
+      const pragma_decimals =  Tokens[selectedToken].name  == "Ethereum" ?  8  : 6 ;
+      const price =  Tokens[selectedToken].name == "Ethereum" ? BigInt(ethData.pragmaPrice.toFixed(0)) * BigInt(10**(30)) / BigInt(10**(pragma_decimals - 4)) / BigInt(10**( Tokens[selectedToken].decimals))
+      : BigInt("10000000000000000000000000000") ;
+
+      let size_delta_usd = BigInt(amount * (10 ** Tokens[selectedToken].decimals)) * price;
+      console.log("Size delta usd: ", size_delta_usd.toString());
+
       const createOrderParams = {
         receiver: address,
         callback_contract: 0,
@@ -42,8 +51,8 @@ export default function useMarketSwap() {
         market: 0,
         initial_collateral_token: Tokens[selectedToken].address,
         swap_path: [MARKET_TOKEN_CONTRACT_ADDRESS],
-        size_delta_usd: uint256.bnToUint256(BigInt(amount * (10 ** Tokens[selectedToken].decimals))),
-        initial_collateral_delta_amount: uint256.bnToUint256(BigInt(amount * (10 ** Tokens[selectedToken].decimals))),
+        size_delta_usd: uint256.bnToUint256(size_delta_usd),
+        initial_collateral_delta_amount: uint256.bnToUint256(BigInt(amount * 10 ** Tokens[selectedToken].decimals)),
         trigger_price: uint256.bnToUint256(0),
         acceptable_price: uint256.bnToUint256(1),
         execution_fee: uint256.bnToUint256(0),

@@ -53,10 +53,10 @@ export default function Trade({ className }: PropsWithClassName) {
   });
   // TODO @YohanTz: Type properly
   const [slTpInfos, setSlTpInfos] = useState<SlTpInfos>({
-    sl: "",
-    slTriggerPrice: ""+ethData.currentPrice,
+    sl:"",
+    slTriggerPrice: "",
     tp: "",
-    tpTriggerPrice: ""+ethData.currentPrice,
+    tpTriggerPrice: "",
   });
 
   const { trade } = useMarketTrade();
@@ -143,7 +143,7 @@ export default function Trade({ className }: PropsWithClassName) {
         slTpInfos={slTpInfos}
         setSlTpInfos={setSlTpInfos}
         orderPrice={ethData.currentPrice}
-        qty={parseInt(receiveTokenValue)}
+        qty={Number(receiveTokenValue)}
       />
 
       <div className="flex flex-col gap-2 rounded-md border border-border p-3">

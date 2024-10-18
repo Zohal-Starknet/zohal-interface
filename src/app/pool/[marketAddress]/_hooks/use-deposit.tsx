@@ -28,7 +28,7 @@ export default function useDeposit() {
 
     const ethTransferCall = ethTokenContract.populate("transfer", [
       DEPOSIT_VAULT_CONTRACT_ADDRESS,
-      uint256.bnToUint256(BigInt(token0) * BigInt(10 ** 18)),
+      uint256.bnToUint256(BigInt(Number(token0) * 10 ** 18)),
     ]);
 
     const usdcTokenContract = new Contract(
@@ -39,7 +39,7 @@ export default function useDeposit() {
 
     const usdcTransferCall = usdcTokenContract.populate("transfer", [
       DEPOSIT_VAULT_CONTRACT_ADDRESS,
-      uint256.bnToUint256(BigInt(token1) * BigInt(10 ** 18)),
+      uint256.bnToUint256(BigInt(token1) * BigInt(10 ** 6)),
     ]); 
 
     const exchangeRouterContract = new Contract(
@@ -49,17 +49,17 @@ export default function useDeposit() {
     );
 
     const createDepositParams = {
+      receiver: address,
       callback_contract: 0,
-      callback_gas_limit: uint256.bnToUint256(0),
-      execution_fee: uint256.bnToUint256(0),
+      ui_fee_receiver: 0,
+      market: MARKET_TOKEN_CONTRACT_ADDRESS, //TODO parametrage du market
       initial_long_token: ETH_CONTRACT_ADDRESS,
       initial_short_token: USDC_CONTRACT_ADDRESS,
       long_token_swap_path: [],
-      market: MARKET_TOKEN_CONTRACT_ADDRESS, //TODO parametrage du market
-      min_market_tokens: 0,
-      receiver: address,
       short_token_swap_path: [],
-      ui_fee_receiver: 0,
+      min_market_tokens: 0,
+      execution_fee: uint256.bnToUint256(0),
+      callback_gas_limit: uint256.bnToUint256(0),
     };
 
     const createDepositCall = exchangeRouterContract.populate(

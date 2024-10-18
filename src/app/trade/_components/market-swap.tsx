@@ -65,8 +65,9 @@ export default function MarketSwap({ className }: PropsWithClassName) {
 
   const { marketTokenBalance: receiveTokenBalance } = useMarketTokenBalance({
     marketTokenAddress: Tokens[receiveTokenSymbol].address,
-    decimal: Tokens[payTokenSymbol].decimals
+    decimal: Tokens[receiveTokenSymbol].decimals
   });
+
 
   const noEnteredAmount =
     payTokenValue.length === 0 && receiveTokenValue.length === 0;

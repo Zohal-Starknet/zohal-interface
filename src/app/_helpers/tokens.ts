@@ -14,13 +14,13 @@ export const Tokens: TokenList = {
   },
   USDC: {
     address: USDC_CONTRACT_ADDRESS,
-    decimals: 18,
+    decimals: 6,
     icon: "/tokens/usdc.png",
     name: "USD",
   },
   ZOH: {
     address: ZOH_CONTRACT_ADDRESS,
-    decimals: 8,
+    decimals: 18,
     icon: "/tokens/zoh.png",
     name: "Zohal",
   }

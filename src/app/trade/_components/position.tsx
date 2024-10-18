@@ -55,18 +55,18 @@ export default function Position({ className }: PropsWithClassName) {
               Math.round(position.market_price * 10 ** 18),
             );
             const collateralAmountBigInt = BigInt(position.collateral_amount);
-
-            const netValue = (Number(collateralAmountBigInt) * ethData.currentPrice + Number(position.base_pnl_usd)) / Number(decimals);
-            const formattedNetValue = netValue.toFixed(2).toString();
+            console.log("Position base pnl usd: ", position.base_pnl_usd);
+            const netValue = (Number(collateralAmountBigInt) * ethData.currentPrice + (Number(BigInt(position.base_pnl_usd) / decimals) /10**16).toFixed(2) );
+            const formattedNetValue = netValue.toString();
             
             const ethAmount = Number(collateralAmountBigInt) / Number(decimals);
             const formattedEthAmount = ethAmount.toFixed(4).toString();
 
-            const sizeInUsd = Number(position.size_in_usd) / Number(decimals);
+            const sizeInUsd = (Number(position.size_in_usd)/10**16) / Number(decimals);
             const formattedSizeInUsd = sizeInUsd.toFixed(2).toString();
 
             const positionLeverage =
-              Number(position.size_in_usd) /
+              (Number(position.size_in_usd) / 10**16) /
               (Number(position.collateral_amount) *
                 Number(position.market_price));
 
@@ -112,7 +112,7 @@ export default function Position({ className }: PropsWithClassName) {
                       )}
                     >
                       {position.base_pnl_usd > 0 ? "+" : ""}
-                      {(BigInt(position.base_pnl_usd) / decimals).toString()}$
+                      {(Number((BigInt(position.base_pnl_usd)/ decimals).toString()) / 10**16).toFixed(2)}$
                     </span>
                   </div>
                 </td>
@@ -125,8 +125,7 @@ export default function Position({ className }: PropsWithClassName) {
                 </td>
                 <td>
                   {(
-                    BigInt(position.size_in_usd) / (BigInt(position.size_in_tokens) * BigInt(position.collateral_amount))
-                  ).toString()}
+                    Number((BigInt(position.size_in_usd) /  BigInt(position.collateral_amount)) / BigInt(10**16))).toFixed(2).toString()}
                 </td>
                 <td>${ethData.currentPrice.toFixed(2)}</td>
                 <td className="text-right">

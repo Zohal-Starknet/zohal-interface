@@ -5,6 +5,7 @@ import {
   READER_CONTRACT_ADDRESS,
   REFERRAL_STORAGE_CONTRACT_ADDRESS,
   EXCHANGE_ROUTER_CONTRACT_ADDRESS,
+  ETH_CONTRACT_ADDRESS
 } from "@zohal/app/_lib/addresses";
 import { useEffect, useState } from "react";
 import { CairoCustomEnum, Contract, uint256 } from "starknet";
@@ -18,7 +19,7 @@ export type Position = {
   account: bigint;
   borrowing_factor: bigint;
   collateral_amount: bigint;
-  collateral_token: bigint;
+  collateral_token: string;
   decreased_at_block: bigint;
   funding_fee_amount_per_size: bigint;
   increased_at_block: bigint;
@@ -52,6 +53,10 @@ export default function useUserPosition() {
       return;
     }
 
+    const pragma_decimals =  position.collateral_token  == ETH_CONTRACT_ADDRESS ?  8  : 6 ;
+    const price =  position.collateral_token  == ETH_CONTRACT_ADDRESS  ? BigInt(ethData.pragmaPrice.toFixed(0)) * BigInt(10**(30)) / BigInt(10**(pragma_decimals - 4)) / BigInt(10**(18))
+    : BigInt("10000000000000000000000000000") ;
+
     const createOrderParams = {
       receiver: address,
       callback_contract: 0,
@@ -60,13 +65,11 @@ export default function useUserPosition() {
       initial_collateral_token: collateral_token,
       swap_path: [],
       size_delta_usd: uint256.bnToUint256(size_delta_usd),
-      initial_collateral_delta_amount: uint256.bnToUint256(
-        BigInt(collateral_amount),
-      ),
+      initial_collateral_delta_amount: uint256.bnToUint256(BigInt(collateral_amount)),
       trigger_price: uint256.bnToUint256(0),
       acceptable_price: position.is_long
-        ? uint256.bnToUint256(BigInt(3000))
-        : uint256.bnToUint256(BigInt(5000)),
+        ? uint256.bnToUint256(BigInt((price * BigInt(95) / BigInt(100)))) 
+        : uint256.bnToUint256(BigInt((price * BigInt(105) / BigInt(100)))),
       execution_fee: uint256.bnToUint256(0),
       callback_gas_limit: uint256.bnToUint256(0),
       min_output_amount: uint256.bnToUint256(BigInt(0)),
@@ -119,6 +122,8 @@ export default function useUserPosition() {
         Promise<{ base_pnl_usd: { mag: bigint; sign: Boolean } }>
       > = [];
 
+      let price = BigInt(ethData.pragmaPrice.toFixed(0)) * BigInt(10**(30)) / BigInt(10**(8 - 4)) / BigInt(10**18);
+
       positionKeys.map((positionKey) => {
         positionsInfos.push(
           readerContract.functions.get_position_info(
@@ -129,14 +134,14 @@ export default function useUserPosition() {
             positionKey,
             {
               index_token_price: {
-                min: parseInt("" + ethData.currentPrice),
-                max: parseInt("" + ethData.currentPrice),
+                min: parseInt("" + price),
+                max: parseInt("" + price),
               },
               long_token_price: {
-                min: parseInt("" + ethData.currentPrice),
-                max: parseInt("" + ethData.currentPrice),
+                min: parseInt("" + price),
+                max: parseInt("" + price),
               },
-              short_token_price: { min: 1, max: 1 },
+              short_token_price: { min: BigInt("10000000000000000000000000000") , max: BigInt("10000000000000000000000000000")  },
             },
             0,
             0,

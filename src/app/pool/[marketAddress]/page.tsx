@@ -29,7 +29,7 @@ function BuyGm() {
 
   const { marketTokenBalance: usdcTokenBalance } = useMarketTokenBalance({
     marketTokenAddress: Tokens.USDC.address,
-    decimal: Tokens.ETH.decimals
+    decimal: Tokens.USDC.decimals
   });
 
   return (
@@ -91,7 +91,7 @@ function SellGm() {
       />
       <button
         className="border-border bg-secondary my-4 rounded-lg border py-2"
-        onClick={() => withdraw()}
+        onClick={() => withdraw(zohInputValue)}
       >
         Withdraw
       </button>

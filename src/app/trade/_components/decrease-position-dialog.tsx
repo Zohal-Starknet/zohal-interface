@@ -19,7 +19,7 @@ import useUserPosition, { Position } from "../_hooks/use-user-position";
 interface ClosePositionDialogProps {
   position: Position;
   collateral_amount: bigint;
-  collateral_token: bigint;
+  collateral_token: String;
   onOpenChange(open: boolean): void;
   open: boolean;
 }
@@ -36,7 +36,7 @@ export default function DecreasePositionDialog({
   const [collateralAmountNew, setCollateralAmountNew] = useState(BigInt(0));
   const { closePosition } = useUserPosition();
 
-  const formattedSizeInUsdAmount = (position.size_in_usd / decimals).toString();
+  const formattedSizeInUsdAmount = (Number(position.size_in_usd / decimals) / 10**16).toString();
 
   const isCloseAction =
     parseFloat(inputValue) >= parseFloat(formattedSizeInUsdAmount);

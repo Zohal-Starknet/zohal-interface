@@ -119,7 +119,7 @@ function SlTpModal({
         <div className="mt-4 flex items-center justify-between text-sm">
           <div>
             <p className="text-muted-foreground">Order Price</p>
-            <p>{Math.floor(orderPrice)}</p>
+            <p>{orderPrice}</p>
           </div>
           <div>
             <p className="text-muted-foreground">Qty</p>
@@ -127,7 +127,7 @@ function SlTpModal({
           </div>
           <div className="text-end">
             <p className="text-muted-foreground">Last traded price</p>
-            <p>{Math.floor(orderPrice)}</p>
+            <p>{orderPrice}</p>
           </div>
         </div>
 
@@ -150,7 +150,7 @@ function SlTpModal({
                 <Input
                   className="h-full w-full bg-secondary px-2 text-xs"
                   placeholder="Profit"
-                  value={""+Math.floor(Number(temporarySlTpInfos.tp))}
+                  value={""+temporarySlTpInfos.tp}
                   onChange={onUpdateTp}
                 />
                 <span>USD</span>
@@ -175,7 +175,7 @@ function SlTpModal({
                 <Input
                   className="h-full w-full bg-secondary px-2 text-xs"
                   placeholder="Loss"
-                  value={""+Math.floor(Number(temporarySlTpInfos.sl))}
+                  value={""+Number(temporarySlTpInfos.sl)}
                   onChange={onUpdateSl}
                 />
                 <span>USD</span>

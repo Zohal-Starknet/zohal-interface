@@ -34,7 +34,7 @@ export default function useMarketTokenBalance({
       )) as bigint;
 
       setMarketTokenBalance(
-        new Intl.NumberFormat().format(Math.floor((Number(balanceOf) / 10 ** decimal))),
+        (Number(balanceOf) / 10 ** decimal).toPrecision(2).toString(),
       );
     };
 

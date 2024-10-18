@@ -65,19 +65,17 @@ export default function usePoolData() {
         )) as [unknown, PoolData];
 
       const poolData = tokenPriceResponse[1];
-      const decimals = BigInt(Math.pow(10, 18));
-
+      const decimalsETH = BigInt(Math.pow(10, 18));
+      const decimalsUSDC = BigInt(Math.pow(10, 6));
 
       setPoolData({
         ...poolData,
-        long_token_amount: (BigInt(poolData.long_token_amount) / decimals).toString(),
-        long_token_usd: (BigInt(poolData.long_token_usd) / decimals).toString(),
+        long_token_amount: (BigInt(poolData.long_token_amount)).toString(),
+        long_token_usd: (BigInt(poolData.long_token_usd) / decimalsETH).toString(),
         //@ts-ignore
-        pool_value: (BigInt(poolData.pool_value.mag) / decimals).toString(),
-        short_token_amount: (
-          BigInt(poolData.short_token_amount) / decimals
-        ).toString(),
-        short_token_usd: (BigInt(poolData.short_token_usd) / decimals).toString(),
+        pool_value: ((BigInt(poolData.pool_value.mag) / decimalsETH) + BigInt(poolData.short_token_usd) / decimalsUSDC ).toString(),
+        short_token_amount: (BigInt(poolData.short_token_amount) / decimalsUSDC).toString(),
+        short_token_usd: (BigInt(poolData.short_token_usd) / decimalsUSDC).toString(),
       });
     };
 
