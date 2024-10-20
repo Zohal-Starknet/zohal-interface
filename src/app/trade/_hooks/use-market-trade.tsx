@@ -28,6 +28,12 @@ export default function useMarketTrade() {
       provider,
     );
 
+
+    const approveCall = tokenContract.populate("approve", [
+      ORDER_VAULT_CONTRACT_ADDRESS,
+      uint256.bnToUint256(BigInt(tokenAmount * 10 ** tokenSymbol.decimals)),
+    ]);
+
     console.log("Token amount: ", tokenAmount);
     const transferCall = tokenContract.populate("transfer", [
       ORDER_VAULT_CONTRACT_ADDRESS,
@@ -82,7 +88,7 @@ export default function useMarketTrade() {
     ]);
     
 
-    const calls = [transferCall, createOrderCall];
+    const calls = [approveCall, transferCall, createOrderCall];
 
     
     if (tpPrice) {
