@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import MarketSwap from './market-swap';
-import LimitSwap from './limit-swap';
 import { TabItemType } from '@zohal/app/_ui/tabs';
 
 type SubPanelProps = {
@@ -8,10 +7,9 @@ type SubPanelProps = {
 };
 
 export default function SubPanel({ className }: SubPanelProps) {
-    const swapTabItems: [TabItemType, TabItemType] = [
-        { content: <MarketSwap />, label: "Market", value: "market" },
-        { content: <LimitSwap />, label: "Limit", value: "limit" },
-    ];
+    const swapTabItems: [TabItemType] = [
+        { content: <MarketSwap />, label: "Market", value: "market" }
+        ];
 
     const [selectedTab, setSelectedTab] = useState("market");
 
