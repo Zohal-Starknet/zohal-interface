@@ -3,7 +3,7 @@
 import { useAccount, useBlock, useNetwork } from "@starknet-react/core";
 import { BlockTag } from "starknet";
 
-const testnetBlockUrl = "https://sepolia.voyager.online/block";
+const testnetBlockUrl = "https://voyager.online/block";
 
 export default function FooterBlockNumber() {
   const { chainId: walletChainId } = useAccount();
