@@ -5,11 +5,13 @@ import {
   READER_CONTRACT_ADDRESS,
   REFERRAL_STORAGE_CONTRACT_ADDRESS,
   EXCHANGE_ROUTER_CONTRACT_ADDRESS,
-  ETH_CONTRACT_ADDRESS
+  ETH_CONTRACT_ADDRESS,
+  ORDER_VAULT_CONTRACT_ADDRESS
 } from "@zohal/app/_lib/addresses";
 import { useEffect, useState } from "react";
 import { CairoCustomEnum, Contract, uint256 } from "starknet";
 
+import erc_20_abi from "../abi/erc_20.json";
 import reader_abi from "../../pool/_abi/reader_abi.json";
 import exchange_router_abi from "../abi/exchange_router.json";
 import datastore_abi from "../abi/datastore.json";
@@ -70,7 +72,7 @@ export default function useUserPosition() {
       acceptable_price: position.is_long
         ? uint256.bnToUint256(BigInt((price * BigInt(95) / BigInt(100)))) 
         : uint256.bnToUint256(BigInt((price * BigInt(105) / BigInt(100)))),
-      execution_fee: uint256.bnToUint256(0),
+      execution_fee: uint256.bnToUint256("80000000000000"),
       callback_gas_limit: uint256.bnToUint256(0),
       min_output_amount: uint256.bnToUint256(BigInt(0)),
       order_type: new CairoCustomEnum(order_type),
@@ -85,11 +87,22 @@ export default function useUserPosition() {
       provider,
     );
 
+    const ethContract = new Contract(
+      erc_20_abi.abi,
+      ETH_CONTRACT_ADDRESS,
+      provider,
+    );
+
+    const transferCall = ethContract.populate("transfer", [
+      ORDER_VAULT_CONTRACT_ADDRESS,
+      uint256.bnToUint256(BigInt("80000000000000")),
+    ]);
+    
     const createOrderCall = exchangeRouterContract.populate("create_order", [
       createOrderParams,
     ]);
 
-    await account.execute(createOrderCall);
+    await account.execute([transferCall, createOrderCall]);
   }
 
   useEffect(() => {

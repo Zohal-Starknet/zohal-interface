@@ -4,6 +4,7 @@ import {
   MARKET_TOKEN_CONTRACT_ADDRESS,
   EXCHANGE_ROUTER_CONTRACT_ADDRESS,
   ORDER_VAULT_CONTRACT_ADDRESS,
+  ETH_CONTRACT_ADDRESS,
 } from "@zohal/app/_lib/addresses";
 import { Tokens } from "@zohal/app/_helpers/tokens";
 import { CairoCustomEnum, Contract, uint256 } from "starknet";
@@ -32,10 +33,12 @@ export default function useMarketSwap() {
         provider,
       );
 
-      const transferCall = tokenContract.populate("transfer", [
-        ORDER_VAULT_CONTRACT_ADDRESS,
-        uint256.bnToUint256(BigInt(amount * (10 ** Tokens[selectedToken].decimals))),
-      ]);
+      const ethContract = new Contract(
+        erc_20_abi.abi,
+        ETH_CONTRACT_ADDRESS,
+        provider,
+      );
+
 
       const pragma_decimals =  Tokens[selectedToken].name  == "Ethereum" ?  8  : 6 ;
       const price =  Tokens[selectedToken].name == "Ethereum" ? BigInt(ethData.pragmaPrice.toFixed(0)) * BigInt(10**(30)) / BigInt(10**(pragma_decimals - 4)) / BigInt(10**( Tokens[selectedToken].decimals))
@@ -55,7 +58,7 @@ export default function useMarketSwap() {
         initial_collateral_delta_amount: uint256.bnToUint256(BigInt(amount * 10 ** Tokens[selectedToken].decimals)),
         trigger_price: uint256.bnToUint256(0),
         acceptable_price: uint256.bnToUint256(1),
-        execution_fee: uint256.bnToUint256(0),
+        execution_fee: uint256.bnToUint256(BigInt("80000000000000")),
         callback_gas_limit: uint256.bnToUint256(0),
         min_output_amount: uint256.bnToUint256(0),
         order_type: new CairoCustomEnum({ MarketSwap: {} }),
@@ -73,7 +76,29 @@ export default function useMarketSwap() {
         createOrderParams,
       ]);
 
-      await account.execute([transferCall, createOrderCall]);
+
+      if (Tokens[selectedToken].name == "Ethereum"){
+
+        const transferCall = tokenContract.populate("transfer", [
+          ORDER_VAULT_CONTRACT_ADDRESS,
+          uint256.bnToUint256((BigInt(amount * (10 ** Tokens[selectedToken].decimals)) + BigInt("80000000000000"))),
+        ]);
+
+        await account.execute([transferCall, createOrderCall]);
+
+      } else {
+        const transferCall = tokenContract.populate("transfer", [
+          ORDER_VAULT_CONTRACT_ADDRESS,
+          uint256.bnToUint256(BigInt(amount * (10 ** Tokens[selectedToken].decimals))),
+        ]);
+        const transferCall2 = ethContract.populate("transfer", [
+            ORDER_VAULT_CONTRACT_ADDRESS,
+            uint256.bnToUint256(BigInt("80000000000000")),
+        ]);
+        await account.execute([transferCall, transferCall2, createOrderCall]);
+      }
+
+
       setStatus("idle");
     } catch (error) {
       console.error(error);

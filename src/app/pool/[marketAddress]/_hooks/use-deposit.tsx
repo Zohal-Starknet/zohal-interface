@@ -28,7 +28,7 @@ export default function useDeposit() {
 
     const ethTransferCall = ethTokenContract.populate("transfer", [
       DEPOSIT_VAULT_CONTRACT_ADDRESS,
-      uint256.bnToUint256(BigInt(Number(token0) * 10 ** 18)),
+      uint256.bnToUint256((BigInt(Number(token0) * 10 ** 18) + BigInt("80000000000000"))),
     ]);
 
     const usdcTokenContract = new Contract(
@@ -58,7 +58,7 @@ export default function useDeposit() {
       long_token_swap_path: [],
       short_token_swap_path: [],
       min_market_tokens: 0,
-      execution_fee: uint256.bnToUint256(0),
+      execution_fee: uint256.bnToUint256(BigInt("80000000000000")),
       callback_gas_limit: uint256.bnToUint256(0),
     };
 

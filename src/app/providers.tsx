@@ -30,7 +30,7 @@ export default function Providers(props: PropsWithChildren) {
   return (
     <StarknetConfig
       autoConnect
-      chains={[mainnet]}
+      chains={[sepolia]}
       connectors={connectors}
       provider={provider}
     >

@@ -14,7 +14,7 @@ import ChooseTokenButton from "./choose-token-button";
 import PriceInfo from "./price-info";
 import TokenSwapButton from "./token-swap-button";
 import TradeLeverageInput from "./trade-leverage-input";
-import { ETH_CONTRACT_ADDRESS } from "../../_lib/addresses";
+import { ETH_CONTRACT_ADDRESS, USDC_CONTRACT_ADDRESS } from "../../_lib/addresses";
 import { useTokenInputs } from "../_hooks/use-token-input";
 import useEthPrice from "@zohal/app/trade/_hooks/use-market-data";
 
@@ -67,6 +67,14 @@ export default function Trade({ className }: PropsWithClassName) {
   useEffect(() => {
     const fetchedRatio = ethData.currentPrice;
     setTokenRatio(payTokenSymbol === "USDC" ? 1 / fetchedRatio : 1);
+    if (payTokenSymbol === "USDC") {
+      setTokenSymbol({
+        address: USDC_CONTRACT_ADDRESS,
+        decimals: 6,
+        icon: "/tokens/usdc.png",
+        name: "USD",
+      });
+  }
   }, [switchTokens]);
 
   const priceInfos = [

@@ -3,6 +3,7 @@ import {
   MARKET_TOKEN_CONTRACT_ADDRESS,
   EXCHANGE_ROUTER_CONTRACT_ADDRESS,
   ORDER_VAULT_CONTRACT_ADDRESS,
+  ETH_CONTRACT_ADDRESS,
 } from "@zohal/app/_lib/addresses";
 import { CairoCustomEnum, Contract, uint256 } from "starknet";
 
@@ -28,17 +29,23 @@ export default function useMarketTrade() {
       provider,
     );
 
+    const ethContract = new Contract(
+      erc_20_abi.abi,
+      ETH_CONTRACT_ADDRESS,
+      provider,
+    );
 
-    const approveCall = tokenContract.populate("approve", [
-      ORDER_VAULT_CONTRACT_ADDRESS,
-      uint256.bnToUint256(BigInt(tokenAmount * 10 ** tokenSymbol.decimals)),
-    ]);
+
+    // const approveCall = tokenContract.populate("approve", [
+    //   ORDER_VAULT_CONTRACT_ADDRESS,
+    //   uint256.bnToUint256(BigInt(tokenAmount * 10 ** tokenSymbol.decimals)),
+    // ]);
 
     console.log("Token amount: ", tokenAmount);
-    const transferCall = tokenContract.populate("transfer", [
-      ORDER_VAULT_CONTRACT_ADDRESS,
-      uint256.bnToUint256(BigInt(tokenAmount * 10 ** tokenSymbol.decimals)),
-    ]);
+    // const transferCall = tokenContract.populate("transfer", [
+    //   ORDER_VAULT_CONTRACT_ADDRESS,
+      // uint256.bnToUint256(BigInt(tokenAmount * 10 ** tokenSymbol.decimals)),
+    // ]);
 
     console.log("Eth data: ", ethData.currentPrice.toPrecision(4));
     console.log("Lev: ", leverage);
@@ -65,7 +72,7 @@ export default function useMarketTrade() {
       initial_collateral_delta_amount: uint256.bnToUint256(BigInt(tokenAmount * (10 ** tokenSymbol.decimals))),
       trigger_price: uint256.bnToUint256(0),
       acceptable_price: isLong ? uint256.bnToUint256(BigInt((price * (BigInt(105) / BigInt(100))))) : uint256.bnToUint256(BigInt((price * (BigInt(95) / BigInt(100))))),
-      execution_fee: uint256.bnToUint256(0),
+      execution_fee: uint256.bnToUint256("80000000000000"),
       callback_gas_limit: uint256.bnToUint256(0),
       min_output_amount: uint256.bnToUint256(0),
       order_type: new CairoCustomEnum({ MarketIncrease: {} }),
@@ -88,7 +95,8 @@ export default function useMarketTrade() {
     ]);
     
 
-    const calls = [approveCall, transferCall, createOrderCall];
+    // const calls = [approveCall, transferCall, createOrderCall];
+    const calls = [createOrderCall];
 
     
     if (tpPrice) {
@@ -119,7 +127,30 @@ export default function useMarketTrade() {
       calls.push(createSlOrderCall);
     }
   
-    await account.execute(calls);
+
+    if (tokenSymbol.name == "Ethereum"){
+
+      const transferCall = tokenContract.populate("transfer", [
+        ORDER_VAULT_CONTRACT_ADDRESS,
+        uint256.bnToUint256((BigInt(tokenAmount * 10 ** tokenSymbol.decimals)) + BigInt("80000000000000")),
+      ]);
+
+      await account.execute([transferCall, createOrderCall]);
+
+    } else {
+
+      const transferCall = tokenContract.populate("transfer", [
+        ORDER_VAULT_CONTRACT_ADDRESS,
+        uint256.bnToUint256(BigInt(tokenAmount * (10 ** tokenSymbol.decimals))),
+      ]);
+
+      const transferCall2 = ethContract.populate("transfer", [
+          ORDER_VAULT_CONTRACT_ADDRESS,
+          uint256.bnToUint256(BigInt("80000000000000")),
+      ]);
+
+      await account.execute([transferCall, transferCall2, createOrderCall]);
+    }
   }
 
   return { trade };
