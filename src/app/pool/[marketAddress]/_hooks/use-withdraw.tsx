@@ -2,7 +2,9 @@ import { useAccount, useProvider } from "@starknet-react/core";
 import {
   MARKET_TOKEN_CONTRACT_ADDRESS,
   WITHDRAWAL_VAULT_CONTRACT_ADDRESS,
-  EXCHANGE_ROUTER_CONTRACT_ADDRESS
+  EXCHANGE_ROUTER_CONTRACT_ADDRESS,
+  ETH_CONTRACT_ADDRESS,
+  ORDER_VAULT_CONTRACT_ADDRESS
 } from "@zohal/app/_lib/addresses";
 import { Contract, uint256 } from "starknet";
 
@@ -14,10 +16,16 @@ export default function useWithdraw() {
   const { account, address } = useAccount();
   const { provider } = useProvider();
 
-  function withdraw(zohInputValue: string) {
+  async function withdraw(zohInputValue: string) {
     if (account === undefined || address === undefined) {
       return;
     }
+
+    const ethContract = new Contract(
+      erc_20_abi.abi,
+      ETH_CONTRACT_ADDRESS,
+      provider,
+    );
 
     const marketTokenContract = new Contract(
       erc_20_abi.abi,
@@ -25,9 +33,13 @@ export default function useWithdraw() {
       provider,
     );
 
+    const balanceOf = (await marketTokenContract.functions.balance_of(
+      address,
+    )) as bigint;
+
     const marketTokenTransferCall = marketTokenContract.populate("transfer", [
       WITHDRAWAL_VAULT_CONTRACT_ADDRESS,
-      uint256.bnToUint256(BigInt(zohInputValue) * BigInt(10 ** 18)), 
+      uint256.bnToUint256(BigInt(balanceOf)), 
     ]);
 
     const createWithdrawalParams = {
@@ -40,7 +52,7 @@ export default function useWithdraw() {
       min_long_token_amount: uint256.bnToUint256(BigInt("0")), //TODO combien au minimun je reçois des ETH
       min_short_token_amount: uint256.bnToUint256(BigInt("0")), //TODO combien au minimun je reçois des USDC
       callback_gas_limit: uint256.bnToUint256(0),
-      execution_fee: uint256.bnToUint256(0),
+      execution_fee: uint256.bnToUint256("80000000000000"),
     };
 
     const exchangeRouterContract = new Contract(
@@ -49,12 +61,17 @@ export default function useWithdraw() {
       provider,
     );
 
+    const transferCall = ethContract.populate("transfer", [
+      ORDER_VAULT_CONTRACT_ADDRESS,
+      uint256.bnToUint256(BigInt("80000000000000")),
+    ]);
+
     const createWithdrawalCall = exchangeRouterContract.populate(
       "create_withdrawal",
-      [address, createWithdrawalParams],
+      [createWithdrawalParams],
     );
 
-    void account.execute([marketTokenTransferCall, createWithdrawalCall]);
+    await account.execute([transferCall, marketTokenTransferCall, createWithdrawalCall]);
   }
 
   return { withdraw };
