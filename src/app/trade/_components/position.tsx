@@ -9,6 +9,7 @@ import useEthPrice from "../_hooks/use-market-data";
 import ClosePositionDialog from "./decrease-position-dialog";
 import { DropdownMenu } from "@zohal/app/_ui/dropdown-menu";
 import EditMarketPositionDialog from "./edit-market-position-dialog";
+import { ETH_CONTRACT_ADDRESS } from "@zohal/app/_lib/addresses";
 
 /* eslint-disable @next/next/no-img-element */
 export default function Position({ className }: PropsWithClassName) {
@@ -50,18 +51,21 @@ export default function Position({ className }: PropsWithClassName) {
         </thead>
         <tbody>
           {positions.map((position, index) => {
-            const decimals = BigInt(10 ** 18);
+            const decimals = position.collateral_token == ETH_CONTRACT_ADDRESS ? BigInt(10 ** 18): BigInt(10 ** 6);
             const collateralAmountBigInt = BigInt(position.collateral_amount);
             const ethAmount = Number(collateralAmountBigInt) / Number(decimals);
             const formattedEthAmount = ethAmount.toFixed(4).toString();
 
-            const sizeInUsd = (Number(position.size_in_usd)/10**16) / Number(decimals);
+            const sizeInUsd = (Number(position.size_in_usd)/10**16) / Number(10**18);
             const formattedSizeInUsd = sizeInUsd.toFixed(2).toString();
 
-            const positionLeverage =
+            const positionLeverage =position.collateral_token == ETH_CONTRACT_ADDRESS ?
               (Number(position.size_in_usd) / 10**16) /
-              (Number(position.collateral_amount) *
-                Number(position.market_price));
+              (Number(position.collateral_amount) * Number(position.market_price)) : (Number(position.size_in_usd) / 10**16) /
+              (Number(position.collateral_amount) * 10**12);;
+
+            const positionLeverageETH = (Number(position.size_in_usd) / 10**16) / (Number(position.collateral_amount) * Number(position.market_price));
+
 
             return (
               <tr
@@ -100,7 +104,7 @@ export default function Position({ className }: PropsWithClassName) {
                       )}>
                     $
                     {position.base_pnl_usd > 0 ? "+" : ""}
-                      {(Number((BigInt(position.base_pnl_usd)/ decimals).toString()) / 10**16).toFixed(2)}$
+                      {(Number((BigInt(position.base_pnl_usd)/ BigInt(10**18)).toString()) / 10**16).toFixed(2)}$
                     <br />
                   </div>
                 </td>
@@ -108,12 +112,12 @@ export default function Position({ className }: PropsWithClassName) {
                   ${formattedSizeInUsd.toString()}
                 </td>
                 <td>
-                  {formattedEthAmount.toString()} ETH
+                  {formattedEthAmount.toString()} {position.collateral_token == ETH_CONTRACT_ADDRESS ? "ETH" : "USDC"}
                   <br />
                 </td>
                 <td>
                   {(
-                    (Number((BigInt(position.size_in_usd) / BigInt(position.collateral_amount)) / BigInt(10**16))) / positionLeverage).toFixed(2).toString()}
+                    (Number((BigInt(position.size_in_usd) / BigInt(position.collateral_amount)) / BigInt(10**16))) / positionLeverageETH).toFixed(2).toString()}
                 </td>
                 <td>${ethData.currentPrice.toFixed(2)}</td>
                 <td className="text-right">
