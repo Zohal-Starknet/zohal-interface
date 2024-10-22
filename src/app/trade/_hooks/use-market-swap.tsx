@@ -17,14 +17,12 @@ export default function useMarketSwap() {
   const { account, address } = useAccount();
   const { ethData } = useEthPrice();
   const { provider } = useProvider();
-  const [status, setStatus] = useState<TransactionStatus>("idle");
 
    //@ts-ignore
   async function swap(selectedToken, amount, oraclePrice) {
     if (account === undefined || address === undefined) {
       return;
     }
-    setStatus("loading");
     try {
       const tokenContract = new Contract(
         erc_20_abi.abi,
@@ -74,12 +72,10 @@ export default function useMarketSwap() {
       ]);
 
       await account.execute([transferCall, createOrderCall]);
-      setStatus("idle");
     } catch (error) {
       console.error(error);
-      setStatus("rejected"); 
     }
   }
 
-  return { status, swap };
+  return {swap };
 }
