@@ -14,13 +14,18 @@ export default async function handler(req, res) {
         const filteredOrders = data
           .filter(order => formatAccountAddress(order.account) === address)
           .map(order => ({
+            key : order.key,
             order_type: order.order_type,
             size_delta_usd: order.size_delta_usd,
             initial_collateral_delta_amount: order.initial_collateral_delta_amount,
+            initial_collateral_token: formatAccountAddress(order.initial_collateral_token),
+            acceptable_price: order.acceptable_price,
             trigger_price: order.trigger_price,
             market: order.market,
             account: formatAccountAddress(order.account),
-            timestamp: order.timestamp
+            is_long: order.is_long,
+            timestamp: order.timestamp,
+            status_tx: order.status_tx
           }))
           .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
