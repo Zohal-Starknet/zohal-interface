@@ -1,13 +1,10 @@
 "use client";
 import { PropsWithClassName } from "@zohal/app/_lib/utils";
 
-import Form from "../../_ui/form";
-import SubPanel from "./trade_sub_pannel";
+import MarketSwap from "@zohal/app/trade/_components/market-swap";
 
 export default function Swap({ className }: PropsWithClassName) {
   return (
-    <Form className={className}>
-      <SubPanel className="mb-2" />
-    </Form>
+        <MarketSwap />
   );
 }

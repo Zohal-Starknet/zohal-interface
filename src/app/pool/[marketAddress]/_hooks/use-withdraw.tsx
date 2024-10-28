@@ -62,7 +62,7 @@ export default function useWithdraw() {
     );
 
     const transferCall = ethContract.populate("transfer", [
-      ORDER_VAULT_CONTRACT_ADDRESS,
+      WITHDRAWAL_VAULT_CONTRACT_ADDRESS,
       uint256.bnToUint256(BigInt("80000000000000")),
     ]);
 

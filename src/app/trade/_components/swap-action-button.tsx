@@ -25,7 +25,7 @@ export default function SwapActionButton(props: SwapActionButtonProps) {
     oraclePrice
   } = props;
 
-  const { status, swap } = useMarketSwap();
+  const { swap } = useMarketSwap();
 
   const { openConnectModal } = useConnectModal();
 
