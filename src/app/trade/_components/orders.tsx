@@ -37,23 +37,29 @@ export default function Orders({ className }: PropsWithClassName) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetch(`/api/fetch-orders?address=${address}`)
-      .then(response => {
+
+  const fetchOrders = async () => {
+    try {
+      const response = await fetch(`/api/fetch-orders?address=${address}`);
+      if (response.ok) {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        return response.json();
-      })
-      .then(data => {
+        const responseData = await response.json();
+        let data = await responseData.data.json();
         setOrders(data);
         setLoading(false);
-      })
-      .catch(error => {
-        console.error('Error fetching orders:', error);
-        setError(error);
-        setLoading(false);
-      });
+      }
+    } catch (error:any) {
+      console.error('Error fetching orders:', error);
+      setError(error);
+      setLoading(false);
+    }
+  };
+  
+  useEffect(() => {
+    fetchOrders();
+
   }, [address]);
 
   if (loading) {

@@ -57,10 +57,14 @@ export default function useMarketTrade() {
   
     let priceTrade = BigInt(ethData.pragmaPrice.toFixed(0)) * BigInt(10**(30)) / BigInt(10**(pragma_decimals - 4)) / BigInt(10**(tokenSymbol.decimals))
     let pricePay = tokenSymbol.name == "Ethereum" ?  priceTrade : BigInt("10000000000000000000000000000") ;
+
+    console.log("Price Trade: ", priceTrade);
     
     let acceptable_price = isLong ? uint256.bnToUint256(BigInt((pricePay * (BigInt(105) / BigInt(100))))) : uint256.bnToUint256(BigInt((pricePay * (BigInt(95) / BigInt(100)))));
 
     console.log("Acceptable price : ", acceptable_price);
+    let size_delta_usd = uint256.bnToUint256(BigInt(leverage) * pricePay * BigInt(tokenAmount * (10 ** tokenSymbol.decimals)));
+    console.log("Size delta : ", size_delta_usd);
 
     const createOrderParams = {
       receiver: address,
@@ -69,10 +73,10 @@ export default function useMarketTrade() {
       market: MARKET_TOKEN_CONTRACT_ADDRESS,
       initial_collateral_token: tokenSymbol.address,
       swap_path: [], 
-      size_delta_usd: uint256.bnToUint256(BigInt(leverage) * pricePay * BigInt(tokenAmount * (10 ** tokenSymbol.decimals))),
+      size_delta_usd: size_delta_usd,
       initial_collateral_delta_amount: uint256.bnToUint256(BigInt(tokenAmount * (10 ** tokenSymbol.decimals))),
       trigger_price: uint256.bnToUint256(0),
-      acceptable_price: isLong ? uint256.bnToUint256(BigInt((priceTrade * (BigInt(105) / BigInt(100))))) : uint256.bnToUint256(BigInt((priceTrade * (BigInt(95) / BigInt(100))))),
+      acceptable_price: acceptable_price,
       execution_fee: uint256.bnToUint256("80000000000000"),
       callback_gas_limit: uint256.bnToUint256(0),
       min_output_amount: uint256.bnToUint256(0),

@@ -136,8 +136,10 @@ export default function useUserPosition() {
       > = [];
 
       let price = BigInt(ethData.pragmaPrice.toFixed(0)) * BigInt(10**(30)) / BigInt(10**(8 - 4)) / BigInt(10**18);
+      console.log("Price USER POSITION: ", price);
 
       positionKeys.map((positionKey) => {
+        console.log("Position key: ", positionKey);
         positionsInfos.push(
           readerContract.functions.get_position_info(
             {
