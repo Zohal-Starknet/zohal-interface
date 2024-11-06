@@ -37,7 +37,7 @@ export default function TradeLeverageInput(props: TradeLeverageInputProps) {
       <div className="mt-2 flex w-full flex-col gap-3">
         <div className="flex items-center gap-4">
           <Slider
-            max={50}
+            max={10}
             min={1}
             //@ts-ignore
             onValueChange={(value) => setLeverage(value)}
