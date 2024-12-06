@@ -9,18 +9,38 @@ import useEthPrice from "../_hooks/use-market-data";
 import ClosePositionDialog from "./decrease-position-dialog";
 import { DropdownMenu } from "@zohal/app/_ui/dropdown-menu";
 import EditMarketPositionDialog from "./edit-market-position-dialog";
-import { ETH_CONTRACT_ADDRESS } from "@zohal/app/_lib/addresses";
+import EditLimitPositionDialog from "./edit-limit-position-dialog";
+import EditCollateralPositionDialog from "./edit-collateral-position-dialog";
+import {
+  BTC_CONTRACT_ADDRESS,
+  BTC_MARKET_TOKEN_CONTRACT_ADDRESS,
+  ETH_CONTRACT_ADDRESS,
+  ETH_MARKET_TOKEN_CONTRACT_ADDRESS,
+  STRK_CONTRACT_ADDRESS,
+  STRK_MARKET_TOKEN_CONTRACT_ADDRESS,
+} from "@zohal/app/_lib/addresses";
+import useBtcPrice from "../_hooks/use-market-data-btc";
+import useStrkPrice from "../_hooks/use-market-data-strk";
+import { PiPencilLineDuotone } from "react-icons/pi";
+import useCloseAllPositions from "../_hooks/use-close-all-positions";
+import useUserPositionInfos from "../_hooks/use-user-position-infos";
+import useFormatNumber from "../_hooks/use-format-number";
 
 /* eslint-disable @next/next/no-img-element */
 export default function Position({ className }: PropsWithClassName) {
   // TODO @YohanTz: Add ? icon to explain each of the table header
-  const { closePosition, positions } = useUserPosition();
+  const { editPosition, positions } = useUserPosition();
   const { ethData } = useEthPrice();
+  const { btcData } = useBtcPrice();
+  const { strkData } = useStrkPrice();
+  const { closeAllPositions } = useCloseAllPositions();
+  const { getPositionInfos } = useUserPositionInfos();
+  const { formatNumberWithoutExponent } = useFormatNumber();
 
   if (positions === undefined) {
     return (
       <div className="mt-4 flex justify-center text-neutral-400">
-        No Positions
+        Connect your wallet to see your positions
       </div>
     );
   }
@@ -43,45 +63,36 @@ export default function Position({ className }: PropsWithClassName) {
             <th className={tableHeaderCommonStyles}>Size</th>
             <th className={tableHeaderCommonStyles}>Collateral</th>
             <th className={tableHeaderCommonStyles}>Entry Price</th>
+            <th className={tableHeaderCommonStyles}>Liq Price</th>
             <th className={tableHeaderCommonStyles}>Market Price</th>
             <th className={cn("text-end", tableHeaderCommonStyles)}>
-              Close by
+              <button
+                className="rounded-lg border border-border bg-secondary px-1 hover:bg-gray-800"
+                onClick={() => closeAllPositions(positions)}
+              >
+                Close all positions
+              </button>
             </th>
           </tr>
         </thead>
         <tbody>
           {positions.map((position, index) => {
-            const decimals = position.collateral_token == ETH_CONTRACT_ADDRESS ? BigInt(10 ** 18): BigInt(10 ** 6);
-            const collateralAmountBigInt = BigInt(position.collateral_amount);
-            const ethAmount = Number(collateralAmountBigInt) / Number(decimals);
-            const formattedEthAmount = ethAmount.toFixed(4).toString();
-
-            const sizeInUsd = (Number(position.size_in_usd)/10**16) / Number(10**18);
-            const formattedSizeInUsd = sizeInUsd.toFixed(2).toString();
-
-            const positionLeverage =position.collateral_token == ETH_CONTRACT_ADDRESS ?
-              (Number(position.size_in_usd) / 10**16) /
-              (Number(position.collateral_amount) * Number(position.market_price)) : (Number(position.size_in_usd) / 10**16) /
-              (Number(position.collateral_amount) * 10**12);;
-
-            const positionLeverageETH = (Number(position.size_in_usd) / 10**16) / (Number(position.collateral_amount) * Number(position.market_price));
-
-
+            const positionInfos = getPositionInfos(position);
             return (
               <tr
                 className="border-b border-border text-sm"
                 key={position.key || index}
               >
-                <td className="flex gap-4 py-4">
+                <td className="flex gap-4 py-1">
                   <div className="flex-shrink-0 rounded-full border border-border p-1">
                     <img
-                      alt={`Ethereum icon`}
+                      alt={`${positionInfos.collateral_symbol} icon`}
                       className="w-8 rounded-full"
-                      src={Tokens.ETH.icon}
+                      src={Tokens[positionInfos.collateral_symbol].icon}
                     />
                   </div>
                   <div>
-                    ETH-USD
+                    {positionInfos.collateral_symbol}-USD
                     <span
                       className={clsx(
                         "ml-4 rounded-sm px-1 py-0.5 text-xs font-semibold text-background",
@@ -92,34 +103,61 @@ export default function Position({ className }: PropsWithClassName) {
                     </span>
                     <br />
                     <span className="text-sm text-muted-foreground">
-                      {positionLeverage.toFixed(2)}×
+                      {positionInfos.leverage}×
                     </span>
                   </div>
                 </td>
                 <td>
-                  <div className={clsx(
-                        position.base_pnl_usd > 0
-                          ? "text-sm text-[#40B68B]"
-                          : "text-sm text-[#FF5354]",
-                      )}>
-                    $
-                    {position.base_pnl_usd > 0 ? "+" : ""}
-                      {(Number((BigInt(position.base_pnl_usd)/ BigInt(10**18)).toString()) / 10**16).toFixed(2)}$
+                  <div
+                    className={clsx(
+                      positionInfos.pnl > 0
+                        ? "text-sm text-[#40B68B]"
+                        : "text-sm text-[#FF5354]",
+                    )}
+                  >
+                    {positionInfos.pnl > 0 ? "+" : ""}
+                    {formatNumberWithoutExponent(
+                      Number(positionInfos.pnl.toFixed(2)),
+                    )}
                     <br />
                   </div>
                 </td>
                 <td className="pr-6">
-                  ${formattedSizeInUsd.toString()}
+                  $
+                  {formatNumberWithoutExponent(
+                    Number(positionInfos.size_in_usd),
+                  )}
+                </td>
+                <td className="h-full align-middle">
+                  <div className="flex items-center gap-2">
+                    <span>
+                      {formatNumberWithoutExponent(
+                        Number(positionInfos.collateral_amount),
+                      )}{" "}
+                      USDC
+                    </span>
+                    <EditCollateralPositionDialog position={position} />
+                  </div>
                 </td>
                 <td>
-                  {formattedEthAmount.toString()} {position.collateral_token == ETH_CONTRACT_ADDRESS ? "ETH" : "USDC"}
-                  <br />
+                  $
+                  {formatNumberWithoutExponent(
+                    Number(positionInfos.entry_price),
+                  )}
                 </td>
                 <td>
-                  {((Number((BigInt(position.size_in_usd) / BigInt(position.collateral_amount)) / BigInt(10**16))) / positionLeverageETH).toFixed(2).toString()}
+                  $
+                  {formatNumberWithoutExponent(Number(positionInfos.liq_price))}
                 </td>
-                <td>${ethData.currentPrice.toFixed(2)}</td>
-                <td className="text-right">
+                <td>
+                  {positionInfos.collateral_symbol === "ETH"
+                    ? `$${formatNumberWithoutExponent(Number(ethData.currentPrice.toFixed(2)))}`
+                    : positionInfos.collateral_symbol === "BTC"
+                      ? `$${formatNumberWithoutExponent(Number(btcData.currentPrice.toFixed(2)))}`
+                      : `$${formatNumberWithoutExponent(Number(strkData.currentPrice.toFixed(2)))}`}
+                </td>
+                <td className="pr-2 text-right">
+                  <EditLimitPositionDialog position={position} />
                   <EditMarketPositionDialog position={position} />
                 </td>
               </tr>
@@ -131,4 +169,4 @@ export default function Position({ className }: PropsWithClassName) {
   );
 }
 
-const tableHeaderCommonStyles = "pb-4 font-normal";
+const tableHeaderCommonStyles = "pb-1 pr-2 font-normal";

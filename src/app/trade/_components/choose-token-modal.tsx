@@ -1,4 +1,5 @@
-import { type TokenSymbol, Tokens } from "@zohal/app/_helpers/tokens";
+import { type TokenSymbol } from "@zohal/app/_helpers/tokens";
+import { TradableTokens } from "@zohal/app/_helpers/tradable-tokens";
 import { Dialog, DialogContent, DialogHeader } from "@zohal/app/_ui/Modal";
 import Divider from "@zohal/app/_ui/divider";
 import Input from "@zohal/app/_ui/input";
@@ -19,42 +20,40 @@ export default function ChooseTokenModal(props: ChooseTokenModalProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredTokens = useMemo(() => {
-    return Object.entries(Tokens).flatMap(([tokenSymbol, tokenInfo]) => {
-      const lowerCaseQuery = searchQuery.toLowerCase();
+    return Object.entries(TradableTokens).flatMap(
+      ([tokenSymbol, tokenInfo]) => {
+        const lowerCaseQuery = searchQuery.toLowerCase();
 
-      const shouldIncludeToken =
-        (tokenSymbol.toLowerCase().includes(lowerCaseQuery) ||
-        tokenInfo.name.toLowerCase().includes(lowerCaseQuery) ||
-        tokenInfo.address === lowerCaseQuery)  &&
-        tokenSymbol.toLowerCase() !== 'zoh';
-
-
-      if (shouldIncludeToken) {
-        return {
-          tokenSymbol,
-          ...tokenInfo,
-        };
-      }
-
-      return [];
-    });
+        const shouldIncludeToken =
+          (tokenSymbol.toLowerCase().includes(lowerCaseQuery) ||
+            tokenInfo.name.toLowerCase().includes(lowerCaseQuery) ||
+            tokenInfo.address === lowerCaseQuery) &&
+          tokenSymbol.toLowerCase() !== "zoh";
+        if (shouldIncludeToken) {
+          return {
+            tokenSymbol,
+            ...tokenInfo,
+          };
+        }
+        return [];
+      },
+    );
   }, [searchQuery]);
-  
+
   return (
     <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent className="h-full max-h-[20rem] px-0 pb-0">
         <DialogHeader className="mx-6 text-left">Select a token</DialogHeader>
-
         <Input
           className="mx-6 rounded-md border border-border bg-secondary px-3 py-2 text-base"
           onChange={(newQuery) => setSearchQuery(newQuery)}
           placeholder="Search name or paste address"
           value={searchQuery}
+          disabled={false}
         />
 
         <div className="flex flex-col">
           <Divider />
-
           <div className="flex flex-col gap-2">
             {filteredTokens.length ? (
               filteredTokens.map((filteredToken) => {
@@ -75,7 +74,7 @@ export default function ChooseTokenModal(props: ChooseTokenModalProps) {
                       <div className="flex flex-col text-left">
                         <h4>{filteredToken?.name}</h4>
                         <span className="text-xs text-muted-foreground">
-                          {tokenSymbol}
+                          {filteredToken?.tokenSymbol}
                         </span>
                       </div>
                     </div>

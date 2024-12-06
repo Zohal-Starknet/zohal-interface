@@ -23,19 +23,17 @@ export default function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body className="lg:overflow-hidden bg-black text-white">
+      <body className="bg-black text-white lg:overflow-hidden">
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="root"
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex h-full flex-col min-h-screen">
+          <div className="flex h-full min-h-screen flex-col">
             <Providers>
               <Header />
-              <div className="flex-auto">
-                {children}
-              </div>
+              <div className="flex-auto">{children}</div>
               <Toaster position="bottom-right" />
             </Providers>
           </div>

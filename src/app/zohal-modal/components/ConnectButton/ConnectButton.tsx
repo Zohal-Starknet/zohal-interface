@@ -29,7 +29,7 @@ export function ConnectButton() {
           >
             {address !== undefined && (
               <button
-                className="flex h-10 items-center rounded-xl border border-border bg-card p-0.5"
+                className="flex h-10 items-center rounded-xl border border-border bg-secondary p-0.5"
                 onClick={openAccountModal}
               >
                 {/* TODO @YohanTz: Display Skeleton ? */}

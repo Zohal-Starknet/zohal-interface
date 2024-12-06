@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import { cn } from "../_lib/utils";
-
 // TODO - Handle state
 type Props = {
   className?: string;
@@ -8,11 +7,12 @@ type Props = {
   onChange: (newValue: string) => void;
   placeholder: string;
   value: string;
+  disabled: boolean;
 };
 
 // TODO: Add type in props
 export default function Input(props: Props) {
-  const { className, id, onChange, placeholder, value } = props;
+  const { className, id, onChange, placeholder, value, disabled } = props;
   return (
     <input
       autoComplete="off"
@@ -22,6 +22,7 @@ export default function Input(props: Props) {
       onChange={(event) => onChange(event.target.value)}
       placeholder={placeholder}
       value={value}
+      disabled={disabled}
     />
   );
 }

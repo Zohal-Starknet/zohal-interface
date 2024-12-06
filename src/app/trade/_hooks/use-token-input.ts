@@ -5,101 +5,121 @@ type Props = {
   /** Ratio applied to the prices when modified */
   ratio: number;
   leverage: number;
+  tokenSymbol: string;
 };
 
-export function useTokenInputs({ ratio, leverage }: Props) {
-  const [payTokenSymbol, setPayTokenSymbol] = useState<TokenSymbol>("ETH");
-  const [payTokenValue, setPayTokenValue] = useState("0");
+export function useTokenInputs({ ratio, leverage, tokenSymbol }: Props) {
+  const [payTokenSymbol, setPayTokenSymbol] = useState<TokenSymbol>("USDC");
+  const [payTokenValue, setPayTokenValue] = useState("");
   const [payTokenLimitValue, setPayTokenLimitValue] = useState("0");
 
   const [receiveTokenSymbol, setReceiveTokenSymbol] =
-    useState<TokenSymbol>("USDC");
-  const [receiveTokenValue, setReceiveTokenValue] = useState("0");
+    useState<TokenSymbol>("ETH");
+  const [receiveTokenValue, setReceiveTokenValue] = useState("");
   const [receiveTokenLimitValue, setReceiveTokenLimitValue] = useState("0");
 
   const [pricePerToken, setPricePerToken] = useState("");
   const [tokenRatio, setTokenRatio] = useState(ratio);
 
-
   useEffect(() => {
     if (payTokenValue !== "") {
       setReceiveTokenValue(
-        (parseFloat(payTokenValue) * tokenRatio * leverage).toString()
+        (parseFloat(payTokenValue) * tokenRatio * leverage).toString(),
       );
     }
   }, [payTokenValue, leverage, tokenRatio]);
 
-
   const updatePayTokenValue = useCallback(
     (tokenValue: string) => {
-      setPayTokenValue(tokenValue);
-      setReceiveTokenValue(
-        tokenValue !== ""
-          ? (parseFloat(tokenValue) * tokenRatio * leverage).toString()
-          : ""
-      );
+      const formattedValue = tokenValue.replace(",", ".");
+      if (/^\d*([.]?\d*)$/.test(formattedValue)) {
+        setPayTokenValue(formattedValue);
+        setReceiveTokenValue(
+          formattedValue !== ""
+            ? (parseFloat(formattedValue) * tokenRatio * leverage).toString()
+            : "",
+        );
+      }
     },
-    [tokenRatio, leverage]
+    [tokenRatio, leverage],
   );
-
 
   const updateReceiveTokenValue = useCallback(
     (tokenValue: string) => {
-      setReceiveTokenValue(tokenValue);
-      setPayTokenValue(
-        tokenValue !== ""
-          ? (parseFloat(tokenValue) / (tokenRatio * leverage)).toString()
-          : ""
-      );
+      const formattedValue = tokenValue.replace(",", ".");
+      if (/^\d*([.]?\d*)$/.test(formattedValue)) {
+        setReceiveTokenValue(formattedValue);
+        setPayTokenValue(
+          formattedValue !== ""
+            ? (parseFloat(formattedValue) / (tokenRatio * leverage)).toString()
+            : "",
+        );
+      }
     },
-    [tokenRatio, leverage]
+    [tokenRatio, leverage],
   );
 
   const updatePayTokenLimitValue = useCallback(
     (tokenValue: string) => {
-      setPayTokenLimitValue(tokenValue);
-      setReceiveTokenLimitValue(tokenValue !== ""? (parseFloat(tokenValue) * parseFloat(pricePerToken) ).toString(): "");
+      const formattedValue = tokenValue.replace(",", ".");
+      if (/^\d*([.]?\d*)$/.test(formattedValue)) {
+        setPayTokenLimitValue(formattedValue);
+        setReceiveTokenLimitValue(
+          formattedValue !== ""
+            ? (
+                parseFloat(formattedValue) * parseFloat(pricePerToken)
+              ).toString()
+            : "",
+        );
+      }
     },
-    [pricePerToken]
+    [pricePerToken],
   );
 
-  const updateReceiveTokenLimitValue = useCallback(
-    (tokenValue: string) => {
-      setReceiveTokenValue(tokenValue);
-      setPayTokenLimitValue(tokenValue !== ""? (parseFloat(tokenValue) / parseFloat(pricePerToken) ).toString(): "");
-    },
-    []
-  );
+  const updateReceiveTokenLimitValue = useCallback((tokenValue: string) => {
+    const formattedValue = tokenValue.replace(",", ".");
+    if (/^\d*([.]?\d*)$/.test(formattedValue)) {
+      setReceiveTokenValue(formattedValue);
+      setPayTokenLimitValue(
+        formattedValue !== ""
+          ? (parseFloat(formattedValue) / parseFloat(pricePerToken)).toString()
+          : "",
+      );
+    }
+  }, []);
 
   const updateLimitPrice = useCallback(
     (inputValue: string) => {
       if (inputValue !== "") {
-        setPricePerToken(inputValue);
-        setReceiveTokenLimitValue(""+(parseFloat(payTokenLimitValue)* parseFloat(inputValue)));
+        const formattedValue = inputValue.replace(",", ".");
+        if (/^\d*([.]?\d*)$/.test(formattedValue)) {
+          setPricePerToken(formattedValue);
+          setReceiveTokenLimitValue(
+            "" + parseFloat(payTokenLimitValue) * parseFloat(formattedValue),
+          );
+        }
       }
     },
-    [payTokenLimitValue]
+    [payTokenLimitValue],
   );
 
   const updatePayTokenTradeValue = useCallback(
     function updatePayTokenValue(tokenValue: string) {
-      setPayTokenValue(tokenValue);
-      setReceiveTokenValue(
-        tokenValue !== "" ? (parseFloat(tokenValue) * tokenRatio * leverage).toString() : "",
-      );
+      const formattedValue = tokenValue.replace(",", ".");
+      if (/^\d*([.]?\d*)$/.test(formattedValue)) {
+        setPayTokenValue(formattedValue);
+        setReceiveTokenValue(
+          formattedValue !== ""
+            ? (parseFloat(formattedValue) * tokenRatio * leverage).toString()
+            : "",
+        );
+      }
     },
     [tokenRatio, leverage],
   );
 
   function switchTokens() {
-    const tempPayTokenSymbol = payTokenSymbol;
-    const tempPayTokenValue = payTokenValue;
-    
-    setPayTokenSymbol(receiveTokenSymbol);
-    setReceiveTokenSymbol(tempPayTokenSymbol);
-    
-    setPayTokenValue(receiveTokenValue);
-    setReceiveTokenValue(tempPayTokenValue);
+    setReceiveTokenSymbol(tokenSymbol);
   }
 
   return {
@@ -118,6 +138,6 @@ export function useTokenInputs({ ratio, leverage }: Props) {
     updateReceiveTokenValue,
     updateReceiveTokenLimitValue,
     updateLimitPrice,
-    updatePayTokenTradeValue
+    updatePayTokenTradeValue,
   };
 }

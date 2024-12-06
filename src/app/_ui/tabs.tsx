@@ -22,7 +22,6 @@ type TabsProps = {
 };
 
 export default function Tabs({ ariaLabel, defaultValue, items }: TabsProps) {
-
   return (
     <RadixTabs.Root
       className="flex w-full flex-col"
@@ -30,7 +29,7 @@ export default function Tabs({ ariaLabel, defaultValue, items }: TabsProps) {
     >
       <RadixTabs.List
         aria-label={ariaLabel}
-        className="flex h-[4.75rem] shrink-0 gap-2 px-4"
+        className="flex h-[2.5rem] shrink-0 gap-2 px-4"
       >
         {items.map((item) => {
           const { label, value } = item;

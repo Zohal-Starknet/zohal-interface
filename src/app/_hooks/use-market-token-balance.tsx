@@ -1,45 +1,28 @@
-import { useAccount, useProvider } from "@starknet-react/core";
+import { useAccount, useProvider, useReadContract } from "@starknet-react/core";
 import { useEffect, useState } from "react";
-import { Contract } from "starknet";
+import { BlockTag, Contract } from "starknet";
 
 import erc_20_abi from "../trade/abi/erc_20.json";
 
 export default function useMarketTokenBalance({
-  marketTokenAddress, decimal
+  marketTokenAddress,
+  decimal,
 }: {
-  marketTokenAddress: string;
-  decimal: number
+  marketTokenAddress: `0x${string}`;
+  decimal: number;
 }) {
   const { address } = useAccount();
-  const { provider } = useProvider();
-  const [marketTokenBalance, setMarketTokenBalance] = useState<
-    string | undefined
-  >(undefined);
 
-  useEffect(() => {
-    const fetchBalance = async () => {
-      if (address === undefined) {
-        setMarketTokenBalance("0");
-        return;
-      }
+  const { data: balanceOf } = useReadContract({
+    address: marketTokenAddress,
+    abi: erc_20_abi.abi,
+    enabled: address !== undefined,
+    functionName: "balance_of",
+    blockIdentifier: BlockTag.PENDING,
+    watch: true,
+    args: [address],
+  });
 
-      const marketTokenContract = new Contract(
-        erc_20_abi.abi,
-        marketTokenAddress,
-        provider,
-      );
-
-      const balanceOf = (await marketTokenContract.functions.balance_of(
-        address,
-      )) as bigint;
-
-      setMarketTokenBalance(
-        (Number(balanceOf) / 10 ** decimal).toPrecision(2).toString(),
-      );
-    };
-
-    void fetchBalance();
-  }, [address, marketTokenAddress, provider]);
-
+  const marketTokenBalance = (Number(balanceOf) / 10 ** 6).toFixed(2);
   return { marketTokenBalance };
 }

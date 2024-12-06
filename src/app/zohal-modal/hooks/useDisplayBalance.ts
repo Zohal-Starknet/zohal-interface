@@ -1,15 +1,18 @@
-import { useAccount, useBalance } from "@starknet-react/core";
+import { Tokens } from "@zohal/app/_helpers/tokens";
+import useMarketTokenBalance from "@zohal/app/_hooks/use-market-token-balance";
 import { useMemo } from "react";
 
 export function useDisplayBalance() {
-  const { address } = useAccount();
-  const { data: balanceData } = useBalance({ address });
+  const { marketTokenBalance: payTokenBalance } = useMarketTokenBalance({
+    marketTokenAddress: Tokens["USDC"].address,
+    decimal: Tokens["USDC"].decimals,
+  });
 
   const displayBalance = useMemo(() => {
-      return balanceData
-          ? `${parseFloat(balanceData.formatted).toFixed(4)} ${balanceData.symbol}`
-          : undefined
-  }, [balanceData]);
+    return payTokenBalance
+      ? `${Number(payTokenBalance).toFixed(2)} ${Tokens["USDC"].name}`
+      : undefined;
+  }, [payTokenBalance]);
 
   return displayBalance;
 }

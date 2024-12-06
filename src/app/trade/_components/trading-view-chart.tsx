@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import datafeed from '../../_helpers/datafeed';
+import datafeed from "../../_helpers/datafeed";
 
 interface TradingViewChartProps {
   symbol?: string;
@@ -34,19 +34,27 @@ const TradingViewChart: React.FC<TradingViewChartProps> = (props) => {
     if (isScriptLoaded) {
       const widgetOptions = {
         symbol: props.symbol || "ETH/USD",
-        datafeed: datafeed,
+        datafeed: datafeed(props.symbol || "ETH/USD"),
+        allow_symbol_change: false,
         interval: props.interval || "15",
         container: chartContainerRef.current,
         library_path: props.library_path || "/static/charting_library/",
         locale: props.locale || "en",
-        disabled_features: ["use_localstorage_for_settings", "items_favoriting", "show_object_tree", "trading_account_manager"],
+        disabled_features: [
+          "use_localstorage_for_settings",
+          "items_favoriting",
+          "show_object_tree",
+          "trading_account_manager",
+          "header_symbol_search",
+          "header_compare",
+        ],
         charts_storage_url: props.charts_storage_url,
         charts_storage_api_version: props.charts_storage_api_version,
         client_id: props.client_id,
         user_id: props.user_id,
         fullscreen: props.fullscreen || false,
         autosize: props.autosize || true,
-        theme: 'dark'
+        theme: "dark",
       };
 
       //@ts-ignore
@@ -64,7 +72,7 @@ const TradingViewChart: React.FC<TradingViewChartProps> = (props) => {
               callback: () => {
                 console.log("Noticed!");
               },
-            })
+            }),
           );
           button.innerHTML = "Check API";
         });
@@ -76,7 +84,9 @@ const TradingViewChart: React.FC<TradingViewChartProps> = (props) => {
     }
   }, [isScriptLoaded, props]);
 
-  return <div ref={chartContainerRef} style={{ height: "100%", width: "100%" }} />;
+  return (
+    <div ref={chartContainerRef} style={{ height: "100%", width: "100%" }} />
+  );
 };
 
 export default TradingViewChart;
