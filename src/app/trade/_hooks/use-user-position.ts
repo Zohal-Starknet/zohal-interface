@@ -1,4 +1,4 @@
-import { useAccount, useProvider } from "@starknet-react/core";
+import { useAccount, useProvider, useReadContract } from "@starknet-react/core";
 import {
   DATA_STORE_CONTRACT_ADDRESS,
   MARKET_TOKEN_CONTRACT_ADDRESS,
@@ -6,16 +6,22 @@ import {
   REFERRAL_STORAGE_CONTRACT_ADDRESS,
   EXCHANGE_ROUTER_CONTRACT_ADDRESS,
   ETH_CONTRACT_ADDRESS,
-  ORDER_VAULT_CONTRACT_ADDRESS
+  ORDER_VAULT_CONTRACT_ADDRESS,
+  BTC_MARKET_TOKEN_CONTRACT_ADDRESS,
+  STRK_MARKET_TOKEN_CONTRACT_ADDRESS,
+  USDC_CONTRACT_ADDRESS,
 } from "@zohal/app/_lib/addresses";
 import { useEffect, useState } from "react";
-import { CairoCustomEnum, Contract, uint256 } from "starknet";
+import { BlockTag, CairoCustomEnum, Contract, uint256 } from "starknet";
 
 import erc_20_abi from "../abi/erc_20.json";
 import reader_abi from "../../pool/_abi/reader_abi.json";
 import exchange_router_abi from "../abi/exchange_router.json";
 import datastore_abi from "../abi/datastore.json";
 import useEthPrice from "./use-market-data";
+import useBtcPrice from "./use-market-data-btc";
+import useStrkPrice from "./use-market-data-strk";
+import isEqual from "lodash.isequal";
 
 export type Position = {
   account: bigint;
@@ -28,7 +34,7 @@ export type Position = {
   is_long: boolean;
   key: bigint;
   long_token_claimable_funding_amount_per_size: bigint;
-  market: bigint;
+  market: string;
   short_token_claimable_funding_amount_per_size: bigint;
   size_in_tokens: bigint;
   size_in_usd: bigint;
@@ -36,43 +42,66 @@ export type Position = {
 
 export default function useUserPosition() {
   const { ethData } = useEthPrice();
+  const { btcData } = useBtcPrice();
+  const { strkData } = useStrkPrice();
   const { account, address } = useAccount();
   const { provider } = useProvider();
-  const [positions, setPositions] = useState<
-    | Array<Position & { base_pnl_usd: bigint } & { market_price: number }>
-    | undefined
-  >(undefined);
 
-  async function closePosition(
+  async function editPosition(
     position: Position,
-    collateral_token: bigint,
     collateral_amount: bigint,
-    order_type: CairoCustomEnum, 
+    order_type: CairoCustomEnum,
     size_delta_usd: bigint,
-
+    trigger_price: bigint,
   ) {
     if (account === undefined || address === undefined) {
       return;
     }
+    const usdcContract = new Contract(
+      erc_20_abi.abi,
+      USDC_CONTRACT_ADDRESS,
+      provider,
+    );
 
-    const pragma_decimals =  position.collateral_token  == ETH_CONTRACT_ADDRESS ?  8  : 6 ;
-    const price =  position.collateral_token  == ETH_CONTRACT_ADDRESS  ? BigInt(ethData.pragmaPrice.toFixed(0)) * BigInt(10**(30)) / BigInt(10**(pragma_decimals - 4)) / BigInt(10**(18))
-    : BigInt("10000000000000000000000000000") ;
+    const pragma_decimals = 8;
+    let price =
+      (BigInt(ethData.pragmaPrice.toFixed(0)) * BigInt(10 ** 30)) /
+      BigInt(10 ** (pragma_decimals - 4)) /
+      BigInt(10 ** 18);
+    let trigger_price_formatted = trigger_price * BigInt(10 ** 10);
+    if (position.market == BTC_MARKET_TOKEN_CONTRACT_ADDRESS) {
+      trigger_price_formatted = trigger_price * BigInt(10 ** 20);
+      price =
+        (BigInt(btcData.pragmaPrice.toFixed(0)) * BigInt(10 ** 30)) /
+        BigInt(10 ** (pragma_decimals - 4)) /
+        BigInt(10 ** 8);
+    }
+    if (position.market == STRK_MARKET_TOKEN_CONTRACT_ADDRESS) {
+      trigger_price_formatted = trigger_price * BigInt(10 ** 10);
+      price =
+        (BigInt(strkData.pragmaPrice.toFixed(0)) * BigInt(10 ** 30)) /
+        BigInt(10 ** (pragma_decimals - 4)) /
+        BigInt(10 ** 18);
+    }
 
     const createOrderParams = {
       receiver: address,
       callback_contract: 0,
       ui_fee_receiver: 0,
-      market: MARKET_TOKEN_CONTRACT_ADDRESS,
-      initial_collateral_token: collateral_token,
+      market: position.market,
+      initial_collateral_token: USDC_CONTRACT_ADDRESS,
       swap_path: [],
       size_delta_usd: uint256.bnToUint256(size_delta_usd),
-      initial_collateral_delta_amount: uint256.bnToUint256(BigInt(collateral_amount)),
-      trigger_price: uint256.bnToUint256(0),
+      initial_collateral_delta_amount: uint256.bnToUint256(collateral_amount),
+      trigger_price: uint256.bnToUint256(trigger_price_formatted),
       acceptable_price: position.is_long
-        ? uint256.bnToUint256(BigInt((price * BigInt(95) / BigInt(100)))) 
-        : uint256.bnToUint256(BigInt((price * BigInt(105) / BigInt(100)))),
-      execution_fee: uint256.bnToUint256("80000000000000"),
+        ? uint256.bnToUint256(
+            BigInt((trigger_price_formatted * BigInt(105)) / BigInt(100)),
+          )
+        : uint256.bnToUint256(
+            BigInt((trigger_price_formatted * BigInt(105)) / BigInt(100)),
+          ),
+      execution_fee: uint256.bnToUint256("0"),
       callback_gas_limit: uint256.bnToUint256(0),
       min_output_amount: uint256.bnToUint256(BigInt(0)),
       order_type: new CairoCustomEnum(order_type),
@@ -87,118 +116,46 @@ export default function useUserPosition() {
       provider,
     );
 
-    const ethContract = new Contract(
-      erc_20_abi.abi,
-      ETH_CONTRACT_ADDRESS,
-      provider,
-    );
+    // const transferCall = ethContract.populate("transfer", [
+    //   ORDER_VAULT_CONTRACT_ADDRESS,
+    //   uint256.bnToUint256(BigInt("80000000000000")),
+    // ]);
 
-    const transferCall = ethContract.populate("transfer", [
-      ORDER_VAULT_CONTRACT_ADDRESS,
-      uint256.bnToUint256(BigInt("80000000000000")),
-    ]);
-    
+    const calls = [];
+
+    if (
+      isEqual(order_type, { MarketIncrease: {} }) ||
+      isEqual(order_type, { LimitIncrease: {} })
+    ) {
+      const transferCall = usdcContract.populate("transfer", [
+        ORDER_VAULT_CONTRACT_ADDRESS,
+        uint256.bnToUint256(collateral_amount),
+      ]);
+
+      calls.push(transferCall);
+    }
+
     const createOrderCall = exchangeRouterContract.populate("create_order", [
       createOrderParams,
     ]);
 
-    await account.execute([transferCall, createOrderCall]);
+    calls.push(createOrderCall);
+
+    await account.execute(calls);
   }
 
-  useEffect(() => {
-    const fetchPositions = async () => {
-      if (address === undefined || ethData.currentPrice === 0) {
-        return;
-      }
-      setPositions(undefined);
+  const { data: allPositions } = useReadContract({
+    address: DATA_STORE_CONTRACT_ADDRESS,
+    abi: datastore_abi.abi,
+    // enabled: address !== undefined && ethData.currentPrice !== 0,
+    enabled: ethData.currentPrice !== 0,
+    functionName: "get_account_all_position",
+    blockIdentifier: BlockTag.PENDING,
+    watch: true,
+    args: [address, 0, 10],
+  });
 
-      const dataStoreContract = new Contract(
-        datastore_abi.abi,
-        DATA_STORE_CONTRACT_ADDRESS,
-        provider,
-      );
+  const positions = allPositions as Array<Position>;
 
-      const positionKeys = (await dataStoreContract.get_account_position_keys(
-        address,
-        0,
-        10,
-      )) as Array<bigint>;
-
-      //@ts-ignore
-      const readerContract = new Contract(
-        reader_abi.abi,
-        READER_CONTRACT_ADDRESS,
-        provider,
-      );
-
-      const positionsInfos: Array<
-        Promise<{ base_pnl_usd: { mag: bigint; sign: Boolean } }>
-      > = [];
-
-      let price = BigInt(ethData.pragmaPrice.toFixed(0)) * BigInt(10**(30)) / BigInt(10**(8 - 4)) / BigInt(10**18);
-      console.log("Price USER POSITION: ", price);
-
-      positionKeys.map((positionKey) => {
-        console.log("Position key: ", positionKey);
-        positionsInfos.push(
-          readerContract.functions.get_position_info(
-            {
-              contract_address: DATA_STORE_CONTRACT_ADDRESS,
-            },
-            { contract_address: REFERRAL_STORAGE_CONTRACT_ADDRESS },
-            positionKey,
-            {
-              index_token_price: {
-                min: parseInt("" + price),
-                max: parseInt("" + price),
-              },
-              long_token_price: {
-                min: parseInt("" + price),
-                max: parseInt("" + price),
-              },
-              short_token_price: { min: BigInt("10000000000000000000000000000") , max: BigInt("10000000000000000000000000000")  },
-            },
-            0,
-            0,
-            true,
-          ) as Promise<{ base_pnl_usd: { mag: bigint; sign: Boolean } }>,
-        );
-      });
-      const positionsInfoFromContract = await Promise.all(positionsInfos);
-
-      const positionsRequests: Array<Promise<Position>> = [];
-
-      positionKeys.map((positionKey) => {
-        positionsRequests.push(
-          dataStoreContract.functions.get_position(
-            positionKey,
-          ) as Promise<Position>,
-        );
-      });
-
-      const positionsFromContract = await Promise.all(positionsRequests);
-      setPositions(
-        positionsFromContract.flatMap((positionFromContract, index) => {
-          if (positionFromContract.collateral_amount === BigInt("0")) {
-            return [];
-          }
-          const positionBasePnl = positionsInfoFromContract[index].base_pnl_usd;
-          const multiplicator =
-            positionBasePnl.sign === false ? BigInt(1) : BigInt(-1);
-
-          return [
-            {
-              ...positionFromContract,
-              base_pnl_usd: multiplicator * positionBasePnl.mag,
-              market_price: parseInt(ethData.currentPrice.toFixed(0)),
-            },
-          ];
-        }),
-      );
-    };
-
-    void fetchPositions();
-  }, [address, provider, ethData]);
-
-  return { closePosition, positions };
+  return { editPosition, positions };
 }

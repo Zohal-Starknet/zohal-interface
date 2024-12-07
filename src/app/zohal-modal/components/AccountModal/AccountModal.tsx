@@ -12,6 +12,8 @@ import { CopyIcon, ExternalLinkIcon } from "@zohal/app/_ui/icons";
 import Link from "next/link";
 
 import { useDisplayName } from "../../hooks/useDisplayName";
+import { useDisplayBalance } from "../../hooks/useDisplayBalance";
+import { Tokens } from "@zohal/app/_helpers/tokens";
 
 type AccountModalProps = {
   /** ID of the connector */
@@ -21,12 +23,12 @@ type AccountModalProps = {
   /** Whethere the modal is open or not */
   open: boolean;
 };
-
 export function AccountModal(props: AccountModalProps) {
   const { connectorId, onClose, open } = props;
   const { disconnect } = useDisconnect();
 
   const { address, starkName, truncatedAddress } = useDisplayName();
+  const UsdBalance = useDisplayBalance();
 
   const displayName = starkName ?? truncatedAddress;
 
@@ -34,10 +36,8 @@ export function AccountModal(props: AccountModalProps) {
     onClose();
     disconnect();
   }
-
   // TODO @YohanTz: rely only on onDisconnect and onConnect in ModalContext.tsx
   // TODO : handle last transactions done and list them
-
   return (
     <Dialog
       modal
@@ -49,7 +49,7 @@ export function AccountModal(props: AccountModalProps) {
         <DialogHeader className="mb-4">
           <DialogTitle>Wallet</DialogTitle>
         </DialogHeader>
-        <div className="border-border flex flex-col gap-4 rounded-md border p-4">
+        <div className="flex flex-col gap-4 rounded-md border border-border p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               {connectorId !== undefined && (
@@ -62,7 +62,7 @@ export function AccountModal(props: AccountModalProps) {
               <p className="text-center text-lg">{displayName}</p>
             </div>
             <Button
-              className="text-xs"
+              className="text-white"
               onClick={onDisconnect}
               size="sm"
               variant="link"
@@ -77,7 +77,6 @@ export function AccountModal(props: AccountModalProps) {
                 if (address === undefined) {
                   return;
                 }
-
                 // TODO : Add Toasts for Success and Failure cases
                 await navigator.clipboard.writeText(address);
               }}
@@ -110,10 +109,14 @@ export function AccountModal(props: AccountModalProps) {
             </Button>
           </div>
         </div>
-        <h3 className="mt-4">Your transactions</h3>
-        <p className="text-muted-foreground text-center text-sm">
+        <h3 className="mt-4">Your Balance</h3>
+        {/* <p className="text-muted-foreground text-center text-sm">
           No transaction found.
-        </p>
+        </p> */}
+        <div className="flex items-center gap-2">
+          <img alt="USDC" className="h-6 w-6" src={Tokens.USDC.icon} />
+          <h4>{UsdBalance}</h4>
+        </div>
       </DialogContent>
     </Dialog>
   );

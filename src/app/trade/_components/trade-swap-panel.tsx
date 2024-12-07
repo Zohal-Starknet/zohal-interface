@@ -1,17 +1,19 @@
 import Panel from "../../_ui/panel";
 import Tabs, { type TabItemType } from "../../_ui/tabs";
-import Swap from "./swap";
 import Trade from "./trade";
+import TradeTpSl from "./trade-tp-sl";
+import TradeTrigger from "./trade-trigger";
 
-const tabItems: [TabItemType, TabItemType] = [
-  { content: <Trade className="p-4" />, label: "Trade", value: "trade" },
-  { content: <Swap className="p-4" />, label: "Swap", value: "swap" },
+const tabItems: [TabItemType, TabItemType, TabItemType] = [
+  { content: <Trade className="p-4" />, label: "Market", value: "trade" },
+  { content: <TradeTrigger className="p-4" />, label: "Limit", value: "limit" },
+  { content: <TradeTpSl className="p-4" />, label: "TP/SL", value: "tpsl" },
 ];
 
-export default function TradeSwapPanel() {
+export default function TradePanel() {
   return (
     <Panel className="flex w-full border-border lg:min-w-[20rem] lg:max-w-[24rem] lg:overflow-y-auto lg:border-l ">
-      <Tabs ariaLabel="Trade or Swap" defaultValue="trade" items={tabItems} />
+      <Tabs ariaLabel="Trade" defaultValue="trade" items={tabItems} />
     </Panel>
   );
 }

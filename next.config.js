@@ -2,6 +2,8 @@
 const nextConfig = {
   webpack: (config) => {
     config.externals.push("encoding");
+    config.externals.push("utf-8-validate");
+    config.externals.push("bufferutil");
     return config;
   },
   async redirects() {
@@ -17,7 +19,7 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   typescript: {
-    ignoreBuildErrors: process.env.NEXT_PUBLIC_DISABLE_TYPECHECK === 'true',
+    ignoreBuildErrors: process.env.NEXT_PUBLIC_DISABLE_TYPECHECK === "true",
   },
 };
 

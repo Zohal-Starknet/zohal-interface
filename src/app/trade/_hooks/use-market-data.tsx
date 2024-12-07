@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-type PriceData = {
+export type PriceData = {
   pragmaPrice: number;
   currentPrice: number;
   change24h: number;
@@ -18,10 +18,85 @@ const convertToUnixTimestamp = (dateString: string): number => {
 
 const getLastTwoDaysData = (data: any[]): any[] => {
   const now = Math.floor(Date.now() / 1000); // Current time in Unix timestamp
-  const twoDaysAgo = now - (2 * 24 * 60 * 60); // Unix timestamp for 2 days ago
+  const twoDaysAgo = now - 2 * 24 * 60 * 60; // Unix timestamp for 2 days ago
 
-  return data.filter(item => item.time >= twoDaysAgo);
+  return data.filter((item) => item.time >= twoDaysAgo);
 };
+
+export function usePriceDataSubscription({
+  pairSymbol,
+}: {
+  pairSymbol: string;
+}) {
+  const [tokenData, setTokenData] = useState<{
+    currentPrice: number;
+    change24h: number;
+    change24hPercent: number;
+    high24h: number;
+    low24h: number;
+  }>({
+    currentPrice: 0,
+    change24h: 0,
+    change24hPercent: 0,
+    high24h: 0,
+    low24h: 0,
+  });
+
+  useEffect(() => {
+    const ws = new WebSocket(
+      "wss://ws.dev.pragma.build/node/v1/onchain/ohlc/subscribe",
+    );
+    ws.onopen = () => {
+      const subscribeMessage = {
+        msg_type: "subscribe",
+        pair: pairSymbol,
+        network: "mainnet",
+        interval: "15min",
+        candles_to_get: 1,
+      };
+      ws.send(JSON.stringify(subscribeMessage));
+    };
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (Array.isArray(data)) {
+        const candle = data[data.length - 1];
+
+        if (candle) {
+          setTokenData({
+            currentPrice: parseFloat(candle.close) / 10 ** 8,
+            change24h: 0,
+            change24hPercent: 0,
+            high24h: 0,
+            low24h: 0,
+          });
+        }
+      }
+    };
+
+    ws.onclose = () => {
+      console.log("WebSocket connection closed");
+    };
+
+    ws.onerror = (error) => {
+      console.error("WebSocket error", error);
+    };
+
+    return () => {
+      ws.send(
+        JSON.stringify({
+          msg_type: "unsubscribe",
+          pair: pairSymbol,
+        }),
+      );
+      ws.close();
+    };
+  }, [pairSymbol]);
+
+  return {
+    tokenData,
+  };
+}
 
 export default function useEthPrice() {
   const [ethData, setEthData] = useState<PriceData>({
@@ -99,7 +174,7 @@ export default function useEthPrice() {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 60000); // Fetch data every 60 seconds
+    const interval = setInterval(fetchData, 60_000); // Fetch data every 60 seconds
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 

@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { useAccount, useProvider } from "@starknet-react/core";
 import {
-  MARKET_TOKEN_CONTRACT_ADDRESS,
   EXCHANGE_ROUTER_CONTRACT_ADDRESS,
   ORDER_VAULT_CONTRACT_ADDRESS,
-  ETH_CONTRACT_ADDRESS,
+  USDC_CONTRACT_ADDRESS,
+  FEE_TOKEN_CONTRACT_ADDRESS,
 } from "@zohal/app/_lib/addresses";
 import { CairoCustomEnum, Contract, uint256 } from "starknet";
 
 import erc_20_abi from "../abi/erc_20.json";
 import exchange_router_abi from "../abi/exchange_router.json";
-import useEthPrice from "./use-market-data";
+import { Tokens } from "@zohal/app/_helpers/tokens";
 
 type TransactionStatus = "idle" | "loading" | "rejected";
 
@@ -20,48 +20,74 @@ export default function useMarketTrade() {
   const { provider } = useProvider();
   const [status, setStatus] = useState<TransactionStatus>("idle");
 
-  const {ethData} = useEthPrice();
-
   //@ts-ignore
-  async function trade(tokenSymbol, tokenAmount, isLong, leverage, tpPrice, slPrice) {
+  async function trade(
+    tradedTokenSymbol,
+    payTokenAmount,
+    isLong,
+    leverage,
+    tpPrice,
+    slPrice,
+    sizeDeltaTp,
+    sizeDeltaSl,
+    tradedPriceData,
+  ) {
     if (account === undefined || address === undefined) {
       return;
     }
+    console.log(tradedTokenSymbol, "tradedTokenSymbol");
+    console.log(payTokenAmount, "payTokenAmount");
+    console.log(isLong, "isLong");
+    console.log(leverage, "leverage");
+    console.log(tradedPriceData, "tradedPriceData");
 
     setStatus("loading");
     try {
-      const tokenContract = new Contract(
+      const usdcContract = new Contract(
         erc_20_abi.abi,
-        tokenSymbol.address,
+        USDC_CONTRACT_ADDRESS,
         provider,
       );
 
-      const ethContract = new Contract(
+      const feeTokenContract = new Contract(
         erc_20_abi.abi,
-        ETH_CONTRACT_ADDRESS,
+        FEE_TOKEN_CONTRACT_ADDRESS,
         provider,
       );
 
-      const pragma_decimals =  tokenSymbol.name  == "Ethereum" ?  8  : 6 ;
-    
-      let priceTrade = BigInt(ethData.pragmaPrice.toFixed(0)) * BigInt(10**(30)) / BigInt(10**(pragma_decimals - 4)) / BigInt(10**(tokenSymbol.decimals))
-      let pricePay = tokenSymbol.name == "Ethereum" ?  priceTrade : BigInt("10000000000000000000000000000") ;
-      let acceptable_price = isLong ? uint256.bnToUint256(BigInt((pricePay * (BigInt(105) / BigInt(100))))) : uint256.bnToUint256(BigInt((pricePay * (BigInt(95) / BigInt(100)))));
-      let size_delta_usd = uint256.bnToUint256(BigInt(leverage) * pricePay * BigInt(tokenAmount * (10 ** tokenSymbol.decimals)));
+      let pricePay = BigInt("10000000000000000000000000000");
 
+      const pragma_decimals = 8;
+      let priceTrade =
+        (BigInt(tradedPriceData.pragmaPrice.toFixed(0)) * BigInt(10 ** 30)) /
+        BigInt(10 ** (pragma_decimals - 4)) /
+        BigInt(10 ** Tokens[tradedTokenSymbol].decimals);
+      let acceptable_price = isLong
+        ? uint256.bnToUint256(BigInt(priceTrade * (BigInt(105) / BigInt(100))))
+        : uint256.bnToUint256(BigInt(priceTrade * (BigInt(95) / BigInt(100))));
+      let size_delta_usd = uint256.bnToUint256(
+        BigInt(leverage) *
+          pricePay *
+          BigInt(payTokenAmount * 10 ** Tokens["USDC"].decimals),
+      );
+
+      console.log(size_delta_usd, "size delta usd");
+      console.log(priceTrade, "price TRADE");
 
       const createOrderParams = {
         receiver: address,
         callback_contract: 0,
         ui_fee_receiver: 0,
-        market: MARKET_TOKEN_CONTRACT_ADDRESS,
-        initial_collateral_token: tokenSymbol.address,
-        swap_path: [], 
+        market: Tokens[tradedTokenSymbol].marketAddress,
+        initial_collateral_token: USDC_CONTRACT_ADDRESS,
+        swap_path: [],
         size_delta_usd: size_delta_usd,
-        initial_collateral_delta_amount: uint256.bnToUint256(BigInt(tokenAmount * (10 ** tokenSymbol.decimals))),
+        initial_collateral_delta_amount: uint256.bnToUint256(
+          BigInt(payTokenAmount * 10 ** 6),
+        ),
         trigger_price: uint256.bnToUint256(0),
         acceptable_price: acceptable_price,
-        execution_fee: uint256.bnToUint256("80000000000000"),
+        execution_fee: uint256.bnToUint256("0"),
         callback_gas_limit: uint256.bnToUint256(0),
         min_output_amount: uint256.bnToUint256(0),
         order_type: new CairoCustomEnum({ MarketIncrease: {} }),
@@ -77,81 +103,84 @@ export default function useMarketTrade() {
       );
 
       const calls = [];
-      if (tokenSymbol.name == "Ethereum"){
-        const transferCall = tokenContract.populate("transfer", [
-          ORDER_VAULT_CONTRACT_ADDRESS,
-          uint256.bnToUint256((BigInt(tokenAmount * 10 ** tokenSymbol.decimals)) + BigInt("80000000000000")),
-        ]);
-        calls.push(transferCall);
-        
-      } else {
 
-        const transferCall = tokenContract.populate("transfer", [
-          ORDER_VAULT_CONTRACT_ADDRESS,
-          uint256.bnToUint256(BigInt(tokenAmount * (10 ** tokenSymbol.decimals))),
-        ]);
+      const transferCall = usdcContract.populate("transfer", [
+        ORDER_VAULT_CONTRACT_ADDRESS,
+        uint256.bnToUint256(
+          BigInt(payTokenAmount * 10 ** Tokens["USDC"].decimals),
+        ),
+      ]);
 
-        calls.push(transferCall);
-        const transferCall2 = ethContract.populate("transfer", [
-            ORDER_VAULT_CONTRACT_ADDRESS,
-            uint256.bnToUint256(BigInt("80000000000000")),
-        ]);
+      calls.push(transferCall);
+      // const transferCall2 = feeTokenContract.populate("transfer", [
+      //     ORDER_VAULT_CONTRACT_ADDRESS,
+      //     uint256.bnToUint256(BigInt("80000000000000")),
+      // ]);
 
-        calls.push(transferCall2);
-      }
-
+      // calls.push(transferCall2);
 
       const createOrderCall = exchangeRouterContract.populate("create_order", [
         createOrderParams,
       ]);
-      
-    
-
       calls.push(createOrderCall);
+
       if (tpPrice) {
-        const transferCall3 = ethContract.populate("transfer", [
-          ORDER_VAULT_CONTRACT_ADDRESS,
-          uint256.bnToUint256(BigInt("80000000000000")),
-      ]);
-      calls.push(transferCall3);
-        tpPrice =  BigInt(tpPrice) * BigInt(10 ** pragma_decimals);
+        tpPrice = BigInt(tpPrice) * BigInt(10 ** pragma_decimals);
         const tpOrderParams = {
           ...createOrderParams,
           trigger_price: uint256.bnToUint256(BigInt(tpPrice)),
-          acceptable_price : isLong ? uint256.bnToUint256(BigInt((tpPrice * BigInt(95) / BigInt(100)))) : uint256.bnToUint256(BigInt((tpPrice * BigInt(105) / BigInt(100)))),
+          size_delta_usd:
+            sizeDeltaTp !== ""
+              ? uint256.bnToUint256(BigInt(sizeDeltaTp * 10 ** 34))
+              : size_delta_usd,
+          acceptable_price: isLong
+            ? uint256.bnToUint256(BigInt((tpPrice * BigInt(95)) / BigInt(100)))
+            : uint256.bnToUint256(
+                BigInt((tpPrice * BigInt(105)) / BigInt(100)),
+              ),
           order_type: new CairoCustomEnum({ LimitDecrease: {} }),
         };
-        const createTpOrderCall = exchangeRouterContract.populate("create_order", [
-          tpOrderParams,
-        ]);
+        const createTpOrderCall = exchangeRouterContract.populate(
+          "create_order",
+          [tpOrderParams],
+        );
         calls.push(createTpOrderCall);
       }
 
       if (slPrice) {
-        const transferCall4 = ethContract.populate("transfer", [
+        const transferCall4 = usdcContract.populate("transfer", [
           ORDER_VAULT_CONTRACT_ADDRESS,
           uint256.bnToUint256(BigInt("80000000000000")),
-      ]);
-      calls.push(transferCall4);
-        slPrice =  BigInt(slPrice) * BigInt(10 ** pragma_decimals);
+        ]);
+        calls.push(transferCall4);
+        slPrice = BigInt(slPrice) * BigInt(10 ** pragma_decimals);
         const slOrderParams = {
           ...createOrderParams,
           trigger_price: uint256.bnToUint256(BigInt(slPrice)),
-          acceptable_price : isLong ? uint256.bnToUint256(BigInt((slPrice * BigInt(95) / BigInt(100)))) : uint256.bnToUint256(BigInt((slPrice * BigInt(105) / BigInt(100)))),
+          size_delta_usd:
+            sizeDeltaSl !== ""
+              ? uint256.bnToUint256(BigInt(sizeDeltaSl * 10 ** 34))
+              : size_delta_usd,
+          acceptable_price: isLong
+            ? uint256.bnToUint256(BigInt((slPrice * BigInt(95)) / BigInt(100)))
+            : uint256.bnToUint256(
+                BigInt((slPrice * BigInt(105)) / BigInt(100)),
+              ),
           order_type: new CairoCustomEnum({ LimitDecrease: {} }),
         };
-        const createSlOrderCall = exchangeRouterContract.populate("create_order", [
-          slOrderParams,
-        ]);
+        const createSlOrderCall = exchangeRouterContract.populate(
+          "create_order",
+          [slOrderParams],
+        );
         calls.push(createSlOrderCall);
       }
 
       await account.execute(calls);
-    
+
       setStatus("idle");
     } catch (error) {
       console.error(error);
-      setStatus("rejected"); 
+      setStatus("rejected");
     }
   }
 

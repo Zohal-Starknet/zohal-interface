@@ -12,7 +12,7 @@ import {FaucetButton} from "@zohal/app/ui/FaucetButton"
 export default function Header() {
   return (
     <>
-      <header className="flex flex-initial items-center justify-between p-4">
+      <header className="flex flex-initial items-center justify-between p-1.5">
         <div className="flex items-center gap-4">
           <Link className="flex-shrink-0" href="/">
             <img

@@ -21,18 +21,18 @@ export const buttonVariants = cva(
 
       variant: {
         danger:
-          "dark:white bg-btn-danger text-white hover:bg-btn-danger dark:bg-btn-danger dark:text-white dark:hover:bg-btn-danger/90",
+          "dark:white dark:hover:brightness-80 bg-btn-danger text-white hover:brightness-110 dark:bg-btn-danger dark:text-white",
         default:
-          "bg-btn-primary text-white hover:bg-btn-primary dark:bg-btn-primary dark:text-white dark:hover:bg-btn-primary/90",
+          "dark:hover:brightness-80 bg-btn-primary text-white hover:brightness-110 dark:bg-btn-primary dark:text-white",
         ghost:
-          "hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50",
-        link: "text-slate-900 underline-offset-4 hover:underline dark:text-slate-50",
+          "dark:hover:brightness-80 text-slate-900 hover:brightness-110 dark:text-slate-50",
+        link: "text-slate-900 underline-offset-4 hover:brightness-110 dark:text-slate-50",
         outline:
-          "border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800 dark:hover:text-slate-50",
+          "dark:hover:brightness-80 border border-slate-200 bg-white text-slate-900 hover:brightness-110 dark:border-slate-800 dark:bg-slate-950",
         secondary:
-          "bg-secondary text-white hover:bg-neutral-800 dark:bg-secondary dark:text-white dark:hover:bg-neutral-800",
+          "dark:hover:brightness-80 bg-secondary text-white hover:brightness-110 dark:bg-secondary dark:text-white",
         success:
-          "bg-btn-success text-white hover:bg-btn-success dark:bg-btn-success dark:text-white dark:hover:bg-btn-success/90",
+          "dark:hover:brightness-80 bg-btn-success text-white hover:brightness-110 dark:bg-btn-success dark:text-white",
       },
     },
   },

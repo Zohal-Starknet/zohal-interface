@@ -13,7 +13,7 @@ export default function Divider(props: DividerProps) {
   return (
     <hr
       className={clsx(
-        "border-border bg-border h-0 w-full border-solid",
+        "mt-1.5 h-0 w-full border-solid border-border bg-border",
         className,
       )}
     />

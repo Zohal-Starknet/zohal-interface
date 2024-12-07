@@ -1,10 +1,7 @@
 "use client";
-
 import * as SliderPrimitive from "@radix-ui/react-slider";
 import * as React from "react";
-
 import { cn } from "../_lib/utils";
-
 const Slider = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
@@ -17,12 +14,25 @@ const Slider = React.forwardRef<
     ref={ref}
     {...props}
   >
-    <SliderPrimitive.Track className="bg-secondary relative h-2 w-full grow overflow-hidden rounded-full">
-      <SliderPrimitive.Range className="bg-primary absolute h-full" />
+    {/* Track with right-to-left gold gradient background */}
+    <SliderPrimitive.Track
+      className="relative h-2 w-full grow overflow-hidden rounded-full"
+      style={{
+        background:
+          "linear-gradient(270deg, rgba(255, 215, 0, 1), rgba(254, 232, 111, 1))",
+      }}
+    >
+      {/* Range with a slightly darker gold color, also right-to-left */}
+      <SliderPrimitive.Range
+        className="absolute h-full"
+        style={{
+          background:
+            "linear-gradient(270deg, rgba(254, 232, 111, 1), rgba(218, 165, 32, 1))",
+        }}
+      />
     </SliderPrimitive.Track>
-    <SliderPrimitive.Thumb className="ring-offset-background focus-visible:ring-ring border-border block h-6 w-6 rounded-md border-2 bg-slate-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" />
+    <SliderPrimitive.Thumb className="block h-6 w-6 rounded-md border-2 border-border bg-slate-900 ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" />
   </SliderPrimitive.Root>
 ));
 Slider.displayName = SliderPrimitive.Root.displayName;
-
 export { Slider };

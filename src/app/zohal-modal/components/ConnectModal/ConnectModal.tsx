@@ -10,19 +10,17 @@ import {
 import Button from "@zohal/app/_ui/button";
 import { useEffect, useState } from "react";
 
-
-import { ec, hash } from 'starknet';
+import { ec, hash } from "starknet";
 
 // Function to convert string to BigInt
-const stringToBigInt = (str : String) => {
-  return BigInt('0x' + Buffer.from(str).toString('hex'));
+const stringToBigInt = (str: String) => {
+  return BigInt("0x" + Buffer.from(str).toString("hex"));
 };
 
 // Convert ISO string timestamp to BigInt using Unix timestamp
-const timestampToBigInt = (timestamp : any) => {
+const timestampToBigInt = (timestamp: any) => {
   return BigInt(Math.floor(new Date(timestamp).getTime() / 1000));
 };
-
 
 type ConnectModalProps = {
   /** Callback function called when the modal is closed */
@@ -44,16 +42,14 @@ export function ConnectModal(props: ConnectModalProps) {
       const userId = 123; // Replace this with actual user ID from context or state
       const timestamp = new Date().toISOString();
       // Convert elements to BigInt where necessary
-      const message = [
-            BigInt(userId), 
-            timestampToBigInt(timestamp)
-      ];
+      const message = [BigInt(userId), timestampToBigInt(timestamp)];
 
       // Generate the message hash using Starknet.js
       const messageHash = hash.computeHashOnElements(message);
 
       // Private key for signing (in a real-world case, you'd retrieve this securely)
-      const privateKey = "0x583eab8ae730da509e9271eb9922efd9bb802b2d4697295e8c16eabba5674b"; // Replace with your actual private key
+      const privateKey =
+        "0x583eab8ae730da509e9271eb9922efd9bb802b2d4697295e8c16eabba5674b"; // Replace with your actual private key
       const signature = ec.starkCurve.sign(privateKey, messageHash);
 
       // Prepare data to send to the API
@@ -94,7 +90,7 @@ export function ConnectModal(props: ConnectModalProps) {
     <>
       {/* Wallet Connection Modal */}
       <Dialog modal onOpenChange={(open) => !open && onClose()} open={open}>
-        <DialogContent className="max-w-sm">
+        <DialogContent className="max-w-sm bg-black text-white">
           <DialogHeader>
             <DialogTitle>Connect a wallet</DialogTitle>
             {/* <DialogDescription>
@@ -108,7 +104,10 @@ export function ConnectModal(props: ConnectModalProps) {
                   <Button
                     className="relative w-full"
                     disabled={!connector.available}
-                    onClick={() => connect({ connector })}
+                    onClick={() => {
+                      connect({ connector });
+                      onClose();
+                    }}
                     variant="secondary"
                   >
                     <img
@@ -129,7 +128,7 @@ export function ConnectModal(props: ConnectModalProps) {
       </Dialog>
 
       {/* Risk Modal */}
-      <Dialog open={showRiskModal} onOpenChange={setShowRiskModal}>
+      {/* <Dialog open={showRiskModal} onOpenChange={setShowRiskModal}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Important Notice</DialogTitle>
@@ -141,12 +140,12 @@ export function ConnectModal(props: ConnectModalProps) {
           </DialogHeader>
           <button
             onClick={handleAccept}
-            className="bg-blue-500 text-white py-2 px-4 rounded-lg"
+            className="rounded-lg bg-blue-500 px-4 py-2 text-white"
           >
             Accept and Proceed
           </button>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
     </>
   );
 }
