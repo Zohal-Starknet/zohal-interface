@@ -13,18 +13,11 @@ import Input from "@zohal/app/_ui/input";
 import { useState, useEffect } from "react";
 
 import useUserPosition, { Position } from "../_hooks/use-user-position";
-import {
-  BTC_MARKET_TOKEN_CONTRACT_ADDRESS,
-  ETH_MARKET_TOKEN_CONTRACT_ADDRESS,
-  STRK_MARKET_TOKEN_CONTRACT_ADDRESS,
-} from "@zohal/app/_lib/addresses";
-import PriceInfo from "./price-info";
 import useEthPrice, { PriceData } from "../_hooks/use-market-data";
-import useBtcPrice from "../_hooks/use-market-data-btc";
-import useStrkPrice from "../_hooks/use-market-data-strk";
 import useFormatNumber from "../_hooks/use-format-number";
 import useUserPositionInfos from "../_hooks/use-user-position-infos";
 import PriceInfoEditPosition from "./price-info-edit-position";
+import { CairoCustomEnum } from "starknet";
 
 interface ClosePositionDialogProps {
   position: Position;
@@ -264,9 +257,10 @@ export default function DecreaseLimitPositionDialog({
               editPosition(
                 position,
                 collateral_amount,
-                { MarketDecrease: {} },
+                { MarketDecrease: {} } as unknown as CairoCustomEnum,
                 position.size_in_usd,
                 limit_price,
+                onOpenChange,
               )
             }
           >
@@ -280,9 +274,10 @@ export default function DecreaseLimitPositionDialog({
               editPosition(
                 position,
                 BigInt(new_collateral_delta),
-                { LimitDecrease: {} },
+                { LimitDecrease: {} } as unknown as CairoCustomEnum,
                 new_size_delta_usd,
                 limit_price,
+                onOpenChange,
               )
             }
           >

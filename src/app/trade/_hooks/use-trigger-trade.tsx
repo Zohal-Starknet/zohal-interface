@@ -22,11 +22,11 @@ export default function useTriggerTrade() {
 
   //@ts-ignore
   async function tradeTrigger(
-    tradedTokenSymbol,
-    payTokenAmount,
-    isLong,
-    leverage,
-    triggeredPrice,
+    tradedTokenSymbol: string,
+    payTokenAmount: number,
+    isLong: boolean,
+    leverage: number,
+    triggeredPrice: number,
   ) {
     if (account === undefined || address === undefined) {
       return;

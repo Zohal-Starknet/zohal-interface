@@ -29,12 +29,14 @@ export function usePriceDataSubscription({
   pairSymbol: string;
 }) {
   const [tokenData, setTokenData] = useState<{
+    pragmaPrice: number,
     currentPrice: number;
     change24h: number;
     change24hPercent: number;
     high24h: number;
     low24h: number;
   }>({
+    pragmaPrice: 0,
     currentPrice: 0,
     change24h: 0,
     change24hPercent: 0,
@@ -64,6 +66,7 @@ export function usePriceDataSubscription({
 
         if (candle) {
           setTokenData({
+            pragmaPrice: parseFloat(candle.close),
             currentPrice: parseFloat(candle.close) / 10 ** 8,
             change24h: 0,
             change24hPercent: 0,
@@ -83,12 +86,14 @@ export function usePriceDataSubscription({
     };
 
     return () => {
-      ws.send(
-        JSON.stringify({
-          msg_type: "unsubscribe",
-          pair: pairSymbol,
-        }),
-      );
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(
+          JSON.stringify({
+            msg_type: "unsubscribe",
+            pair: pairSymbol,
+          }),
+        );
+      }
       ws.close();
     };
   }, [pairSymbol]);

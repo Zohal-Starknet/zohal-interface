@@ -5,23 +5,10 @@ import { cn, type PropsWithClassName } from "@zohal/app/_lib/utils";
 import clsx from "clsx";
 
 import useUserPosition from "../_hooks/use-user-position";
-import useEthPrice from "../_hooks/use-market-data";
-import ClosePositionDialog from "./decrease-position-dialog";
-import { DropdownMenu } from "@zohal/app/_ui/dropdown-menu";
+import useEthPrice, { usePriceDataSubscription } from "../_hooks/use-market-data";
 import EditMarketPositionDialog from "./edit-market-position-dialog";
 import EditLimitPositionDialog from "./edit-limit-position-dialog";
 import EditCollateralPositionDialog from "./edit-collateral-position-dialog";
-import {
-  BTC_CONTRACT_ADDRESS,
-  BTC_MARKET_TOKEN_CONTRACT_ADDRESS,
-  ETH_CONTRACT_ADDRESS,
-  ETH_MARKET_TOKEN_CONTRACT_ADDRESS,
-  STRK_CONTRACT_ADDRESS,
-  STRK_MARKET_TOKEN_CONTRACT_ADDRESS,
-} from "@zohal/app/_lib/addresses";
-import useBtcPrice from "../_hooks/use-market-data-btc";
-import useStrkPrice from "../_hooks/use-market-data-strk";
-import { PiPencilLineDuotone } from "react-icons/pi";
 import useCloseAllPositions from "../_hooks/use-close-all-positions";
 import useUserPositionInfos from "../_hooks/use-user-position-infos";
 import useFormatNumber from "../_hooks/use-format-number";
@@ -29,10 +16,10 @@ import useFormatNumber from "../_hooks/use-format-number";
 /* eslint-disable @next/next/no-img-element */
 export default function Position({ className }: PropsWithClassName) {
   // TODO @YohanTz: Add ? icon to explain each of the table header
-  const { editPosition, positions } = useUserPosition();
-  const { ethData } = useEthPrice();
-  const { btcData } = useBtcPrice();
-  const { strkData } = useStrkPrice();
+  const { positions } = useUserPosition();
+  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
   const { closeAllPositions } = useCloseAllPositions();
   const { getPositionInfos } = useUserPositionInfos();
   const { formatNumberWithoutExponent } = useFormatNumber();
@@ -66,10 +53,9 @@ export default function Position({ className }: PropsWithClassName) {
             <th className={tableHeaderCommonStyles}>Liq Price</th>
             <th className={tableHeaderCommonStyles}>Market Price</th>
             <th className={cn("text-end", tableHeaderCommonStyles)}>
-              <button
+              <button 
                 className="rounded-lg border border-border bg-secondary px-1 hover:bg-gray-800"
-                onClick={() => closeAllPositions(positions)}
-              >
+                onClick={() => closeAllPositions(positions)}>
                 Close all positions
               </button>
             </th>
@@ -108,55 +94,41 @@ export default function Position({ className }: PropsWithClassName) {
                   </div>
                 </td>
                 <td>
-                  <div
-                    className={clsx(
-                      positionInfos.pnl > 0
-                        ? "text-sm text-[#40B68B]"
-                        : "text-sm text-[#FF5354]",
-                    )}
-                  >
+                  <div className={clsx(
+                        positionInfos.pnl > 0
+                          ? "text-sm text-[#40B68B]"
+                          : "text-sm text-[#FF5354]",
+                      )}>
                     {positionInfos.pnl > 0 ? "+" : ""}
-                    {formatNumberWithoutExponent(
-                      Number(positionInfos.pnl.toFixed(2)),
-                    )}
+                      {formatNumberWithoutExponent(Number(positionInfos.pnl.toFixed(2)))}
                     <br />
                   </div>
                 </td>
                 <td className="pr-6">
-                  $
-                  {formatNumberWithoutExponent(
-                    Number(positionInfos.size_in_usd),
-                  )}
+                  ${formatNumberWithoutExponent(Number(positionInfos.size_in_usd))}
                 </td>
                 <td className="h-full align-middle">
                   <div className="flex items-center gap-2">
-                    <span>
-                      {formatNumberWithoutExponent(
-                        Number(positionInfos.collateral_amount),
-                      )}{" "}
-                      USDC
-                    </span>
+                    <span>{formatNumberWithoutExponent(Number(positionInfos.collateral_amount))} USDC</span>
                     <EditCollateralPositionDialog position={position} />
                   </div>
                 </td>
                 <td>
-                  $
-                  {formatNumberWithoutExponent(
-                    Number(positionInfos.entry_price),
+                  ${formatNumberWithoutExponent(Number(positionInfos.entry_price))}
+                </td>
+                <td>
+                  ${formatNumberWithoutExponent(Number(positionInfos.liq_price))}
+                </td>
+                <td>
+                  {positionInfos.collateral_symbol === "ETH" ? (
+                    `$${formatNumberWithoutExponent(Number(ethData.currentPrice.toFixed(2)))}`
+                  ) : positionInfos.collateral_symbol === "BTC" ? (
+                    `$${formatNumberWithoutExponent(Number(btcData.currentPrice.toFixed(2)))}`
+                  ) : (
+                    `$${formatNumberWithoutExponent(Number(strkData.currentPrice.toFixed(2)))}`
                   )}
                 </td>
-                <td>
-                  $
-                  {formatNumberWithoutExponent(Number(positionInfos.liq_price))}
-                </td>
-                <td>
-                  {positionInfos.collateral_symbol === "ETH"
-                    ? `$${formatNumberWithoutExponent(Number(ethData.currentPrice.toFixed(2)))}`
-                    : positionInfos.collateral_symbol === "BTC"
-                      ? `$${formatNumberWithoutExponent(Number(btcData.currentPrice.toFixed(2)))}`
-                      : `$${formatNumberWithoutExponent(Number(strkData.currentPrice.toFixed(2)))}`}
-                </td>
-                <td className="pr-2 text-right">
+                <td className="text-right pr-2">
                   <EditLimitPositionDialog position={position} />
                   <EditMarketPositionDialog position={position} />
                 </td>

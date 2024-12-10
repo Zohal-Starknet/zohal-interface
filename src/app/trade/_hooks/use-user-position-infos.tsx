@@ -3,7 +3,7 @@ import {
   STRK_MARKET_TOKEN_CONTRACT_ADDRESS,
   ETH_MARKET_TOKEN_CONTRACT_ADDRESS,
 } from "@zohal/app/_lib/addresses";
-import useEthPrice, { PriceData } from "./use-market-data";
+import useEthPrice, { PriceData, usePriceDataSubscription } from "./use-market-data";
 import useBtcPrice from "./use-market-data-btc";
 import useStrkPrice from "./use-market-data-strk";
 import { Position } from "./use-user-position";
@@ -36,9 +36,9 @@ export type NewPositionInfos = {
   };
 
 export default function useUserPositionInfos() {
-  const { ethData } = useEthPrice();
-  const { btcData } = useBtcPrice();
-  const { strkData } = useStrkPrice();
+  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
 
   function getPositionInfos(position: Position) {
     let collateral_symbol = "ETH";

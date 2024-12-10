@@ -9,7 +9,7 @@ import {
 import { CairoCustomEnum, Call, Contract, uint256 } from "starknet";
 
 import exchange_router_abi from "../abi/exchange_router.json";
-import useEthPrice from "./use-market-data";
+import useEthPrice, { usePriceDataSubscription } from "./use-market-data";
 import useBtcPrice from "./use-market-data-btc";
 import useStrkPrice from "./use-market-data-strk";
 
@@ -31,9 +31,9 @@ export type Position = {
 };
 
 export default function useCloseAllPositions() {
-  const { ethData } = useEthPrice();
-  const { btcData } = useBtcPrice();
-  const { strkData } = useStrkPrice();
+  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
   const { account, address } = useAccount();
   const { provider } = useProvider();
 

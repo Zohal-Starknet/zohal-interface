@@ -11,6 +11,7 @@ import { CairoCustomEnum, Contract, uint256 } from "starknet";
 import erc_20_abi from "../abi/erc_20.json";
 import exchange_router_abi from "../abi/exchange_router.json";
 import { Tokens } from "@zohal/app/_helpers/tokens";
+import { PriceData } from "./use-market-data";
 
 type TransactionStatus = "idle" | "loading" | "rejected";
 
@@ -22,15 +23,15 @@ export default function useMarketTrade() {
 
   //@ts-ignore
   async function trade(
-    tradedTokenSymbol,
-    payTokenAmount,
-    isLong,
-    leverage,
-    tpPrice,
-    slPrice,
-    sizeDeltaTp,
-    sizeDeltaSl,
-    tradedPriceData,
+    tradedTokenSymbol: string,
+    payTokenAmount: number,
+    isLong: boolean,
+    leverage: number,
+    tpPrice: string,
+    slPrice: string,
+    sizeDeltaTp: string,
+    sizeDeltaSl: string,
+    tradedPriceData: PriceData,
   ) {
     if (account === undefined || address === undefined) {
       return;
@@ -124,19 +125,19 @@ export default function useMarketTrade() {
       ]);
       calls.push(createOrderCall);
 
-      if (tpPrice) {
-        tpPrice = BigInt(tpPrice) * BigInt(10 ** pragma_decimals);
+      if (tpPrice != "") {
+        const tpPriceBigint = BigInt(tpPrice) * BigInt(10 ** 16);
         const tpOrderParams = {
           ...createOrderParams,
-          trigger_price: uint256.bnToUint256(BigInt(tpPrice)),
+          trigger_price: uint256.bnToUint256(BigInt(tpPriceBigint)),
           size_delta_usd:
             sizeDeltaTp !== ""
-              ? uint256.bnToUint256(BigInt(sizeDeltaTp * 10 ** 34))
+              ? uint256.bnToUint256(BigInt(Number(sizeDeltaTp) * 10 ** 34))
               : size_delta_usd,
           acceptable_price: isLong
-            ? uint256.bnToUint256(BigInt((tpPrice * BigInt(95)) / BigInt(100)))
+            ? uint256.bnToUint256(BigInt((tpPriceBigint * BigInt(95)) / BigInt(100)))
             : uint256.bnToUint256(
-                BigInt((tpPrice * BigInt(105)) / BigInt(100)),
+                BigInt((tpPriceBigint * BigInt(105)) / BigInt(100)),
               ),
           order_type: new CairoCustomEnum({ LimitDecrease: {} }),
         };
@@ -147,24 +148,24 @@ export default function useMarketTrade() {
         calls.push(createTpOrderCall);
       }
 
-      if (slPrice) {
-        const transferCall4 = usdcContract.populate("transfer", [
-          ORDER_VAULT_CONTRACT_ADDRESS,
-          uint256.bnToUint256(BigInt("80000000000000")),
-        ]);
-        calls.push(transferCall4);
-        slPrice = BigInt(slPrice) * BigInt(10 ** pragma_decimals);
+      if (slPrice != "") {
+        // const transferCall4 = usdcContract.populate("transfer", [
+        //   ORDER_VAULT_CONTRACT_ADDRESS,
+        //   uint256.bnToUint256(BigInt("80000000000000")),
+        // ]);
+        // calls.push(transferCall4);
+        let slPriceBigint = BigInt(slPrice) * BigInt(10 ** 16);
         const slOrderParams = {
           ...createOrderParams,
-          trigger_price: uint256.bnToUint256(BigInt(slPrice)),
+          trigger_price: uint256.bnToUint256(BigInt(slPriceBigint)),
           size_delta_usd:
             sizeDeltaSl !== ""
-              ? uint256.bnToUint256(BigInt(sizeDeltaSl * 10 ** 34))
+              ? uint256.bnToUint256(BigInt(Number(sizeDeltaSl) * 10 ** 34))
               : size_delta_usd,
           acceptable_price: isLong
-            ? uint256.bnToUint256(BigInt((slPrice * BigInt(95)) / BigInt(100)))
+            ? uint256.bnToUint256(BigInt((slPriceBigint * BigInt(95)) / BigInt(100)))
             : uint256.bnToUint256(
-                BigInt((slPrice * BigInt(105)) / BigInt(100)),
+                BigInt((slPriceBigint * BigInt(105)) / BigInt(100)),
               ),
           order_type: new CairoCustomEnum({ LimitDecrease: {} }),
         };

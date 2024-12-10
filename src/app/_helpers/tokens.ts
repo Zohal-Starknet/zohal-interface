@@ -20,6 +20,13 @@ type TokenList = Record<
 >;
 
 export const Tokens: TokenList = {
+  ZOH: {
+    address: ETH_CONTRACT_ADDRESS,
+    decimals: 18,
+    icon: "/tokens/ethereum.png",
+    name: "Zohal",
+    marketAddress: ETH_MARKET_TOKEN_CONTRACT_ADDRESS,
+  },
   ETH: {
     address: ETH_CONTRACT_ADDRESS,
     decimals: 18,

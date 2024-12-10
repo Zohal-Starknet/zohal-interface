@@ -23,6 +23,7 @@ import useMarketTokenBalance from "@zohal/app/_hooks/use-market-token-balance";
 import useFormatNumber from "../_hooks/use-format-number";
 import useUserPositionInfos from "../_hooks/use-user-position-infos";
 import PriceInfoEditPosition from "./price-info-edit-position";
+import { CairoCustomEnum } from "starknet";
 
 interface ClosePositionDialogProps {
   position: Position;
@@ -233,9 +234,10 @@ export default function IncreasePositionDialog({
             editPosition(
               position,
               BigInt(new_collateral_delta),
-              { MarketIncrease: {} },
+              { MarketIncrease: {} } as unknown as CairoCustomEnum,
               new_size_delta_usd,
               BigInt("0"),
+              onOpenChange,
             )
           }
         >

@@ -56,11 +56,9 @@ function SlTpDropdownMenu({
     function onUpdateTpTriggerPrice(tpPrice: string) {
       const newTpTriggerPrice = tpPrice.replace(",", ".");
       if (/^\d*([.]?\d*)$/.test(newTpTriggerPrice)) {
-        setSlTpInfos((prevInfos) => {
-          const newInfos = { ...prevInfos, tpTriggerPrice: newTpTriggerPrice };
-          onUpdateTp(newInfos.tpTriggerPrice);
-          return newInfos;
-        });
+        const newInfos: SlTpInfos = { ...slTpInfos, tpTriggerPrice: newTpTriggerPrice };
+        onUpdateTp(newInfos.tpTriggerPrice);
+        setSlTpInfos(newInfos);
       }
     },
     [orderPrice, qty],
@@ -70,11 +68,9 @@ function SlTpDropdownMenu({
     function onUpdateSlTriggerPrice(slPrice: string) {
       const newSlTriggerPrice = slPrice.replace(",", ".");
       if (/^\d*([.]?\d*)$/.test(newSlTriggerPrice)) {
-        setSlTpInfos((prevInfos) => {
-          const newInfos = { ...prevInfos, slTriggerPrice: newSlTriggerPrice };
-          onUpdateSl(newInfos.slTriggerPrice);
-          return newInfos;
-        });
+        const newInfos : SlTpInfos = { ...slTpInfos, slTriggerPrice: newSlTriggerPrice };
+        onUpdateSl(newInfos.slTriggerPrice);
+        setSlTpInfos(newInfos);
       }
     },
     [orderPrice, qty],
@@ -88,13 +84,8 @@ function SlTpDropdownMenu({
           const newTp = isLong
             ? (Number(newTpPrice) - orderPrice) * qty
             : orderPrice - Number(newTpPrice) * qty;
-          console.log("orderPrice :" + orderPrice);
-          console.log("qty :" + qty);
-          console.log("TP :" + newTp);
-          setSlTpInfos((prevInfos) => ({
-            ...prevInfos,
-            tp: "" + newTp,
-          }));
+          const newInfos : SlTpInfos = { ...slTpInfos, tp: "" + newTp };
+          setSlTpInfos(newInfos)
         }
       }
     },
@@ -109,11 +100,8 @@ function SlTpDropdownMenu({
           const newSl = isLong
             ? (Number(newSlPrice) - orderPrice) * qty
             : (orderPrice - Number(newSlPrice)) * qty;
-          console.log("SL :" + newSl);
-          setSlTpInfos((prevInfos) => ({
-            ...prevInfos,
-            sl: "" + newSl,
-          }));
+            const newInfos : SlTpInfos = { ...slTpInfos, sl: "" + newSl };
+            setSlTpInfos(newInfos)
         }
       }
     },
@@ -125,10 +113,8 @@ function SlTpDropdownMenu({
       : (isLong
       ? (Number(slTpInfos.tpTriggerPrice) - orderPrice) * qty
       : (orderPrice - Number(slTpInfos.tpTriggerPrice)) * qty); 
-    setSlTpInfos((prevInfos) => ({
-      ...prevInfos,
-      tp: "" + newTp,
-    }));
+    const newInfos : SlTpInfos = { ...slTpInfos, tp: "" + newTp };
+    setSlTpInfos(newInfos)
   }, [slTpInfos.tpTriggerPrice, orderPrice, qty]);
 
   useEffect(() => {
@@ -136,10 +122,8 @@ function SlTpDropdownMenu({
       : (isLong
       ? (Number(slTpInfos.slTriggerPrice) - orderPrice) * qty
       : (orderPrice - Number(slTpInfos.slTriggerPrice)) * qty);
-    setSlTpInfos((prevInfos) => ({
-      ...prevInfos,
-      sl: "" + newSl,
-    }));
+    const newInfos : SlTpInfos = { ...slTpInfos, sl: "" + newSl };
+    setSlTpInfos(newInfos)
   }, [slTpInfos.slTriggerPrice, orderPrice, qty]);
 
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -155,30 +139,23 @@ function SlTpDropdownMenu({
     const newSizeFormatted = newSize.replace(",", ".");
       if (/^\d*([.]?\d*)$/.test(newSizeFormatted)) {
       setPositionSizeTp(newSizeFormatted);
-      setSlTpInfos((prevInfos) => ({
-        ...prevInfos,
-        size_delta_usd_tp: "" + newSizeFormatted,
-      }));
+    const newInfos : SlTpInfos = { ...slTpInfos, size_delta_usd_tp: "" + newSizeFormatted };
+    setSlTpInfos(newInfos)
     }
   }
 
   function onPositionSizeSl(newSize: string) {
     const newSizeFormatted = newSize.replace(",", ".");
       if (/^\d*([.]?\d*)$/.test(newSizeFormatted)) {
-      setPositionSizeSl(newSizeFormatted);
-      setSlTpInfos((prevInfos) => ({
-        ...prevInfos,
-        size_delta_usd_sl: "" + newSizeFormatted,
-      }));
-    }
+        setPositionSizeSl(newSizeFormatted);
+        const newInfos : SlTpInfos = { ...slTpInfos, size_delta_usd_sl: "" + newSizeFormatted };
+        setSlTpInfos(newInfos)
+      }
   }
 
   const handleDropdownClick = () => {
-    setSlTpInfos((prevInfos) => ({
-      ...prevInfos,
-      size_delta_usd_sl: "",
-      size_delta_usd_tp: "",
-    }));
+    const newInfos : SlTpInfos = { ...slTpInfos, size_delta_usd_sl: "", size_delta_usd_tp: "" };
+    setSlTpInfos(newInfos)
     setPositionSizeTp("");
     setPositionSizeSl("");
     setApplicableEntirePosition(true);

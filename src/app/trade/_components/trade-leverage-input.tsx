@@ -60,7 +60,7 @@ export default function TradeLeverageInput(props: TradeLeverageInputProps) {
           {leverageInputs.map((leverageInput) => {
             return (
               <button
-                className="h-10 flex-shrink-0 rounded-lg border border-border px-2 text-xs text-primary-foreground"
+                className="h-10 flex-shrink-0 rounded-lg border border-border px-2 text-xs text-white"
                 key={leverageInput.name}
                 style={{
                   background: "#0f172a",

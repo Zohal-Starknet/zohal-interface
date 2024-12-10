@@ -18,16 +18,15 @@ const Slider = React.forwardRef<
     <SliderPrimitive.Track
       className="relative h-2 w-full grow overflow-hidden rounded-full"
       style={{
-        background:
-          "linear-gradient(270deg, rgba(255, 215, 0, 1), rgba(254, 232, 111, 1))",
+        background: "#0f172a", // Couleur de fond du slider (bleu très foncé)
       }}
     >
-      {/* Range with a slightly darker gold color, also right-to-left */}
+      {/* Dégradé allant du bleu foncé au bleu brillant */}
       <SliderPrimitive.Range
         className="absolute h-full"
         style={{
           background:
-            "linear-gradient(270deg, rgba(254, 232, 111, 1), rgba(218, 165, 32, 1))",
+            "linear-gradient(270deg, rgba(13, 71, 161, 1), rgba(33, 150, 243, 1))", // Ajustement des couleurs pour bleu foncé à brillant
         }}
       />
     </SliderPrimitive.Track>

@@ -44,6 +44,7 @@ export default function SwapInput(props: PropsWithChildren<SwapInputProps>) {
           onChange={onInputChange}
           placeholder="0.00"
           value={inputValue}
+          disabled={false}
         />
         {children}
       </div>

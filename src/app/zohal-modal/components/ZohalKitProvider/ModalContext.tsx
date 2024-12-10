@@ -53,9 +53,8 @@ export function ModalProvider(props: PropsWithChildren) {
     openModal: openConnectModal,
   } = useModalState();
 
-  const { address, connector } = useAccount({
-    // TODO @YohanTz: implement and use onConnect / onDisconnect callbacks in @starknet-react/core
-  });
+  // TODO @YohanTz: implement and use onConnect / onDisconnect callbacks in @starknet-react/core
+  const { address, connector } = useAccount();
 
   const value = useMemo(
     () => ({

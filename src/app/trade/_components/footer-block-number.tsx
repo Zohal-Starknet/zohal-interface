@@ -9,7 +9,7 @@ export default function FooterBlockNumber() {
   const { chainId: walletChainId } = useAccount();
   const { chain } = useNetwork();
 
-  const { data: block } = useBlock({ blockIdentifier: BlockTag.latest });
+  const { data: block } = useBlock({ blockIdentifier: BlockTag.LATEST });
 
   // TODO @YohanTz: Show Skeleton
   if (block === undefined) {
@@ -32,12 +32,11 @@ export default function FooterBlockNumber() {
   return (
     <a
       className={badgeContainerClassName}
-      href={`${testnetBlockUrl}/${block.block_hash}`}
+      href={`${testnetBlockUrl}/${block}`}
       rel="noopener noreferrer"
       target="_blank"
     >
       <div className="h-2 w-2 rounded-full bg-[#40B68B]" />
-      <span className="text-xs">{block.block_number}</span>
     </a>
   );
 }

@@ -19,7 +19,7 @@ import {
   USDC_CONTRACT_ADDRESS,
 } from "../../_lib/addresses";
 import { useTokenInputs } from "../_hooks/use-token-input";
-import useEthPrice from "@zohal/app/trade/_hooks/use-market-data";
+import useEthPrice, { usePriceDataSubscription } from "@zohal/app/trade/_hooks/use-market-data";
 
 import SlTpCheckbox from "./sl-tp-checkbox";
 import { SlTpInfos } from "./sl-tp-modal";
@@ -44,9 +44,9 @@ export default function Trade({ className }: PropsWithClassName) {
   const [checkedShort, setCheckedShort] = useState(false);
   const initialRatio = 1;
   const [leverage, setLeverage] = useState(1);
-  const { ethData } = useEthPrice();
-  const { btcData } = useBtcPrice();
-  const { strkData } = useStrkPrice();
+  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
   const [priceData, setPriceData] = useState(ethData);
   const {
     payTokenSymbol,
@@ -131,52 +131,11 @@ export default function Trade({ className }: PropsWithClassName) {
   const priceInfos = [
     { label: "Market", value: tokenSymbol + "-USDC" },
     { label: "Leverage", value: "" + leverage + "x" },
-    {
-      label: "Collateral",
-      value: payTokenValue
-        ? "$" + formatNumberWithoutExponent(Number(payTokenValue))
-        : "-",
-    },
-    {
-      label: "Entry Price",
-      value:
-        "$" +
-        formatNumberWithoutExponent(Number(priceData.currentPrice.toFixed(2))),
-    },
-    {
-      label: "Liq. Price For Long",
-      value:
-        priceData && payTokenValue != "" && receiveTokenValue != ""
-          ? "$" +
-            formatNumberWithoutExponent(
-              Number(
-                (
-                  priceData.currentPrice -
-                  Number(payTokenValue) / Number(receiveTokenValue)
-                ).toFixed(2),
-              ),
-            )
-          : "-",
-    },
-    {
-      label: "Liq. Price For Short",
-      value:
-        priceData && payTokenValue != "" && receiveTokenValue != ""
-          ? "$" +
-            formatNumberWithoutExponent(
-              Number(
-                (
-                  priceData.currentPrice +
-                  Number(payTokenValue) / Number(receiveTokenValue)
-                ).toFixed(2),
-              ),
-            )
-          : "-",
-    },
-    {
-      label: "Account Balance",
-      value: "$" + formatNumberWithoutExponent(Number(payTokenBalance)),
-    },
+    { label: "Collateral", value: payTokenValue ? "$" + formatNumberWithoutExponent(Number(payTokenValue)) : "-"},
+    { label: "Entry Price", value: "$" + formatNumberWithoutExponent(Number(priceData.currentPrice.toFixed(2))) },
+    { label: "Liq. Price For Long", value: priceData && payTokenValue != "" && receiveTokenValue != "" ? "$" + formatNumberWithoutExponent(Number((priceData.currentPrice - (Number(payTokenValue) / Number(receiveTokenValue))).toFixed(2))) : "-"},
+    { label: "Liq. Price For Short", value: priceData && payTokenValue != "" && receiveTokenValue != "" ? "$" + formatNumberWithoutExponent(Number((priceData.currentPrice + (Number(payTokenValue) / Number(receiveTokenValue))).toFixed(2))) : "-"},
+    { label: "Account Balance", value: "$" + formatNumberWithoutExponent(Number(payTokenBalance)) },
   ];
 
   const handleTrade = (isBuy: boolean) => {
@@ -223,10 +182,9 @@ export default function Trade({ className }: PropsWithClassName) {
             disabled={false}
           />
           <div className="mr-4 mt-1 flex items-center gap-1">
-            <button
+            <button 
               className="mr-1 flex flex-shrink-0 items-center gap-2 rounded-lg bg-background px-2 py-1 transition duration-100 hover:bg-gray-800"
-              onClick={() => updatePayTokenTradeValue(payTokenBalance || "0")}
-            >
+              onClick={() => updatePayTokenTradeValue(payTokenBalance || "0")}>
               Max
             </button>
             <img alt="USDC" className="h-6 w-6" src={Tokens.USDC.icon} />
@@ -238,17 +196,13 @@ export default function Trade({ className }: PropsWithClassName) {
         <div className="flex items-center justify-between">
           {payTokenValue ? (
             <label className="block text-xs">
-              Long/Short : $
-              {formatNumberWithoutExponent(Number(payTokenValue) * leverage)}
+              Long/Short : ${formatNumberWithoutExponent(Number(payTokenValue) * leverage)}
             </label>
           ) : (
             <label className="block text-xs">Long/Short</label>
           )}
           <span className="text-xs text-muted-foreground">
-            Market Price:{" "}
-            {formatNumberWithoutExponent(
-              Number(priceData.currentPrice.toFixed(3)),
-            )}
+            Market Price: {formatNumberWithoutExponent(Number(priceData.currentPrice.toFixed(3)))}
           </span>
         </div>
         <div className="mt-1 flex items-center justify-between bg-transparent">

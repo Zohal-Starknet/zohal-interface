@@ -9,12 +9,8 @@ import { useState } from "react";
 import { Position } from "../_hooks/use-user-position";
 import DecreaseLimitPositionDialog from "./decrease-limit-position-dialog";
 import IncreaseLimitPositionDialog from "./increase-limit-position-dialog";
-import {
-  BTC_MARKET_TOKEN_CONTRACT_ADDRESS,
-  ETH_MARKET_TOKEN_CONTRACT_ADDRESS,
-  STRK_MARKET_TOKEN_CONTRACT_ADDRESS,
-} from "@zohal/app/_lib/addresses";
-import useEthPrice from "../_hooks/use-market-data";
+import { BTC_MARKET_TOKEN_CONTRACT_ADDRESS, ETH_MARKET_TOKEN_CONTRACT_ADDRESS, STRK_MARKET_TOKEN_CONTRACT_ADDRESS } from "@zohal/app/_lib/addresses";
+import useEthPrice, { usePriceDataSubscription } from "../_hooks/use-market-data";
 import useBtcPrice from "../_hooks/use-market-data-btc";
 import useStrkPrice from "../_hooks/use-market-data-strk";
 interface EditPositionProps {
@@ -22,11 +18,13 @@ interface EditPositionProps {
 }
 export default function EditPosition({ position }: EditPositionProps) {
   const [openedModal, setOpenedModal] = useState<
-    "decreasePosition" | "increasePosition" | undefined
+    | "decreasePosition"
+    | "increasePosition"
+    | undefined
   >(undefined);
-  const { ethData } = useEthPrice();
-  const { btcData } = useBtcPrice();
-  const { strkData } = useStrkPrice();
+  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
   const [priceData, setPriceData] = useState(btcData);
   const [tokenSymbol, setTokenSymbol] = useState("BTC");
 
@@ -52,7 +50,7 @@ export default function EditPosition({ position }: EditPositionProps) {
     <>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <button className="mr-2 rounded-lg border border-border bg-secondary px-3 py-2 hover:bg-gray-800">
+          <button className="rounded-lg border border-border bg-secondary px-3 py-2 mr-2 hover:bg-gray-800">
             Limit
           </button>
         </DropdownMenuTrigger>

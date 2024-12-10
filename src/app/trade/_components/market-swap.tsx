@@ -12,14 +12,14 @@ import SwapActionButton from "./swap-action-button";
 import SwapInput from "./swap-input";
 import TokenSwapButton from "./token-swap-button";
 import ChooseTokenButton from "./choose-token-button";
-import useEthPrice from "@zohal/app/trade/_hooks/use-market-data";
+import useEthPrice, { usePriceDataSubscription } from "@zohal/app/trade/_hooks/use-market-data";
 
-import usePoolData from "@zohal/app/pool/_hooks/use-pool-data";
+// import usePoolData from "@zohal/app/pool/_hooks/use-pool-data";
 
 export default function MarketSwap({ className }: PropsWithClassName) {
-  const { poolData } = usePoolData();
+  // const { poolData } = usePoolData();
   const initialRatio = 1;
-  const [tokenPrice, setTokenPrice] = useState<number>(0.0);
+  const [tokenSymbol, setTokenSymbol] = useState<TokenSymbol>("ETH");
   const {
     payTokenSymbol,
     payTokenValue,
@@ -30,31 +30,27 @@ export default function MarketSwap({ className }: PropsWithClassName) {
     switchTokens,
     updatePayTokenValue,
     updateReceiveTokenValue,
-  } = useTokenInputs({ ratio: initialRatio, leverage:1 });
-  const { ethData } = useEthPrice();
-
-  const fetchPrice = async (token: any) => {
-    const pair = token+"/usd";
-    const apiUrl = `/api/fetch-price?pair=${pair}`;
-    try {
-      const response = await fetch(apiUrl);
-      if (response.ok) {
-        const data = await response.json();
-        let price = data.price; 
-        const decimal = data.decimals;
-        price = parseInt(price, 16) / 10 ** decimal;
-        setTokenPrice(price);
-      }
-    } catch (error) {
-      console.error("Error fetching price " + token +":", error);
-      throw error;
-    }
-  };
+  } = useTokenInputs({ ratio: initialRatio, leverage: 0, tokenSymbol: tokenSymbol });
+  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  const [priceData, setPriceData] = useState(ethData);
 
   useEffect(() => {
-    const fetchedRatio = ethData.currentPrice;
-    setTokenRatio(payTokenSymbol === "USDC" ? 1 / fetchedRatio : fetchedRatio);
-    fetchPrice(payTokenSymbol)
+    let fetchedRatio = 1;
+    if (tokenSymbol === "BTC") {
+      fetchedRatio = btcData.currentPrice;
+      setPriceData(btcData);
+    }
+    if (tokenSymbol === "ETH") {
+      fetchedRatio = ethData.currentPrice;
+      setPriceData(ethData);
+    }
+    if (tokenSymbol === "STRK") {
+      fetchedRatio = strkData.currentPrice;
+      setPriceData(strkData);
+    }
+    setTokenRatio(1 / fetchedRatio);
   }, [switchTokens]);
 
 
@@ -109,7 +105,7 @@ export default function MarketSwap({ className }: PropsWithClassName) {
         />
       </SwapInput>
 
-      {poolData && (
+      {/* {poolData && (
           <SwapMoreInformations
           payTokenSymbol={payTokenSymbol}
           ratio={tokenRatio}
@@ -119,7 +115,7 @@ export default function MarketSwap({ className }: PropsWithClassName) {
           liquidity={IntlFormatter.format(Number(poolData.pool_value))}
         />
         )
-      }
+      } */}
 
       <SwapActionButton
         insufficientBalance={insufficientBalance}

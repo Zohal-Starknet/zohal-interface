@@ -15,10 +15,9 @@ import { useEffect, useState } from "react";
 import { BlockTag, CairoCustomEnum, Contract, uint256 } from "starknet";
 
 import erc_20_abi from "../abi/erc_20.json";
-import reader_abi from "../../pool/_abi/reader_abi.json";
 import exchange_router_abi from "../abi/exchange_router.json";
 import datastore_abi from "../abi/datastore.json";
-import useEthPrice from "./use-market-data";
+import useEthPrice, { usePriceDataSubscription } from "./use-market-data";
 import useBtcPrice from "./use-market-data-btc";
 import useStrkPrice from "./use-market-data-strk";
 import isEqual from "lodash.isequal";
@@ -41,9 +40,9 @@ export type Position = {
 };
 
 export default function useUserPosition() {
-  const { ethData } = useEthPrice();
-  const { btcData } = useBtcPrice();
-  const { strkData } = useStrkPrice();
+  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
   const { account, address } = useAccount();
   const { provider } = useProvider();
 
@@ -53,6 +52,7 @@ export default function useUserPosition() {
     order_type: CairoCustomEnum,
     size_delta_usd: bigint,
     trigger_price: bigint,
+    onOpenChange: (open: boolean) => void
   ) {
     if (account === undefined || address === undefined) {
       return;
@@ -124,8 +124,8 @@ export default function useUserPosition() {
     const calls = [];
 
     if (
-      isEqual(order_type, { MarketIncrease: {} }) ||
-      isEqual(order_type, { LimitIncrease: {} })
+      (isEqual(order_type, { MarketIncrease: {} }) ||
+      isEqual(order_type, { LimitIncrease: {} })) && collateral_amount > BigInt(0)
     ) {
       const transferCall = usdcContract.populate("transfer", [
         ORDER_VAULT_CONTRACT_ADDRESS,
@@ -142,6 +142,8 @@ export default function useUserPosition() {
     calls.push(createOrderCall);
 
     await account.execute(calls);
+
+    onOpenChange(false)
   }
 
   const { data: allPositions } = useReadContract({
@@ -155,7 +157,19 @@ export default function useUserPosition() {
     args: [address, 0, 10],
   });
 
-  const positions = allPositions as Array<Position>;
+  const { data: positionsCount } = useReadContract({
+    address: DATA_STORE_CONTRACT_ADDRESS,
+    abi: datastore_abi.abi,
+    // enabled: address !== undefined && ethData.currentPrice !== 0,
+    // enabled: ethData.currentPrice !== 0,
+    functionName: "get_account_position_count",
+    blockIdentifier: BlockTag.PENDING,
+    watch: true,
+    args: [address],
+  });
 
-  return { editPosition, positions };
+  const positions = allPositions as Array<Position>;
+  const positions_count = positionsCount ? Number(positionsCount) : 0;
+
+  return { editPosition, positions, positions_count };
 }

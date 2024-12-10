@@ -1,10 +1,12 @@
 import Panel from "../../_ui/panel";
 import Tabs, { type TabItemType } from "../../_ui/tabs";
+import Swap from "./swap";
 import Trade from "./trade";
 import TradeTpSl from "./trade-tp-sl";
 import TradeTrigger from "./trade-trigger";
 
 const tabItems: [TabItemType, TabItemType, TabItemType] = [
+  // { content: <Swap className="p-4" />, label: "Swap", value: "Swap" },
   { content: <Trade className="p-4" />, label: "Market", value: "trade" },
   { content: <TradeTrigger className="p-4" />, label: "Limit", value: "limit" },
   { content: <TradeTpSl className="p-4" />, label: "TP/SL", value: "tpsl" },

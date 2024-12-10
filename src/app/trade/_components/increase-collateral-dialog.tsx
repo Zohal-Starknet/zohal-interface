@@ -20,7 +20,7 @@ import {
 } from "@zohal/app/_lib/addresses";
 import PriceInfo from "./price-info";
 import useMarketTokenBalance from "@zohal/app/_hooks/use-market-token-balance";
-import useEthPrice from "../_hooks/use-market-data";
+import useEthPrice, { usePriceDataSubscription } from "../_hooks/use-market-data";
 import useBtcPrice from "../_hooks/use-market-data-btc";
 import useStrkPrice from "../_hooks/use-market-data-strk";
 import useFormatNumber from "../_hooks/use-format-number";
@@ -54,9 +54,9 @@ export default function DecreaseCollateralDialog({
     BigInt(10 ** 16) /
     BigInt(10 ** 18)
   ).toString();
-  const { ethData } = useEthPrice();
-  const { btcData } = useBtcPrice();
-  const { strkData } = useStrkPrice();
+  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
   const [priceData, setPriceData] = useState(ethData);
   const { formatNumberWithoutExponent } = useFormatNumber();
 
@@ -78,23 +78,19 @@ export default function DecreaseCollateralDialog({
   }
 
   let new_collateral_delta =
-    parseFloat(inputValue) > 0
-      ? BigInt(Math.round(parseFloat(inputValue) * 10 ** 6))
-      : BigInt("0");
+  parseFloat(inputValue) > 0
+    ? BigInt(Math.round(parseFloat(inputValue) * 10 ** 6))
+    : BigInt("0");
 
-  let new_size_delta_usd =
-    keepSameLeverage &&
-    inputValue &&
-    collateralUsdAmount &&
-    formattedSizeDeltaUsdcAmount
-      ? BigInt(
-          Math.round(
-            (parseFloat(inputValue) / collateralUsdAmount) *
-              parseFloat(formattedSizeDeltaUsdcAmount) *
-              10 ** 6,
-          ),
-        ) * BigInt(10 ** 28)
-      : BigInt(0);
+  let new_size_delta_usd = keepSameLeverage && inputValue && collateralUsdAmount && formattedSizeDeltaUsdcAmount
+    ? BigInt(
+        Math.round(
+          (parseFloat(inputValue) / collateralUsdAmount) *
+            parseFloat(formattedSizeDeltaUsdcAmount) *
+            10 ** 6
+        )
+      ) * BigInt(10**28)
+    : BigInt(0);
 
   console.log("new collatrela delta", new_collateral_delta);
 
@@ -111,11 +107,9 @@ export default function DecreaseCollateralDialog({
       setLimitPrice(formattedPrice);
     }
   }
-
+  
   let limit_price =
-    limitPrice === ""
-      ? BigInt(0)
-      : BigInt(Math.round(parseFloat(limitPrice) * 10 ** 6));
+    limitPrice === "" ? BigInt(0) : BigInt(Math.round(parseFloat(limitPrice) * 10 ** 6));
 
   useEffect(() => {
     if (!open) {
@@ -124,59 +118,15 @@ export default function DecreaseCollateralDialog({
   }, [open]);
 
   const positionInfos = getPositionInfos(position);
-  const newPositionInfos = getNewPositionInfos(
-    position,
-    new_collateral_delta,
-    new_size_delta_usd,
-    false,
-  );
+  const newPositionInfos = getNewPositionInfos(position, new_collateral_delta, new_size_delta_usd, false);
 
   const priceInfos = [
-    {
-      label: "Leverage",
-      value_before: positionInfos.leverage,
-      value_after: newPositionInfos.new_leverage,
-    },
-    {
-      label: "Entry Price",
-      value_before: formatNumberWithoutExponent(
-        Number(positionInfos.entry_price),
-      ),
-      value_after: formatNumberWithoutExponent(
-        Number(newPositionInfos.new_entry_price),
-      ),
-    },
-    {
-      label: "Market Price",
-      value_before: formatNumberWithoutExponent(priceData.currentPrice),
-    },
-    {
-      label: "Liq. Price",
-      value_before: formatNumberWithoutExponent(
-        Number(positionInfos.liq_price),
-      ),
-      value_after: formatNumberWithoutExponent(
-        Number(newPositionInfos.new_liq_price),
-      ),
-    },
-    {
-      label: "Size",
-      value_before: formatNumberWithoutExponent(
-        Number(positionInfos.size_in_usd),
-      ),
-      value_after: formatNumberWithoutExponent(
-        Number(newPositionInfos.new_size_in_usd),
-      ),
-    },
-    {
-      label: "Collateral (USD)",
-      value_before: formatNumberWithoutExponent(
-        Number(positionInfos.collateral_amount),
-      ),
-      value_after: formatNumberWithoutExponent(
-        Number(newPositionInfos.new_collateral_amount),
-      ),
-    },
+    { label: "Leverage", value_before: positionInfos.leverage, value_after: newPositionInfos.new_leverage },
+    { label: "Entry Price", value_before: formatNumberWithoutExponent(Number(positionInfos.entry_price)), value_after: formatNumberWithoutExponent(Number(newPositionInfos.new_entry_price)) },
+    { label: "Market Price", value_before: formatNumberWithoutExponent(priceData.currentPrice) },
+    { label: "Liq. Price", value_before: formatNumberWithoutExponent(Number(positionInfos.liq_price)), value_after: formatNumberWithoutExponent(Number(newPositionInfos.new_liq_price)) },
+    { label: "Size", value_before: formatNumberWithoutExponent(Number(positionInfos.size_in_usd)), value_after: formatNumberWithoutExponent(Number(newPositionInfos.new_size_in_usd)) },
+    { label: "Collateral (USD)", value_before: formatNumberWithoutExponent(Number(positionInfos.collateral_amount)), value_after: formatNumberWithoutExponent(Number(newPositionInfos.new_collateral_amount)) },
   ];
 
   return (
@@ -258,11 +208,7 @@ export default function DecreaseCollateralDialog({
               <button
                 className="mr-1 flex flex-shrink-0 items-center gap-2 rounded-lg bg-background px-2 py-1 transition duration-100 hover:bg-gray-800"
                 onClick={() =>
-                  setInputValue(
-                    payTokenBalance
-                      ? formatNumberWithoutExponent(Number(payTokenBalance))
-                      : "0",
-                  )
+                  setInputValue(payTokenBalance ? payTokenBalance : "0")
                 }
               >
                 Max
@@ -313,6 +259,7 @@ export default function DecreaseCollateralDialog({
                 : { LimitIncrease: {} },
               new_size_delta_usd,
               limit_price,
+              onOpenChange,
             )
           }
         >

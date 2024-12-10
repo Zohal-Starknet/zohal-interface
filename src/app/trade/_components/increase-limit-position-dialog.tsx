@@ -13,16 +13,12 @@ import Input from "@zohal/app/_ui/input";
 import { useState, useEffect } from "react";
 
 import useUserPosition, { Position } from "../_hooks/use-user-position";
-import {
-  BTC_MARKET_TOKEN_CONTRACT_ADDRESS,
-  ETH_MARKET_TOKEN_CONTRACT_ADDRESS,
-  STRK_MARKET_TOKEN_CONTRACT_ADDRESS,
-} from "@zohal/app/_lib/addresses";
+import { BTC_MARKET_TOKEN_CONTRACT_ADDRESS, ETH_MARKET_TOKEN_CONTRACT_ADDRESS, STRK_MARKET_TOKEN_CONTRACT_ADDRESS } from "@zohal/app/_lib/addresses";
 import PriceInfo from "./price-info";
 import useMarketTokenBalance from "@zohal/app/_hooks/use-market-token-balance";
 import useBtcPrice from "../_hooks/use-market-data-btc";
 import useStrkPrice from "../_hooks/use-market-data-strk";
-import useEthPrice from "../_hooks/use-market-data";
+import useEthPrice, { usePriceDataSubscription } from "../_hooks/use-market-data";
 import useFormatNumber from "../_hooks/use-format-number";
 import useUserPositionInfos from "../_hooks/use-user-position-infos";
 import PriceInfoEditPosition from "./price-info-edit-position";
@@ -48,9 +44,9 @@ export default function IncreaseLimitPositionDialog({
   const decimals = BigInt(10 ** 6);
   const collateralAmountBigInt = BigInt(position.collateral_amount);
   const collateralUsdAmount = Number(collateralAmountBigInt) / Number(decimals);
-  const { ethData } = useEthPrice();
-  const { btcData } = useBtcPrice();
-  const { strkData } = useStrkPrice();
+  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
   const [priceData, setPriceData] = useState(ethData);
   const { formatNumberWithoutExponent } = useFormatNumber();
 
@@ -59,11 +55,7 @@ export default function IncreaseLimitPositionDialog({
     decimal: Tokens["USDC"].decimals,
   });
 
-  const formattedSizeDeltaUsdcAmount = (
-    position.size_in_usd /
-    BigInt(10 ** 16) /
-    BigInt(10 ** 18)
-  ).toString();
+  const formattedSizeDeltaUsdcAmount = ((position.size_in_usd / BigInt(10 ** 16)) / BigInt(10 ** 18)).toString();
 
   let tokenSymbol = "ETH";
   if (position.market === ETH_MARKET_TOKEN_CONTRACT_ADDRESS) {
@@ -76,16 +68,15 @@ export default function IncreaseLimitPositionDialog({
     setPriceData(strkData);
   }
 
-  let new_size_delta_usd =
-    parseFloat(inputValue) > 0
-      ? BigInt(Math.round(parseFloat(inputValue) * 10 ** 16)) * BigInt(10 ** 18)
-      : BigInt("0");
+  let new_size_delta_usd = parseFloat(inputValue) > 0
+  ? BigInt(Math.round(parseFloat(inputValue) * 10 ** 16)) * BigInt(10 ** 18)
+  : BigInt("0");
 
   let new_collateral_delta = keepSameLeverage
     ? Math.round(
         (parseFloat(inputValue) / parseFloat(formattedSizeDeltaUsdcAmount)) *
           collateralUsdAmount *
-          10 ** 6,
+          10 ** 6
       )
     : 0;
 
@@ -104,11 +95,9 @@ export default function IncreaseLimitPositionDialog({
       setLimitPrice(formattedPrice);
     }
   }
-
+  
   let limit_price =
-    limitPrice === ""
-      ? BigInt(0)
-      : BigInt(Math.round(parseFloat(limitPrice) * 10 ** 6));
+    limitPrice === "" ? BigInt(0) : BigInt(Math.round(parseFloat(limitPrice) * 10 ** 6));
 
   useEffect(() => {
     if (!open) {
@@ -117,59 +106,15 @@ export default function IncreaseLimitPositionDialog({
   }, [open]);
 
   const positionInfos = getPositionInfos(position);
-  const newPositionInfos = getNewPositionInfos(
-    position,
-    BigInt(0),
-    new_size_delta_usd,
-    false,
-  );
+  const newPositionInfos = getNewPositionInfos(position, BigInt(0), new_size_delta_usd, false);
 
   const priceInfos = [
-    {
-      label: "Leverage",
-      value_before: positionInfos.leverage,
-      value_after: newPositionInfos.new_leverage,
-    },
-    {
-      label: "Entry Price",
-      value_before: formatNumberWithoutExponent(
-        Number(positionInfos.entry_price),
-      ),
-      value_after: formatNumberWithoutExponent(
-        Number(newPositionInfos.new_entry_price),
-      ),
-    },
-    {
-      label: "Market Price",
-      value_before: formatNumberWithoutExponent(priceData.currentPrice),
-    },
-    {
-      label: "Liq. Price",
-      value_before: formatNumberWithoutExponent(
-        Number(positionInfos.liq_price),
-      ),
-      value_after: formatNumberWithoutExponent(
-        Number(newPositionInfos.new_liq_price),
-      ),
-    },
-    {
-      label: "Size",
-      value_before: formatNumberWithoutExponent(
-        Number(positionInfos.size_in_usd),
-      ),
-      value_after: formatNumberWithoutExponent(
-        Number(newPositionInfos.new_size_in_usd),
-      ),
-    },
-    {
-      label: "Collateral (USD)",
-      value_before: formatNumberWithoutExponent(
-        Number(positionInfos.collateral_amount),
-      ),
-      value_after: formatNumberWithoutExponent(
-        Number(newPositionInfos.new_collateral_amount),
-      ),
-    },
+    { label: "Leverage", value_before: positionInfos.leverage, value_after: newPositionInfos.new_leverage },
+    { label: "Entry Price", value_before: formatNumberWithoutExponent(Number(positionInfos.entry_price)), value_after: formatNumberWithoutExponent(Number(newPositionInfos.new_entry_price)) },
+    { label: "Market Price", value_before: formatNumberWithoutExponent(priceData.currentPrice) },
+    { label: "Liq. Price", value_before: formatNumberWithoutExponent(Number(positionInfos.liq_price)), value_after: formatNumberWithoutExponent(Number(newPositionInfos.new_liq_price)) },
+    { label: "Size", value_before: formatNumberWithoutExponent(Number(positionInfos.size_in_usd)), value_after: formatNumberWithoutExponent(Number(newPositionInfos.new_size_in_usd)) },
+    { label: "Collateral (USD)", value_before: formatNumberWithoutExponent(Number(positionInfos.collateral_amount)), value_after: formatNumberWithoutExponent(Number(newPositionInfos.new_collateral_amount)) },
   ];
 
   return (
@@ -178,31 +123,24 @@ export default function IncreaseLimitPositionDialog({
         <DialogHeader>
           <DialogTitle>
             <div className="flex items-center gap-2">
-              <img
-                alt={tokenSymbol}
-                className="h-6 w-6"
-                src={Tokens[tokenSymbol].icon}
-              />
+              <img alt={tokenSymbol} className="h-6 w-6" src={Tokens[tokenSymbol].icon} />
               {tokenSymbol}-USDC
             </div>
           </DialogTitle>
           <DialogDescription>Increase your position</DialogDescription>
         </DialogHeader>
         <div className="flex items-center justify-between">
-          <label
-            htmlFor="adjustCollateralToggle"
-            className="text-sm text-neutral-300"
-          >
+          <label htmlFor="adjustCollateralToggle" className="text-sm text-neutral-300">
             Keep Same Leverage
           </label>
           <div
-            className={`relative h-6 w-12 cursor-pointer rounded-full ${
+            className={`relative w-12 h-6 cursor-pointer rounded-full ${
               keepSameLeverage ? "bg-yellow-500" : "bg-gray-500"
             } transition-colors duration-300`}
             onClick={() => setKeepSameLeverage(!keepSameLeverage)}
           >
             <div
-              className={`absolute left-1 top-1/2 h-4 w-4 -translate-y-1/2 transform rounded-full bg-white shadow-md transition-transform duration-300 ${
+              className={`absolute top-1/2 left-1 transform -translate-y-1/2 w-4 h-4 rounded-full bg-white shadow-md transition-transform duration-300 ${
                 keepSameLeverage ? "translate-x-6" : ""
               }`}
             ></div>
@@ -210,13 +148,11 @@ export default function IncreaseLimitPositionDialog({
         </div>
         <div className="rounded-md border border-border bg-secondary p-3">
           <div className="flex items-center justify-between">
-            {inputValue ? (
-              <label className="block text-xs">
-                Pay: ${Number(inputValue)}
-              </label>
-            ) : (
+            { inputValue ?
+              <label className="block text-xs">Pay: ${Number(inputValue)}</label>
+              :
               <label className="block text-xs">Pay</label>
-            )}
+            }
             <span className="text-xs text-muted-foreground">
               Balance: {formatNumberWithoutExponent(Number(payTokenBalance))}
             </span>
@@ -230,55 +166,48 @@ export default function IncreaseLimitPositionDialog({
               value={inputValue}
               disabled={false}
             />
-            <div className="mr-4 mt-1 flex items-center gap-1">
-              <button
-                className="mr-1 flex flex-shrink-0 items-center gap-2 rounded-lg bg-background px-2 py-1 transition duration-100 hover:bg-gray-800"
-                onClick={() =>
-                  setInputValue(payTokenBalance ? payTokenBalance : "0")
-                }
-              >
+          <div className="mt-1 mr-4 flex items-center gap-1">
+            <button
+              className="flex flex-shrink-0 items-center gap-2 rounded-lg bg-background mr-1 px-2 py-1 hover:bg-gray-800 transition duration-100"
+              onClick={() => setInputValue(payTokenBalance ? payTokenBalance : "0")}>
                 Max
-              </button>
-              <img alt="USDC" className="h-6 w-6" src={Tokens.USDC.icon} />
-              USD
-            </div>
+            </button>
+            <img alt="USDC" className="h-6 w-6" src={Tokens.USDC.icon} />
+            USD
           </div>
         </div>
-        <div className="rounded-md border border-border bg-secondary p-3">
-          <div className="flex items-center justify-between">
-            <label className="block text-xs">Price</label>
-            <span className="text-xs text-muted-foreground">
-              Price: {priceData.currentPrice.toFixed(2)}
-            </span>
-          </div>
-          <div className="mt-1 flex items-center justify-between bg-transparent">
-            <Input
-              className="w-full bg-transparent text-lg"
-              id="Price position"
-              onChange={onPriceInputChange}
-              placeholder="0.00"
-              value={limitPrice}
-              disabled={false}
-            />
-            <div>USD</div>
+      </div>
+      <div className="rounded-md border border-border bg-secondary p-3">
+        <div className="flex items-center justify-between">
+          <label className="block text-xs">Price</label>
+          <span className="text-xs text-muted-foreground">
+            Price: {priceData.currentPrice.toFixed(2)}
+          </span>
+        </div>
+        <div className="mt-1 flex items-center justify-between bg-transparent">
+          <Input
+            className="w-full bg-transparent text-lg"
+            id="Price position"
+            onChange={onPriceInputChange}
+            placeholder="0.00"
+            value={limitPrice}
+            disabled={false}
+          />
+          <div>
+            USD
           </div>
         </div>
+      </div>
         <div className="flex flex-col gap-2 rounded-md border border-border p-3">
-          {priceInfos.map((priceInfo, index) => (
-            <PriceInfoEditPosition key={index} {...priceInfo} />
-          ))}
+        {priceInfos.map((priceInfo, index) => (
+          <PriceInfoEditPosition key={index} {...priceInfo} />
+        ))}
         </div>
         <button
           className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
           onClick={() =>
             //@ts-ignore
-            editPosition(
-              position,
-              BigInt(new_collateral_delta),
-              { LimitIncrease: {} },
-              new_size_delta_usd,
-              limit_price,
-            )
+            editPosition(position, BigInt(new_collateral_delta), { LimitIncrease: {} }, new_size_delta_usd, limit_price, onOpenChange)
           }
         >
           Increase position

@@ -108,7 +108,7 @@ const datafeed = (pairSymbol: string) => ({
         return;
       }
       //@ts-ignore
-      let bars = [];
+      let bars: any = [];
       let time;
       data.data.forEach((bar: any) => {
         time = new Date(bar.time).getTime();

@@ -44,6 +44,7 @@ function BuyGm() {
         onChange={setEthInputValue}
         placeholder="0.0"
         value={ethInputValue}
+        disabled={false}
       />
       <div className="mt-6 flex items-end justify-between">
         <p>USDC</p>
@@ -55,6 +56,7 @@ function BuyGm() {
         onChange={setUsdcInputValue}
         placeholder="0.0"
         value={usdcInputValue}
+        disabled={false}
       />
       <button
         className="border-border bg-secondary my-4 rounded-lg border py-2"
@@ -88,6 +90,7 @@ function SellGm() {
         onChange={setZohInputValue}
         placeholder="0.0"
         value={zohInputValue}
+        disabled={false}
       />
       <button
         className="border-border bg-secondary my-4 rounded-lg border py-2"

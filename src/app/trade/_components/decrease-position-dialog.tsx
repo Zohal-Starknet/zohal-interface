@@ -22,6 +22,7 @@ import PriceInfo from "./price-info";
 import useUserPositionInfos from "../_hooks/use-user-position-infos";
 import useFormatNumber from "../_hooks/use-format-number";
 import PriceInfoEditPosition from "./price-info-edit-position";
+import { CairoCustomEnum } from "starknet";
 
 interface ClosePositionDialogProps {
   position: Position;
@@ -227,9 +228,10 @@ export default function DecreasePositionDialog({
               editPosition(
                 position,
                 collateral_amount,
-                { MarketDecrease: {} },
+                { MarketDecrease: {} } as unknown as CairoCustomEnum,
                 position.size_in_usd,
                 BigInt("0"),
+                onOpenChange,
               )
             }
           >
@@ -243,9 +245,10 @@ export default function DecreasePositionDialog({
               editPosition(
                 position,
                 BigInt(new_collateral_delta),
-                { MarketDecrease: {} },
+                { MarketDecrease: {} } as unknown as CairoCustomEnum,
                 new_size_delta_usd,
                 BigInt("0"),
+                onOpenChange,
               )
             }
           >

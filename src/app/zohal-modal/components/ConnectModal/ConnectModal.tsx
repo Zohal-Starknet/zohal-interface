@@ -111,7 +111,7 @@ export function ConnectModal(props: ConnectModalProps) {
                     variant="secondary"
                   >
                     <img
-                      src={connector.icon.dark}
+                      src={typeof connector.icon === 'string' ? connector.icon : connector.icon.dark}
                       className="absolute left-3 h-5"
                     />
                     {connector_id_to_name[connector.id]}
