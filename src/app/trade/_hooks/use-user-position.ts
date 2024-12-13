@@ -17,7 +17,7 @@ import { BlockTag, CairoCustomEnum, Contract, uint256 } from "starknet";
 import erc_20_abi from "../abi/erc_20.json";
 import exchange_router_abi from "../abi/exchange_router.json";
 import datastore_abi from "../abi/datastore.json";
-import useEthPrice, { usePriceDataSubscription } from "./use-market-data";
+import useEthPrice, { PriceData, usePythPriceSubscription } from "./use-market-data";
 import useBtcPrice from "./use-market-data-btc";
 import useStrkPrice from "./use-market-data-strk";
 import isEqual from "lodash.isequal";
@@ -40,9 +40,9 @@ export type Position = {
 };
 
 export default function useUserPosition() {
-  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
-  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
-  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  const { priceData: ethData } = usePythPriceSubscription("ETH/USD");
+  const { priceData: btcData } = usePythPriceSubscription("BTC/USD" );
+  const { priceData: strkData } = usePythPriceSubscription("STRK/USD");
   const { account, address } = useAccount();
   const { provider } = useProvider();
 
@@ -52,7 +52,8 @@ export default function useUserPosition() {
     order_type: CairoCustomEnum,
     size_delta_usd: bigint,
     trigger_price: bigint,
-    onOpenChange: (open: boolean) => void
+    onOpenChange: (open: boolean) => void,
+    slippage: string
   ) {
     if (account === undefined || address === undefined) {
       return;
@@ -84,6 +85,45 @@ export default function useUserPosition() {
         BigInt(10 ** 18);
     }
 
+    let acceptable_price = BigInt(0);
+    if (
+      isEqual(order_type, { MarketIncrease: {} }) || isEqual(order_type, { MarketDecrease: {} })
+    ) {
+      if (
+        (position.is_long && isEqual(order_type, { MarketIncrease: {} })) ||
+        (!position.is_long && isEqual(order_type, { MarketDecrease: {} }))
+      ) {
+        console.log("ENTER HERE")
+        console.log("real price:", price)
+        acceptable_price = (price * BigInt(Number(slippage) + 100)) / BigInt(100)
+        console.log("acceptable_price", acceptable_price)
+
+      } 
+      else if (
+        (position.is_long && isEqual(order_type, { MarketDecrease: {} })) ||
+        (!position.is_long && isEqual(order_type, { MarketIncrease: {} }))
+      ) {
+        acceptable_price = BigInt((price * BigInt(100 - Number(slippage))) / BigInt(100))
+      }
+    } else {
+      if (
+        (position.is_long && isEqual(order_type, { LimitIncrease: {} })) ||
+        (!position.is_long && isEqual(order_type, { LimitDecrease: {} }))
+      ) {
+        acceptable_price = BigInt((trigger_price_formatted * BigInt(Number(slippage) + 100)) / BigInt(100))
+      } 
+      else if (
+        (position.is_long && isEqual(order_type, { LimitDecrease: {} })) ||
+        (!position.is_long && isEqual(order_type, { LimitIncrease: {} }))
+      ) {
+        acceptable_price = BigInt((trigger_price_formatted * BigInt(100 - Number(slippage))) / BigInt(100))
+      }
+    }
+
+    if (acceptable_price == BigInt(0)) {
+      return
+    }
+
     const createOrderParams = {
       receiver: address,
       callback_contract: 0,
@@ -94,13 +134,7 @@ export default function useUserPosition() {
       size_delta_usd: uint256.bnToUint256(size_delta_usd),
       initial_collateral_delta_amount: uint256.bnToUint256(collateral_amount),
       trigger_price: uint256.bnToUint256(trigger_price_formatted),
-      acceptable_price: position.is_long
-        ? uint256.bnToUint256(
-            BigInt((trigger_price_formatted * BigInt(105)) / BigInt(100)),
-          )
-        : uint256.bnToUint256(
-            BigInt((trigger_price_formatted * BigInt(105)) / BigInt(100)),
-          ),
+      acceptable_price: uint256.bnToUint256(acceptable_price),
       execution_fee: uint256.bnToUint256("0"),
       callback_gas_limit: uint256.bnToUint256(0),
       min_output_amount: uint256.bnToUint256(BigInt(0)),

@@ -1,4 +1,5 @@
 import { makeApiRequest } from "./helpers";
+import { subscribeOnStream, unsubscribeFromStream } from "./streaming";
 
 interface DatafeedConfiguration {
   supported_resolutions: string[];
@@ -39,10 +40,16 @@ async function getAllSymbols() {
   ];
   return allSymbols;
 }
+const API_ENDPOINT = 'https://benchmarks.pyth.network/v1/shims/tradingview'
+const lastBarsCache = new Map()
 
 const datafeed = (pairSymbol: string) => ({
   onReady: (callback: (config: DatafeedConfiguration) => void) => {
-    setTimeout(() => callback(configurationData));
+    fetch(`${API_ENDPOINT}/config`).then((response) => {
+      response.json().then((configurationData) => {
+        setTimeout(() => callback(configurationData))
+      })
+    })
   },
   searchSymbols: async (
     userInput: string,
@@ -50,45 +57,32 @@ const datafeed = (pairSymbol: string) => ({
     symbolType: string,
     onResultReadyCallback: (symbols: any[]) => void,
   ) => {
-    const symbols = await getAllSymbols();
-    const newSymbols = symbols.filter((symbol) => {
-      const isExchangeValid = exchange === "" || symbol.exchange === exchange;
-      const isFullSymbolContainsInput =
-        symbol.ticker.toLowerCase().indexOf(userInput.toLowerCase()) !== -1;
-      return isExchangeValid && isFullSymbolContainsInput;
-    });
-    onResultReadyCallback(newSymbols);
+    // console.log('[searchSymbols]: Method call')
+    fetch(`${API_ENDPOINT}/search?query=${userInput}`).then((response) => {
+      response.json().then((data) => {
+        onResultReadyCallback(data)
+      })
+    })
   },
   resolveSymbol: async (
     symbolName: string,
     onSymbolResolvedCallback: (symbolInfo: LibrarySymbolInfo) => void,
     onResolveErrorCallback: (reason: string) => void,
   ) => {
-    const symbols = await getAllSymbols();
-    const symbolItem = symbols.find(({ ticker }) => ticker === symbolName);
-    if (!symbolItem) {
-      console.log("[resolveSymbol]: Cannot resolve symbol", symbolName);
-      onResolveErrorCallback("Cannot resolve symbol");
-      return;
-    }
-    const symbolInfo: LibrarySymbolInfo = {
-      ticker: symbolItem.ticker,
-      name: symbolItem.symbol,
-      description: symbolItem.description,
-      type: symbolItem.type,
-      session: "24x7",
-      timezone: "Etc/UTC",
-      exchange: symbolItem.exchange,
-      minmov: 1,
-      pricescale: 100,
-      has_intraday: true,
-      visible_plots_set: "ohlc",
-      has_weekly_and_monthly: false,
-      supported_resolutions: configurationData.supported_resolutions,
-      volume_precision: 2,
-      data_status: "streaming",
-    };
-    onSymbolResolvedCallback(symbolInfo);
+    // console.log('[resolveSymbol]: Method call', symbolName)
+    fetch(`${API_ENDPOINT}/symbols?symbol=${symbolName}`).then((response) => {
+      response
+        .json()
+        .then((symbolInfo) => {
+          // console.log('[resolveSymbol]: Symbol resolved', symbolInfo)
+          onSymbolResolvedCallback(symbolInfo)
+        })
+        .catch((error) => {
+          // console.log('[resolveSymbol]: Cannot resolve symbol', symbolName)
+          onResolveErrorCallback('Cannot resolve symbol')
+          return
+        })
+    })
   },
   getBars: async (
     symbolInfo: LibrarySymbolInfo,
@@ -97,43 +91,51 @@ const datafeed = (pairSymbol: string) => ({
     onHistoryCallback: (bars: any[], meta: { noData: boolean }) => void,
     onErrorCallback: (error: Error) => void,
   ) => {
-    const { from, to } = periodParams;
-    try {
-      const data = await makeApiRequest(pairSymbol);
-      if (
-        (data.Response && data.Response === "Error") ||
-        data.data.length === 0
-      ) {
-        onHistoryCallback([], { noData: true });
-        return;
-      }
-      //@ts-ignore
-      let bars: any = [];
-      let time;
-      data.data.forEach((bar: any) => {
-        time = new Date(bar.time).getTime();
-        //@ts-ignore
-        bars = [
-          ...bars,
-          {
-            time: time,
-            low: bar.low / 10 ** 8,
-            high: bar.high / 10 ** 8,
-            open: bar.open / 10 ** 8,
-            close: bar.close / 10 ** 8,
-          },
-        ];
-      });
+    const { from, to, firstDataRequest } = periodParams
+    // console.log('[getBars]: Method call', symbolInfo, resolution, from, to)
 
-      //@ts-ignore
-      bars.sort((a, b) => a.time - b.time);
+    const maxRangeInSeconds = 365 * 24 * 60 * 60 // 1 year in seconds
 
-      //@ts-ignore
-      onHistoryCallback(bars, { noData: bars.length === 0 });
-    } catch (error) {
-      //@ts-ignore
-      onErrorCallback(error);
+    let promises = []
+    let currentFrom = from
+    let currentTo
+
+    while (currentFrom < to) {
+      currentTo = Math.min(to, currentFrom + maxRangeInSeconds)
+      const url = `${API_ENDPOINT}/history?symbol=${symbolInfo.ticker}&from=${currentFrom}&to=${currentTo}&resolution=${resolution}`
+      promises.push(fetch(url).then((response) => response.json()))
+      currentFrom = currentTo
     }
+
+    Promise.all(promises)
+      .then((results) => {
+        const bars: any = []
+        results.forEach((data) => {
+          if (data.t.length > 0) {
+            data.t.forEach((time, index) => {
+              bars.push({
+                time: time * 1000,
+                low: data.l[index],
+                high: data.h[index],
+                open: data.o[index],
+                close: data.c[index],
+              })
+            })
+          }
+        })
+
+        if (firstDataRequest && bars.length > 0) {
+          lastBarsCache.set(symbolInfo.ticker, {
+            ...bars[bars.length - 1],
+          })
+        }
+
+        onHistoryCallback(bars, { noData: bars.length === 0 })
+      })
+      .catch((error) => {
+        // console.log('[getBars]: Get error', error)
+        onErrorCallback(error)
+      })
   },
   subscribeBars: (
     symbolInfo: LibrarySymbolInfo,
@@ -142,63 +144,17 @@ const datafeed = (pairSymbol: string) => ({
     subscriberUID: string,
     onResetCacheNeededCallback: () => void,
   ) => {
-    const ws = new WebSocket(
-      "wss://ws.dev.pragma.build/node/v1/onchain/ohlc/subscribe",
-    );
-    ws.onopen = () => {
-      const subscribeMessage = {
-        msg_type: "subscribe",
-        pair: pairSymbol,
-        network: "mainnet",
-        interval: "15min",
-        candles_to_get: 1,
-      };
-      ws.send(JSON.stringify(subscribeMessage));
-    };
-
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (Array.isArray(data)) {
-        data.forEach((barData) => {
-          try {
-            const time = new Date(barData.time).getTime();
-            if (isNaN(time)) {
-              throw new Error(`Invalid time value: ${barData.time}`);
-            }
-            const bar = {
-              time: time,
-              low: parseFloat(barData.low) / 10 ** 8,
-              high: parseFloat(barData.high) / 10 ** 8,
-              open: parseFloat(barData.open) / 10 ** 8,
-              close: parseFloat(barData.close) / 10 ** 8,
-            };
-            onRealtimeCallback(bar);
-          } catch (error) {
-            console.error("[subscribeBars]: Error parsing bar data", error);
-          }
-        });
-      }
-    };
-
-    ws.onclose = () => {
-      console.log(
-        "[subscribeBars]: WebSocket connection closed with subscriberUID:",
-        subscriberUID,
-      );
-    };
-
-    ws.onerror = (error) => {
-      console.error("[subscribeBars]: WebSocket error", error);
-    };
-
-    (this as any)._ws = ws;
+    subscribeOnStream(
+      symbolInfo,
+      resolution,
+      onRealtimeCallback,
+      subscriberUID,
+      onResetCacheNeededCallback,
+      lastBarsCache.get(symbolInfo.ticker)
+    )
   },
   unsubscribeBars: (subscriberUID: string) => {
-    const ws = (this as any)._ws;
-    if (ws) {
-      ws.close();
-      delete (this as any)._ws;
-    }
+    unsubscribeFromStream(subscriberUID)
   },
 });
 

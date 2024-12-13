@@ -1,6 +1,6 @@
 import Input from "@zohal/app/_ui/input";
 import { PropsWithChildren } from "react";
-import useEthPrice, { usePriceDataSubscription } from "../_hooks/use-market-data";
+import useEthPrice, { usePythPriceSubscription } from "../_hooks/use-market-data";
 
 type SwapLimitInputProps = {
   /** Formatted balance of the current token */
@@ -27,7 +27,7 @@ export default function SwapLimitInput(props: PropsWithChildren<SwapLimitInputPr
     onInputChange,
   } = props;
 
-  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  const { priceData: ethData } = usePythPriceSubscription("ETH/USD");
   const ethPrice = parseFloat(ethData.currentPrice.toPrecision(4));
 
   const handleMarkClick = () => {

@@ -10,7 +10,7 @@ import {
 } from "@zohal/app/_ui/dropdown-menu";
 import { ChevronRight } from "@zohal/app/_ui/icons";
 import useEthPrice, {
-  usePriceDataSubscription,
+  usePythPriceSubscription,
 } from "../_hooks/use-market-data";
 
 interface ChartHeaderProps {
@@ -24,8 +24,9 @@ export default function ChartHeader(props: ChartHeaderProps) {
   const [tokenImg, setTokenImg] = useState("ETH");
   const pair = symbol.toLowerCase();
 
-  const { tokenData } = usePriceDataSubscription({ pairSymbol: symbol });
+  const { priceData } = usePythPriceSubscription(symbol);
 
+  console.log("Price chart header", priceData)
   return (
     <div className="flex h-[3.8rem] items-center pl-4">
       {/* Mobile View */}
@@ -45,20 +46,20 @@ export default function ChartHeader(props: ChartHeaderProps) {
         <div className="flex items-center gap-4 pl-5">
           <div className="flex flex-col">
             <span className="text-foreground">
-              ${tokenData.currentPrice.toFixed(2)}
+              ${priceData.currentPrice.toFixed(2)}
             </span>
             <span className="text-sm text-muted-foreground">
-              ${tokenData.currentPrice.toFixed(2)}
+              ${priceData.currentPrice.toFixed(2)}
             </span>
           </div>
           <span
             className={`text-xxs rounded-md px-2 py-1 text-sm font-semibold ${
-              tokenData.change24h >= 0
+              priceData.change24h >= 0
                 ? "bg-[#40B68B] text-background"
                 : "bg-[#FF0000] text-foreground"
             }`}
           >
-            {tokenData.change24hPercent.toFixed(2)}%
+            {priceData.change24hPercent.toFixed(2)}%
           </span>
         </div>
       </div>
@@ -127,20 +128,20 @@ export default function ChartHeader(props: ChartHeaderProps) {
         <div className="flex items-center gap-4 pl-5">
           <div className="flex flex-col">
             <span className="text-foreground">
-              ${tokenData.currentPrice.toFixed(2)}
+              ${priceData.currentPrice.toFixed(2)}
             </span>
             <span className="text-sm text-muted-foreground">
-              ${tokenData.currentPrice.toFixed(2)}
+              ${priceData.currentPrice.toFixed(2)}
             </span>
           </div>
           <span
             className={`text-xxs rounded-md px-2 py-1 text-sm font-semibold ${
-              tokenData.change24h >= 0
+              priceData.change24h >= 0
                 ? "bg-[#40B68B] text-background"
                 : "bg-[#FF0000] text-foreground"
             }`}
           >
-            {tokenData.change24hPercent.toFixed(2)}%
+            {priceData.change24hPercent.toFixed(2)}%
           </span>
         </div>
         <VerticalDivider />
@@ -148,25 +149,25 @@ export default function ChartHeader(props: ChartHeaderProps) {
           <span className="text-xs text-muted-foreground">24h Change</span>
           <span
             className={`${
-              tokenData.change24h >= 0 ? "text-[#40B68B]" : "text-[#FF0000]"
+              priceData.change24h >= 0 ? "text-[#40B68B]" : "text-[#FF0000]"
             }`}
           >
-            ${tokenData.change24h.toFixed(2)} (
-            {tokenData.change24hPercent.toFixed(2)}%)
+            ${priceData.change24h.toFixed(2)} (
+            {priceData.change24hPercent.toFixed(2)}%)
           </span>
         </div>
         <VerticalDivider />
         <div className="flex flex-col gap-1">
           <span className="text-xs text-muted-foreground">24h High</span>
           <span className="text-foreground">
-            ${tokenData.high24h.toFixed(2)}
+            ${priceData.high24h.toFixed(2)}
           </span>
         </div>
         <VerticalDivider />
         <div className="flex flex-col gap-1 pr-4">
           <span className="text-xs text-muted-foreground">24h Low</span>
           <span className="text-foreground">
-            ${tokenData.low24h.toFixed(2)}
+            ${priceData.low24h.toFixed(2)}
           </span>
         </div>
       </div>

@@ -23,6 +23,7 @@ import useUserPositionInfos from "../_hooks/use-user-position-infos";
 import useFormatNumber from "../_hooks/use-format-number";
 import PriceInfoEditPosition from "./price-info-edit-position";
 import { CairoCustomEnum } from "starknet";
+import { usePythPriceSubscription } from "../_hooks/use-market-data";
 
 interface ClosePositionDialogProps {
   position: Position;
@@ -46,20 +47,30 @@ export default function DecreasePositionDialog({
   const collateralAmountBigInt = BigInt(position.collateral_amount);
   const collateralUsdAmount = Number(collateralAmountBigInt) / Number(decimals);
 
+  const { priceData: ethData } = usePythPriceSubscription("ETH/USD");
+  const { priceData: btcData } = usePythPriceSubscription("BTC/USD" );
+  const { priceData: strkData } = usePythPriceSubscription("STRK/USD");
+  const [priceData, setPriceData] = useState(ethData);
+  const [tokenSymbol, setTokenSymbol] = useState("ETH")
+  
+  useEffect(() => {
+    if (position.market === ETH_MARKET_TOKEN_CONTRACT_ADDRESS) {
+      setPriceData(ethData);
+      setTokenSymbol("ETH")
+    } else if (position.market === BTC_MARKET_TOKEN_CONTRACT_ADDRESS) {
+      setPriceData(btcData);
+      setTokenSymbol("BTC")
+  } else if (position.market === STRK_MARKET_TOKEN_CONTRACT_ADDRESS) {
+      setPriceData(strkData);
+      setTokenSymbol("STRK")
+    }
+  }, [position.market, ethData, btcData, strkData]);
+
   const formattedSizeDeltaUsdcAmount = (
     position.size_in_usd /
     BigInt(10 ** 16) /
     BigInt(10 ** 18)
   ).toString();
-
-  let tokenSymbol = "ETH";
-  if (position.market === ETH_MARKET_TOKEN_CONTRACT_ADDRESS) {
-    tokenSymbol = "ETH";
-  } else if (position.market === BTC_MARKET_TOKEN_CONTRACT_ADDRESS) {
-    tokenSymbol = "BTC";
-  } else if (position.market === STRK_MARKET_TOKEN_CONTRACT_ADDRESS) {
-    tokenSymbol = "STRK";
-  }
 
   const isCloseAction =
     parseFloat(inputValue) >= parseFloat(formattedSizeDeltaUsdcAmount);
@@ -83,6 +94,21 @@ export default function DecreasePositionDialog({
       setInputValue(formattedValue);
     }
   }
+
+  const [slippage, setSlippage] = useState("0.03");
+
+  function onSlippageChange(newSlippage: string) {
+    const formattedSlippage = newSlippage.replace(",", ".");
+    if (formattedSlippage.length > 4) {
+        return;
+    }
+    if (/^\d*([.]?\d*)$/.test(formattedSlippage)) {
+        const numericValue = parseFloat(formattedSlippage);
+        if (numericValue <= 100 || isNaN(numericValue)) {
+            setSlippage(formattedSlippage);
+        }
+    }
+}
 
   useEffect(() => {
     if (!open) {
@@ -215,6 +241,25 @@ export default function DecreasePositionDialog({
             </div>
           </div>
         </div>
+        <div className="flex items-center justify-between rounded-md border border-neutral-700 p-3">
+          <label
+            htmlFor="allowedSlippage"
+            className="text-sm text-neutral-300 flex-shrink-0"
+          >
+            Allowed Slippage
+          </label>
+          <div className="flex items-center">
+            <Input
+              className="bg-secondary rounded-md border border-neutral-700 text-lg outline-none text-right w-12"
+              id="PricePosition"
+              onChange={onSlippageChange}
+              placeholder="0.00"
+              value={slippage}
+              disabled={false}
+            />
+            <div className="text-lg ml-1">%</div>
+          </div>
+        </div>
         <div className="flex flex-col gap-2 rounded-md border border-border p-3">
           {priceInfos.map((priceInfo, index) => (
             <PriceInfoEditPosition key={index} {...priceInfo} />
@@ -232,6 +277,7 @@ export default function DecreasePositionDialog({
                 position.size_in_usd,
                 BigInt("0"),
                 onOpenChange,
+                slippage
               )
             }
           >
@@ -249,6 +295,7 @@ export default function DecreasePositionDialog({
                 new_size_delta_usd,
                 BigInt("0"),
                 onOpenChange,
+                slippage
               )
             }
           >

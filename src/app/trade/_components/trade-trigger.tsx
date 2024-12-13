@@ -16,7 +16,7 @@ import TokenSwapButton from "./token-swap-button";
 import TradeLeverageInput from "./trade-leverage-input";
 import { ETH_CONTRACT_ADDRESS, USDC_CONTRACT_ADDRESS } from "../../_lib/addresses";
 import { useTokenInputs } from "../_hooks/use-token-input";
-import useEthPrice, { usePriceDataSubscription } from "@zohal/app/trade/_hooks/use-market-data";
+import useEthPrice, { usePythPriceSubscription } from "@zohal/app/trade/_hooks/use-market-data";
 
 import SlTpCheckbox from "./sl-tp-checkbox";
 import { SlTpInfos } from "./sl-tp-modal";
@@ -42,9 +42,9 @@ export default function TradeTrigger({ className }: PropsWithClassName) {
   const [tokenSymbol, setTokenSymbol] = useState<TokenSymbol>("ETH");
   const initialRatio = 1;
   const [leverage, setLeverage] = useState(1);
-  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
-  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
-  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  const { priceData: ethData } = usePythPriceSubscription("ETH/USD");
+  const { priceData: btcData } = usePythPriceSubscription("BTC/USD" );
+  const { priceData: strkData } = usePythPriceSubscription("STRK/USD");
   const [priceData, setPriceData] = useState(ethData);
   const {
     payTokenSymbol,

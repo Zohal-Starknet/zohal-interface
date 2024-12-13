@@ -18,7 +18,7 @@ import PriceInfo from "./price-info";
 import useMarketTokenBalance from "@zohal/app/_hooks/use-market-token-balance";
 import useBtcPrice from "../_hooks/use-market-data-btc";
 import useStrkPrice from "../_hooks/use-market-data-strk";
-import useEthPrice, { usePriceDataSubscription } from "../_hooks/use-market-data";
+import useEthPrice, { usePythPriceSubscription } from "../_hooks/use-market-data";
 import useFormatNumber from "../_hooks/use-format-number";
 import useUserPositionInfos from "../_hooks/use-user-position-infos";
 import PriceInfoEditPosition from "./price-info-edit-position";
@@ -44,9 +44,9 @@ export default function IncreaseLimitPositionDialog({
   const decimals = BigInt(10 ** 6);
   const collateralAmountBigInt = BigInt(position.collateral_amount);
   const collateralUsdAmount = Number(collateralAmountBigInt) / Number(decimals);
-  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
-  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
-  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  const { priceData: ethData } = usePythPriceSubscription("ETH/USD");
+  const { priceData: btcData } = usePythPriceSubscription("BTC/USD" );
+  const { priceData: strkData } = usePythPriceSubscription("STRK/USD");
   const [priceData, setPriceData] = useState(ethData);
   const { formatNumberWithoutExponent } = useFormatNumber();
 
@@ -96,6 +96,21 @@ export default function IncreaseLimitPositionDialog({
     }
   }
   
+  const [slippage, setSlippage] = useState("0.03");
+
+  function onSlippageChange(newSlippage: string) {
+    const formattedSlippage = newSlippage.replace(",", ".");
+    if (formattedSlippage.length > 4) {
+        return;
+    }
+    if (/^\d*([.]?\d*)$/.test(formattedSlippage)) {
+        const numericValue = parseFloat(formattedSlippage);
+        if (numericValue <= 100 || isNaN(numericValue)) {
+            setSlippage(formattedSlippage);
+        }
+    }
+}
+
   let limit_price =
     limitPrice === "" ? BigInt(0) : BigInt(Math.round(parseFloat(limitPrice) * 10 ** 6));
 
@@ -198,6 +213,25 @@ export default function IncreaseLimitPositionDialog({
           </div>
         </div>
       </div>
+      <div className="flex items-center justify-between rounded-md border border-neutral-700 p-3">
+        <label
+          htmlFor="allowedSlippage"
+          className="text-sm text-neutral-300 flex-shrink-0"
+        >
+          Allowed Slippage
+        </label>
+        <div className="flex items-center">
+          <Input
+            className="bg-secondary rounded-md border border-neutral-700 text-lg outline-none text-right w-12"
+            id="PricePosition"
+            onChange={onSlippageChange}
+            placeholder="0.00"
+            value={slippage}
+            disabled={false}
+          />
+          <div className="text-lg ml-1">%</div>
+        </div>
+      </div>
         <div className="flex flex-col gap-2 rounded-md border border-border p-3">
         {priceInfos.map((priceInfo, index) => (
           <PriceInfoEditPosition key={index} {...priceInfo} />
@@ -207,7 +241,7 @@ export default function IncreaseLimitPositionDialog({
           className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
           onClick={() =>
             //@ts-ignore
-            editPosition(position, BigInt(new_collateral_delta), { LimitIncrease: {} }, new_size_delta_usd, limit_price, onOpenChange)
+            editPosition(position, BigInt(new_collateral_delta), { LimitIncrease: {} }, new_size_delta_usd, limit_price, onOpenChange, slippage)
           }
         >
           Increase position

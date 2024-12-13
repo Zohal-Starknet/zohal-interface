@@ -1,107 +1,84 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { subscribeOnStream, unsubscribeFromStream } from "../../_helpers/streaming";
 
 export type PriceData = {
-  pragmaPrice: number;
   currentPrice: number;
-  change24h: number;
-  change24hPercent: number;
   high24h: number;
   low24h: number;
+  change24h: number;
+  change24hPercent: number;
 };
 
-const pair = "eth/usd";
-const apiUrl = `/api/fetch-candlestick?pair=${pair}`;
+const API_ENDPOINT = 'https://benchmarks.pyth.network/v1/shims/tradingview';
 
-const convertToUnixTimestamp = (dateString: string): number => {
-  return Math.floor(new Date(dateString).getTime() / 1000);
-};
-
-const getLastTwoDaysData = (data: any[]): any[] => {
-  const now = Math.floor(Date.now() / 1000); // Current time in Unix timestamp
-  const twoDaysAgo = now - 2 * 24 * 60 * 60; // Unix timestamp for 2 days ago
-
-  return data.filter((item) => item.time >= twoDaysAgo);
-};
-
-export function usePriceDataSubscription({
-  pairSymbol,
-}: {
-  pairSymbol: string;
-}) {
-  const [tokenData, setTokenData] = useState<{
-    pragmaPrice: number,
-    currentPrice: number;
-    change24h: number;
-    change24hPercent: number;
-    high24h: number;
-    low24h: number;
-  }>({
-    pragmaPrice: 0,
+export function usePythPriceSubscription(pairSymbol: string) {
+  const [priceData, setPriceData] = useState<PriceData>({
     currentPrice: 0,
-    change24h: 0,
-    change24hPercent: 0,
     high24h: 0,
     low24h: 0,
+    change24h: 0,
+    change24hPercent: 0,
   });
 
   useEffect(() => {
-    const ws = new WebSocket(
-      "wss://ws.dev.pragma.build/node/v1/onchain/ohlc/subscribe",
-    );
-    ws.onopen = () => {
-      const subscribeMessage = {
-        msg_type: "subscribe",
-        pair: pairSymbol,
-        network: "mainnet",
-        interval: "15min",
-        candles_to_get: 1,
-      };
-      ws.send(JSON.stringify(subscribeMessage));
-    };
+    const subscriberUID = `${pairSymbol}-subscriber`;
 
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (Array.isArray(data)) {
-        const candle = data[data.length - 1];
-
-        if (candle) {
-          setTokenData({
-            pragmaPrice: parseFloat(candle.close),
-            currentPrice: parseFloat(candle.close) / 10 ** 8,
+    const fetchInitialData = async () => {
+      try {
+        const response = await fetch(`${API_ENDPOINT}`);
+        const data = await response.json();
+        console.log("DATAA", data)
+        if (data && data.close) {
+          setPriceData({
+            currentPrice: data.close,
+            high24h: data.high || 0,
+            low24h: data.low || 0,
             change24h: 0,
-            change24hPercent: 0,
-            high24h: 0,
-            low24h: 0,
+            change24hPercent: 0
           });
         }
+      } catch (error) {
+        console.error("Error fetching initial data:", error);
       }
     };
 
-    ws.onclose = () => {
-      console.log("WebSocket connection closed");
+    fetchInitialData();
+
+    const onRealtimeCallback = (bar: any) => {
+      setPriceData((prevData) => ({
+        currentPrice: bar.close,
+        high24h: Math.max(prevData.high24h, bar.high),
+        low24h: prevData.low24h === 0 ? bar.low : Math.min(prevData.low24h, bar.low),
+        change24h: bar.close - (prevData.currentPrice || bar.close),
+        change24hPercent:
+          ((bar.close - (prevData.currentPrice || bar.close)) / (prevData.currentPrice || bar.close)) * 100,
+      }));
     };
 
-    ws.onerror = (error) => {
-      console.error("WebSocket error", error);
+    const onResetCacheNeededCallback = () => {
+      console.log("Cache reset needed for", pairSymbol);
     };
+
+    // Subscribe to Pyth stream
+    subscribeOnStream(
+      { ticker: pairSymbol }, // Assuming pairSymbol matches the Pyth ticker format
+      "15min",
+      onRealtimeCallback,
+      subscriberUID,
+      onResetCacheNeededCallback,
+      null // No last bar cached initially
+    );
 
     return () => {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(
-          JSON.stringify({
-            msg_type: "unsubscribe",
-            pair: pairSymbol,
-          }),
-        );
-      }
-      ws.close();
+      unsubscribeFromStream(subscriberUID);
     };
   }, [pairSymbol]);
 
   return {
-    tokenData,
+    priceData,
   };
 }
+
 
 export default function useEthPrice() {
   const [ethData, setEthData] = useState<PriceData>({

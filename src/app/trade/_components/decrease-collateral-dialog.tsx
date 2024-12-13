@@ -18,7 +18,7 @@ import {
   ETH_MARKET_TOKEN_CONTRACT_ADDRESS,
   STRK_MARKET_TOKEN_CONTRACT_ADDRESS,
 } from "@zohal/app/_lib/addresses";
-import useEthPrice, { usePriceDataSubscription } from "../_hooks/use-market-data";
+import useEthPrice, { usePythPriceSubscription } from "../_hooks/use-market-data";
 import useBtcPrice from "../_hooks/use-market-data-btc";
 import useStrkPrice from "../_hooks/use-market-data-strk";
 import useUserPositionInfos from "../_hooks/use-user-position-infos";
@@ -40,6 +40,7 @@ export default function DecreaseCollateralDialog({
 }: ClosePositionDialogProps) {
   const [inputValue, setInputValue] = useState("");
   const [limitPrice, setLimitPrice] = useState("");
+  const [slippage, setSlippage] = useState("0.03");
   const [limitOrder, setLimitOrder] = useState(false);
   const [keepSameLeverage, setKeepSameLeverage] = useState(false);
   const { editPosition } = useUserPosition();
@@ -52,9 +53,9 @@ export default function DecreaseCollateralDialog({
     BigInt(10 ** 18)
   ).toString();
 
-  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
-  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
-  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  const { priceData: ethData } = usePythPriceSubscription("ETH/USD");
+  const { priceData: btcData } = usePythPriceSubscription("BTC/USD" );
+  const { priceData: strkData } = usePythPriceSubscription("STRK/USD");
   const [priceData, setPriceData] = useState(ethData);
   const [tokenSymbol, setTokenSymbol] = useState("ETH")
   const { getPositionInfos, getNewPositionInfos } = useUserPositionInfos();
@@ -105,6 +106,19 @@ export default function DecreaseCollateralDialog({
       setLimitPrice(formattedPrice);
     }
   }
+
+  function onSlippageChange(newSlippage: string) {
+    const formattedSlippage = newSlippage.replace(",", ".");
+    if (formattedSlippage.length > 4) {
+        return;
+    }
+    if (/^\d*([.]?\d*)$/.test(formattedSlippage)) {
+        const numericValue = parseFloat(formattedSlippage);
+        if (numericValue <= 100 || isNaN(numericValue)) {
+            setSlippage(formattedSlippage);
+        }
+    }
+}
   
   let limit_price =
     limitPrice === "" ? BigInt(0) : BigInt(Math.round(parseFloat(limitPrice) * 10 ** 6));
@@ -235,6 +249,25 @@ export default function DecreaseCollateralDialog({
         ) : (
           <></>
         )}
+       <div className="flex items-center justify-between rounded-md border border-neutral-700 p-3">
+          <label
+            htmlFor="allowedSlippage"
+            className="text-sm text-neutral-300 flex-shrink-0"
+          >
+            Allowed Slippage
+          </label>
+          <div className="flex items-center">
+            <Input
+              className="bg-secondary rounded-md border border-neutral-700 text-lg outline-none text-right w-12"
+              id="PricePosition"
+              onChange={onSlippageChange}
+              placeholder="0.00"
+              value={slippage}
+              disabled={false}
+            />
+            <div className="text-lg ml-1">%</div>
+          </div>
+        </div>
         <div className="flex flex-col gap-2 rounded-md border border-border p-3">
           {priceInfos.map((priceInfo, index) => (
             <PriceInfoEditPosition key={index} {...priceInfo} />
@@ -255,6 +288,7 @@ export default function DecreaseCollateralDialog({
                 position.size_in_usd,
                 limit_price,
                 onOpenChange,
+                slippage
               )
             }
           >
@@ -275,6 +309,7 @@ export default function DecreaseCollateralDialog({
                 new_size_delta_usd,
                 limit_price,
                 onOpenChange,
+                slippage
               )
             }
           >

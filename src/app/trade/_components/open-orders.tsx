@@ -4,7 +4,7 @@ import { Tokens } from "@zohal/app/_helpers/tokens";
 import { cn, type PropsWithClassName } from "@zohal/app/_lib/utils";
 import clsx from "clsx";
 
-import useEthPrice, { usePriceDataSubscription } from "../_hooks/use-market-data";
+import useEthPrice, { usePythPriceSubscription } from "../_hooks/use-market-data";
 import { BTC_MARKET_TOKEN_CONTRACT_ADDRESS, ETH_MARKET_TOKEN_CONTRACT_ADDRESS, STRK_MARKET_TOKEN_CONTRACT_ADDRESS } from "@zohal/app/_lib/addresses";
 import useBtcPrice from "../_hooks/use-market-data-btc";
 import useStrkPrice from "../_hooks/use-market-data-strk";
@@ -20,9 +20,9 @@ import useFormatNumber from "../_hooks/use-format-number";
 export default function OpenOrders({ className }: PropsWithClassName) {
   // TODO @YohanTz: Add ? icon to explain each of the table header
   const { orders, cancelOrder } = useUserOrder();
-  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
-  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
-  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  const { priceData: ethData } = usePythPriceSubscription("ETH/USD");
+  const { priceData: btcData } = usePythPriceSubscription("BTC/USD" );
+  const { priceData: strkData } = usePythPriceSubscription("STRK/USD");
   const { formatNumberWithoutExponent } = useFormatNumber();
 
   if (orders === undefined) {
@@ -49,6 +49,7 @@ export default function OpenOrders({ className }: PropsWithClassName) {
             <th className={tableHeaderCommonStyles}>Order</th>
             <th className={tableHeaderCommonStyles}>Size Delta</th>
             <th className={tableHeaderCommonStyles}>Collateral Delta</th>
+            <th className={tableHeaderCommonStyles}>Acceptable Price</th>
             <th className={tableHeaderCommonStyles}>Trigger Price</th>
             <th className={tableHeaderCommonStyles}>Order Type</th>
             <th className={cn("text-end mr-2", tableHeaderCommonStyles)}>
@@ -85,6 +86,7 @@ export default function OpenOrders({ className }: PropsWithClassName) {
 
             const orderLeverage = (Number(order.size_delta_usd) / 10**16) / (Number(order.initial_collateral_delta_amount) * 10**12);
             const triggerPrice = Number(BigInt(order.trigger_price)) / divisor;
+            const acceptablePrice = Number(BigInt(order.acceptable_price)) / divisor;
 
             const nonUndefinedKey = Object.entries(order.order_type.variant).find(([key, value]) => value !== undefined)?.[0];
 
@@ -136,6 +138,9 @@ export default function OpenOrders({ className }: PropsWithClassName) {
                   <div className="flex items-center gap-2">
                     <span>{formatNumberWithoutExponent(Number(formattedUsdAmount))} USDC</span>
                   </div>
+                </td>
+                <td>
+                  ${formatNumberWithoutExponent(Number(acceptablePrice.toFixed(2)))}
                 </td>
                 <td>
                   ${formatNumberWithoutExponent(Number(triggerPrice.toFixed(2)))}

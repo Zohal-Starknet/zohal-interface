@@ -13,11 +13,12 @@ import Input from "@zohal/app/_ui/input";
 import { useState, useEffect } from "react";
 
 import useUserPosition, { Position } from "../_hooks/use-user-position";
-import useEthPrice, { PriceData } from "../_hooks/use-market-data";
+import useEthPrice, { PriceData, usePythPriceSubscription } from "../_hooks/use-market-data";
 import useFormatNumber from "../_hooks/use-format-number";
 import useUserPositionInfos from "../_hooks/use-user-position-infos";
 import PriceInfoEditPosition from "./price-info-edit-position";
 import { CairoCustomEnum } from "starknet";
+import { BTC_MARKET_TOKEN_CONTRACT_ADDRESS, ETH_MARKET_TOKEN_CONTRACT_ADDRESS, STRK_MARKET_TOKEN_CONTRACT_ADDRESS } from "@zohal/app/_lib/addresses";
 
 interface ClosePositionDialogProps {
   position: Position;
@@ -25,7 +26,6 @@ interface ClosePositionDialogProps {
   onOpenChange(open: boolean): void;
   open: boolean;
   price: PriceData;
-  tokenSymbol: string;
 }
 
 export default function DecreaseLimitPositionDialog({
@@ -34,7 +34,6 @@ export default function DecreaseLimitPositionDialog({
   onOpenChange,
   open,
   price,
-  tokenSymbol,
 }: ClosePositionDialogProps) {
   const [inputValue, setInputValue] = useState("");
   const [limitPrice, setLimitPrice] = useState("");
@@ -45,6 +44,24 @@ export default function DecreaseLimitPositionDialog({
   const decimals = BigInt(10 ** 6);
   const collateralAmountBigInt = BigInt(position.collateral_amount);
   const collateralUsdAmount = Number(collateralAmountBigInt) / Number(decimals);
+  const { priceData: ethData } = usePythPriceSubscription("ETH/USD");
+  const { priceData: btcData } = usePythPriceSubscription("BTC/USD" );
+  const { priceData: strkData } = usePythPriceSubscription("STRK/USD");
+  const [priceData, setPriceData] = useState(ethData);
+  const [tokenSymbol, setTokenSymbol] = useState("ETH")
+
+  useEffect(() => {
+    if (position.market === ETH_MARKET_TOKEN_CONTRACT_ADDRESS) {
+      setPriceData(ethData);
+      setTokenSymbol("ETH")
+    } else if (position.market === BTC_MARKET_TOKEN_CONTRACT_ADDRESS) {
+      setPriceData(btcData);
+      setTokenSymbol("BTC")
+  } else if (position.market === STRK_MARKET_TOKEN_CONTRACT_ADDRESS) {
+      setPriceData(strkData);
+      setTokenSymbol("STRK")
+    }
+  }, [position.market, ethData, btcData, strkData]);
 
   const formattedSizeDeltaUsdcAmount = (
     position.size_in_usd /
@@ -83,6 +100,21 @@ export default function DecreaseLimitPositionDialog({
       setLimitPrice(formattedPrice);
     }
   }
+
+  const [slippage, setSlippage] = useState("0.03");
+
+  function onSlippageChange(newSlippage: string) {
+    const formattedSlippage = newSlippage.replace(",", ".");
+    if (formattedSlippage.length > 4) {
+        return;
+    }
+    if (/^\d*([.]?\d*)$/.test(formattedSlippage)) {
+        const numericValue = parseFloat(formattedSlippage);
+        if (numericValue <= 100 || isNaN(numericValue)) {
+            setSlippage(formattedSlippage);
+        }
+    }
+}
 
   let limit_price =
     limitPrice === ""
@@ -244,6 +276,25 @@ export default function DecreaseLimitPositionDialog({
             <div>USD</div>
           </div>
         </div>
+        <div className="flex items-center justify-between rounded-md border border-neutral-700 p-3">
+          <label
+            htmlFor="allowedSlippage"
+            className="text-sm text-neutral-300 flex-shrink-0"
+          >
+            Allowed Slippage
+          </label>
+          <div className="flex items-center">
+            <Input
+              className="bg-secondary rounded-md border border-neutral-700 text-lg outline-none text-right w-12"
+              id="PricePosition"
+              onChange={onSlippageChange}
+              placeholder="0.00"
+              value={slippage}
+              disabled={false}
+            />
+            <div className="text-lg ml-1">%</div>
+          </div>
+        </div>
         <div className="flex flex-col gap-2 rounded-md border border-border p-3">
           {priceInfos.map((priceInfo, index) => (
             <PriceInfoEditPosition key={index} {...priceInfo} />
@@ -261,6 +312,7 @@ export default function DecreaseLimitPositionDialog({
                 position.size_in_usd,
                 limit_price,
                 onOpenChange,
+                slippage
               )
             }
           >
@@ -278,6 +330,7 @@ export default function DecreaseLimitPositionDialog({
                 new_size_delta_usd,
                 limit_price,
                 onOpenChange,
+                slippage
               )
             }
           >
