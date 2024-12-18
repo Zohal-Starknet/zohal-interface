@@ -29,7 +29,7 @@
     "lightweight-charts": "^4.2.2",
     "lodash.isequal": "^4.5.0",
     "lucide-react": "^0.414.0",
-    "next": "13.4.7",
+    "next": "14.2.15",
     "next-themes": "^0.3.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
