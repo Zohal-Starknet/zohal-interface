@@ -13,12 +13,13 @@ import Input from "@zohal/app/_ui/input";
 import { useState, useEffect } from "react";
 
 import useUserPosition, { Position } from "../_hooks/use-user-position";
-import useEthPrice, { PriceData, usePythPriceSubscription } from "../_hooks/use-market-data";
+import useEthPrice, { PriceData, usePriceDataSubscription } from "../_hooks/use-market-data";
 import useFormatNumber from "../_hooks/use-format-number";
 import useUserPositionInfos from "../_hooks/use-user-position-infos";
 import PriceInfoEditPosition from "./price-info-edit-position";
 import { CairoCustomEnum } from "starknet";
 import { BTC_MARKET_TOKEN_CONTRACT_ADDRESS, ETH_MARKET_TOKEN_CONTRACT_ADDRESS, STRK_MARKET_TOKEN_CONTRACT_ADDRESS } from "@zohal/app/_lib/addresses";
+import { check } from "prettier";
 
 interface ClosePositionDialogProps {
   position: Position;
@@ -35,29 +36,32 @@ export default function DecreaseLimitPositionDialog({
   open,
   price,
 }: ClosePositionDialogProps) {
+  const [orderType, setOrderType] = useState({ LimitDecrease: {} } as unknown as CairoCustomEnum);
+  const [checkedTp, setCheckedLong] = useState(true);
+  const [checkedSl, setCheckedShort] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [limitPrice, setLimitPrice] = useState("");
   const [keepSameLeverage, setKeepSameLeverage] = useState(false);
-  const { editPosition } = useUserPosition();
   const { getPositionInfos, getNewPositionInfos } = useUserPositionInfos();
   const { formatNumberWithoutExponent } = useFormatNumber();
   const decimals = BigInt(10 ** 6);
   const collateralAmountBigInt = BigInt(position.collateral_amount);
   const collateralUsdAmount = Number(collateralAmountBigInt) / Number(decimals);
-  const { priceData: ethData } = usePythPriceSubscription("ETH/USD");
-  const { priceData: btcData } = usePythPriceSubscription("BTC/USD" );
-  const { priceData: strkData } = usePythPriceSubscription("STRK/USD");
+  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
   const [priceData, setPriceData] = useState(ethData);
   const [tokenSymbol, setTokenSymbol] = useState("ETH")
 
   useEffect(() => {
-    if (position.market === ETH_MARKET_TOKEN_CONTRACT_ADDRESS) {
+    console.log("MARKEET", position.market)
+    if (position.market == (BigInt(ETH_MARKET_TOKEN_CONTRACT_ADDRESS)).toString()) {
       setPriceData(ethData);
       setTokenSymbol("ETH")
-    } else if (position.market === BTC_MARKET_TOKEN_CONTRACT_ADDRESS) {
+    } else if (position.market == (BigInt(BTC_MARKET_TOKEN_CONTRACT_ADDRESS)).toString()) {
       setPriceData(btcData);
       setTokenSymbol("BTC")
-  } else if (position.market === STRK_MARKET_TOKEN_CONTRACT_ADDRESS) {
+  } else if (position.market == (BigInt(STRK_MARKET_TOKEN_CONTRACT_ADDRESS)).toString()) {
       setPriceData(strkData);
       setTokenSymbol("STRK")
     }
@@ -114,7 +118,23 @@ export default function DecreaseLimitPositionDialog({
             setSlippage(formattedSlippage);
         }
     }
-}
+  }
+
+  const onLongTpSlChange = (checked: boolean) => {
+    if (checked) {
+      setCheckedLong(checked);
+      setCheckedShort(false);
+      setOrderType({ LimitDecrease: {} } as unknown as CairoCustomEnum)
+    }
+  };
+
+  const onShortTpSlChange = (checked: boolean) => {
+    if (checked) {
+      setCheckedLong(false);
+      setCheckedShort(checked);
+      setOrderType({ StopLossDecrease: {} } as unknown as CairoCustomEnum)
+    }
+  };
 
   let limit_price =
     limitPrice === ""
@@ -179,6 +199,30 @@ export default function DecreaseLimitPositionDialog({
       ),
     },
   ];
+
+  const { send, isLoading, isPending } = useUserPosition(
+      position,
+      collateral_amount,
+      limitPrice === ""
+        ? //@ts-ignore
+          { MarketDecrease: {} }
+        : orderType,
+      position.size_in_usd,
+      limit_price,
+      onOpenChange,
+      slippage
+    );
+
+
+  const { send: sendClose, isLoading: isLoadingClose, isPending: isPendingClose } = useUserPosition(
+      position,
+      BigInt(new_collateral_delta),
+      orderType,
+      new_size_delta_usd,
+      limit_price,
+      onOpenChange,
+      slippage
+    );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -261,7 +305,7 @@ export default function DecreaseLimitPositionDialog({
           <div className="flex items-center justify-between">
             <label className="block text-xs">Price</label>
             <span className="text-xs text-muted-foreground">
-              Price: {price.currentPrice.toFixed(2)}
+              Price: {priceData.currentPrice.toString()}
             </span>
           </div>
           <div className="mt-1 flex items-center justify-between bg-transparent">
@@ -274,6 +318,32 @@ export default function DecreaseLimitPositionDialog({
               disabled={false}
             />
             <div>USD</div>
+          </div>
+        </div>
+        <div className="mb-1 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="Long Tp/Sl"
+              checked={checkedTp}
+              onChange={(e) => onLongTpSlChange(e.target.checked)}
+              className="h-4 w-4 cursor-pointer"
+            />
+            <label htmlFor="limitOrder" className="text-sm text-neutral-300">
+              Take Profit
+            </label>
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="Short Tp/Sl"
+              checked={checkedSl}
+              onChange={(e) => onShortTpSlChange(e.target.checked)}
+              className="h-4 w-4 cursor-pointer"
+            />
+            <label htmlFor="limitOrder" className="text-sm text-neutral-300">
+              Stop Loss
+            </label>
           </div>
         </div>
         <div className="flex items-center justify-between rounded-md border border-neutral-700 p-3">
@@ -303,36 +373,14 @@ export default function DecreaseLimitPositionDialog({
         {isCloseAction ? (
           <button
             className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
-            onClick={() =>
-              //@ts-ignore
-              editPosition(
-                position,
-                collateral_amount,
-                { MarketDecrease: {} } as unknown as CairoCustomEnum,
-                position.size_in_usd,
-                limit_price,
-                onOpenChange,
-                slippage
-              )
-            }
+            onClick={() => sendClose() }
           >
             Close Position
           </button>
         ) : (
           <button
             className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
-            onClick={() =>
-              //@ts-ignore
-              editPosition(
-                position,
-                BigInt(new_collateral_delta),
-                { LimitDecrease: {} } as unknown as CairoCustomEnum,
-                new_size_delta_usd,
-                limit_price,
-                onOpenChange,
-                slippage
-              )
-            }
+            onClick={() => send() }
           >
             Reduce position
           </button>

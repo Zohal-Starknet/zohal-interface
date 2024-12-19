@@ -6,9 +6,11 @@ import EditOrderDialog from "./edit-order-dialog";
 
 interface EditPositionProps {
   order: Order;
+  old_size_delta: string;
+  old_trigger_price: string;
 }
 
-export default function EditOrder({ order }: EditPositionProps) {
+export default function EditOrder({ order, old_size_delta, old_trigger_price }: EditPositionProps) {
   const [openedModal, setOpenedModal] = useState<
     | "editOrder"
     | undefined
@@ -33,6 +35,8 @@ export default function EditOrder({ order }: EditPositionProps) {
 
       <EditOrderDialog
         order={order}
+        old_size_delta={old_size_delta}
+        old_trigger_price={old_trigger_price}
         open={openedModal === "editOrder"}
         onOpenChange={handleOpenChange}
       />

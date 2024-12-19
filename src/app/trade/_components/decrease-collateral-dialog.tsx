@@ -18,12 +18,13 @@ import {
   ETH_MARKET_TOKEN_CONTRACT_ADDRESS,
   STRK_MARKET_TOKEN_CONTRACT_ADDRESS,
 } from "@zohal/app/_lib/addresses";
-import useEthPrice, { usePythPriceSubscription } from "../_hooks/use-market-data";
+import useEthPrice, { usePriceDataSubscription } from "../_hooks/use-market-data";
 import useBtcPrice from "../_hooks/use-market-data-btc";
 import useStrkPrice from "../_hooks/use-market-data-strk";
 import useUserPositionInfos from "../_hooks/use-user-position-infos";
 import useFormatNumber from "../_hooks/use-format-number";
 import PriceInfoEditPosition from "./price-info-edit-position";
+import { CairoCustomEnum } from "starknet";
 
 interface ClosePositionDialogProps {
   position: Position;
@@ -38,12 +39,14 @@ export default function DecreaseCollateralDialog({
   onOpenChange,
   open,
 }: ClosePositionDialogProps) {
+  const [orderType, setOrderType] = useState({ LimitDecrease: {} } as unknown as CairoCustomEnum);
+  const [checkedTp, setCheckedLong] = useState(true);
+  const [checkedSl, setCheckedShort] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [limitPrice, setLimitPrice] = useState("");
   const [slippage, setSlippage] = useState("0.03");
   const [limitOrder, setLimitOrder] = useState(false);
   const [keepSameLeverage, setKeepSameLeverage] = useState(false);
-  const { editPosition } = useUserPosition();
   const decimals = BigInt(10 ** 6);
   const collateralAmountBigInt = BigInt(position.collateral_amount);
   const collateralUsdAmount = Number(collateralAmountBigInt) / Number(decimals);
@@ -53,22 +56,23 @@ export default function DecreaseCollateralDialog({
     BigInt(10 ** 18)
   ).toString();
 
-  const { priceData: ethData } = usePythPriceSubscription("ETH/USD");
-  const { priceData: btcData } = usePythPriceSubscription("BTC/USD" );
-  const { priceData: strkData } = usePythPriceSubscription("STRK/USD");
+  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
   const [priceData, setPriceData] = useState(ethData);
   const [tokenSymbol, setTokenSymbol] = useState("ETH")
   const { getPositionInfos, getNewPositionInfos } = useUserPositionInfos();
   const { formatNumberWithoutExponent } = useFormatNumber();
 
   useEffect(() => {
-    if (position.market === ETH_MARKET_TOKEN_CONTRACT_ADDRESS) {
+    console.log("MARKEET", position.market)
+    if (position.market == (BigInt(ETH_MARKET_TOKEN_CONTRACT_ADDRESS)).toString()) {
       setPriceData(ethData);
       setTokenSymbol("ETH")
-    } else if (position.market === BTC_MARKET_TOKEN_CONTRACT_ADDRESS) {
+    } else if (position.market == (BigInt(BTC_MARKET_TOKEN_CONTRACT_ADDRESS)).toString()) {
       setPriceData(btcData);
       setTokenSymbol("BTC")
-  } else if (position.market === STRK_MARKET_TOKEN_CONTRACT_ADDRESS) {
+  } else if (position.market == (BigInt(STRK_MARKET_TOKEN_CONTRACT_ADDRESS)).toString()) {
       setPriceData(strkData);
       setTokenSymbol("STRK")
     }
@@ -118,7 +122,23 @@ export default function DecreaseCollateralDialog({
             setSlippage(formattedSlippage);
         }
     }
-}
+  }
+
+  const onLongTpSlChange = (checked: boolean) => {
+    if (checked) {
+      setCheckedLong(checked);
+      setCheckedShort(false);
+      setOrderType({ LimitDecrease: {} } as unknown as CairoCustomEnum)
+    }
+  };
+
+  const onShortTpSlChange = (checked: boolean) => {
+    if (checked) {
+      setCheckedLong(false);
+      setCheckedShort(checked);
+      setOrderType({ StopLossDecrease: {} } as unknown as CairoCustomEnum)
+    }
+  };
   
   let limit_price =
     limitPrice === "" ? BigInt(0) : BigInt(Math.round(parseFloat(limitPrice) * 10 ** 6));
@@ -141,6 +161,31 @@ export default function DecreaseCollateralDialog({
     { label: "Collateral (USD)", value_before: formatNumberWithoutExponent(Number(positionInfos.collateral_amount)), value_after: formatNumberWithoutExponent(Number(newPositionInfos.new_collateral_amount)) },
   ];
 
+  const { send, isLoading, isPending } = useUserPosition(
+    position,
+    collateral_amount,
+    limitPrice === ""
+      ? //@ts-ignore
+        { MarketDecrease: {} }
+      : orderType,
+    position.size_in_usd,
+    limit_price,
+    onOpenChange,
+    slippage
+  );
+
+  const { send: sendClose, isLoading: isLoadingClose, isPending: isPendingClose } = useUserPosition(
+    position,
+    BigInt(new_collateral_delta),
+    limitPrice === ""
+      ? //@ts-ignore
+        { MarketDecrease: {} }
+      : orderType,
+    new_size_delta_usd,
+    limit_price,
+    onOpenChange,
+    slippage
+  );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -249,6 +294,32 @@ export default function DecreaseCollateralDialog({
         ) : (
           <></>
         )}
+        <div className="mb-1 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="Long Tp/Sl"
+              checked={checkedTp}
+              onChange={(e) => onLongTpSlChange(e.target.checked)}
+              className="h-4 w-4 cursor-pointer"
+            />
+            <label htmlFor="limitOrder" className="text-sm text-neutral-300">
+              Take Profit
+            </label>
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="Short Tp/Sl"
+              checked={checkedSl}
+              onChange={(e) => onShortTpSlChange(e.target.checked)}
+              className="h-4 w-4 cursor-pointer"
+            />
+            <label htmlFor="limitOrder" className="text-sm text-neutral-300">
+              Stop Loss
+            </label>
+          </div>
+        </div>
        <div className="flex items-center justify-between rounded-md border border-neutral-700 p-3">
           <label
             htmlFor="allowedSlippage"
@@ -276,42 +347,14 @@ export default function DecreaseCollateralDialog({
         {isCloseAction ? (
           <button
             className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
-            onClick={() =>
-              //@ts-ignore
-              editPosition(
-                position,
-                collateral_amount,
-                limitPrice === ""
-                  ? //@ts-ignore
-                    { MarketDecrease: {} }
-                  : { LimitDecrease: {} },
-                position.size_in_usd,
-                limit_price,
-                onOpenChange,
-                slippage
-              )
-            }
+            onClick={() => send()}
           >
             Close Position
           </button>
         ) : (
           <button
             className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
-            onClick={() =>
-              //@ts-ignore
-              editPosition(
-                position,
-                BigInt(new_collateral_delta),
-                limitPrice === ""
-                  ? //@ts-ignore
-                    { MarketDecrease: {} }
-                  : { LimitDecrease: {} },
-                new_size_delta_usd,
-                limit_price,
-                onOpenChange,
-                slippage
-              )
-            }
+            onClick={() => sendClose()}
           >
             Reduce collateral
           </button>

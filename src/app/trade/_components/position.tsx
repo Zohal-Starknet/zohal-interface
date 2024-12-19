@@ -5,21 +5,22 @@ import { cn, type PropsWithClassName } from "@zohal/app/_lib/utils";
 import clsx from "clsx";
 
 import useUserPosition from "../_hooks/use-user-position";
-import useEthPrice, { usePythPriceSubscription } from "../_hooks/use-market-data";
+import useEthPrice, { usePriceDataSubscription } from "../_hooks/use-market-data";
 import EditMarketPositionDialog from "./edit-market-position-dialog";
 import EditLimitPositionDialog from "./edit-limit-position-dialog";
 import EditCollateralPositionDialog from "./edit-collateral-position-dialog";
 import useCloseAllPositions from "../_hooks/use-close-all-positions";
 import useUserPositionInfos from "../_hooks/use-user-position-infos";
 import useFormatNumber from "../_hooks/use-format-number";
+import useGetPosition from "../_hooks/use-get-position";
 
 /* eslint-disable @next/next/no-img-element */
 export default function Position({ className }: PropsWithClassName) {
   // TODO @YohanTz: Add ? icon to explain each of the table header
-  const { positions } = useUserPosition();
-  const { priceData: ethData } = usePythPriceSubscription("ETH/USD");
-  const { priceData: btcData } = usePythPriceSubscription("BTC/USD" );
-  const { priceData: strkData } = usePythPriceSubscription("STRK/USD");
+  const { positions } = useGetPosition();
+  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
   const { closeAllPositions } = useCloseAllPositions();
   const { getPositionInfos } = useUserPositionInfos();
   const { formatNumberWithoutExponent } = useFormatNumber();

@@ -21,9 +21,11 @@ export type SlTpInfos = {
   tpTriggerPrice: string;
   tp: string;
   size_delta_usd_tp: string;
+  collateral_delta_tp: string;
   slTriggerPrice: string;
   sl: string;
   size_delta_usd_sl: string;
+  collateral_delta_sl: string;
 };
 
 type SlTpCheckboxProps = {
@@ -371,6 +373,8 @@ function SlTpModal({
                 tpTriggerPrice: "",
                 size_delta_usd_sl: "",
                 size_delta_usd_tp: "",
+                collateral_delta_tp: "",
+                collateral_delta_sl: ""
               });
               setSlTpInfos({
                 sl: "",
@@ -379,6 +383,8 @@ function SlTpModal({
                 tpTriggerPrice: "",
                 size_delta_usd_sl: "",
                 size_delta_usd_tp: "",
+                collateral_delta_tp: "",
+                collateral_delta_sl: ""
               });
               setIsOpen(false);
             }}

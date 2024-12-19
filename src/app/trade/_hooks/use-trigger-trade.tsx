@@ -27,6 +27,13 @@ export default function useTriggerTrade() {
     isLong: boolean,
     leverage: number,
     triggeredPrice: number,
+    tpPrice: string,
+    slPrice: string,
+    sizeDeltaTp: string,
+    sizeDeltaSl: string,
+    collateralDeltaTp: string,
+    collateralDeltaSl: string,
+    slippage: string,
   ) {
     if (account === undefined || address === undefined) {
       return;
@@ -48,18 +55,10 @@ export default function useTriggerTrade() {
 
       let pricePay = BigInt("10000000000000000000000000000");
 
-      const pragma_decimals = 8;
-      let trigger_price =
-        (BigInt(triggeredPrice.toFixed(0)) * BigInt(10 ** 30)) /
-        BigInt(10 ** (pragma_decimals - 4)) /
-        BigInt(10 ** Tokens[tradedTokenSymbol].decimals);
+      let trigger_price = (BigInt(triggeredPrice) * BigInt(10 ** 6))
       let acceptable_price = isLong
-        ? uint256.bnToUint256(
-            BigInt(trigger_price * (BigInt(105) / BigInt(100))),
-          )
-        : uint256.bnToUint256(
-            BigInt(trigger_price * (BigInt(95) / BigInt(100))),
-          );
+          ? uint256.bnToUint256(BigInt(trigger_price * BigInt(10000 + Number(slippage) * 100)) / BigInt(10000))
+          : uint256.bnToUint256(BigInt(trigger_price * BigInt(10000 - Number(slippage) * 100)) / BigInt(10000));
       let size_delta_usd = uint256.bnToUint256(
         BigInt(leverage) * pricePay * BigInt(payTokenAmount),
       );
@@ -77,7 +76,7 @@ export default function useTriggerTrade() {
         ),
         trigger_price: trigger_price,
         acceptable_price: acceptable_price,
-        execution_fee: uint256.bnToUint256("80000000000000"),
+        execution_fee: uint256.bnToUint256("0"),
         callback_gas_limit: uint256.bnToUint256(0),
         min_output_amount: uint256.bnToUint256(0),
         order_type: new CairoCustomEnum({ LimitIncrease: {} }),
@@ -97,17 +96,17 @@ export default function useTriggerTrade() {
       const transferCall = usdcContract.populate("transfer", [
         ORDER_VAULT_CONTRACT_ADDRESS,
         uint256.bnToUint256(
-          BigInt(payTokenAmount * 10 ** Tokens[tradedTokenSymbol].decimals),
+          BigInt(payTokenAmount * 10 ** 6),
         ),
       ]);
 
       calls.push(transferCall);
-      const transferCall2 = feeTokenContract.populate("transfer", [
-        ORDER_VAULT_CONTRACT_ADDRESS,
-        uint256.bnToUint256(BigInt("80000000000000")),
-      ]);
+      // const transferCall2 = feeTokenContract.populate("transfer", [
+      //   ORDER_VAULT_CONTRACT_ADDRESS,
+      //   uint256.bnToUint256(BigInt("80000000000000")),
+      // ]);
 
-      calls.push(transferCall2);
+      // calls.push(transferCall2);
 
       const createOrderCall = exchangeRouterContract.populate("create_order", [
         createOrderParams,
@@ -115,43 +114,57 @@ export default function useTriggerTrade() {
 
       calls.push(createOrderCall);
 
-      // if (tpPrice) {
-      //   const transferCall3 = ethContract.populate("transfer", [
-      //     ORDER_VAULT_CONTRACT_ADDRESS,
-      //     uint256.bnToUint256(BigInt("80000000000000")),
-      // ]);
-      // calls.push(transferCall3);
-      //   tpPrice =  BigInt(tpPrice) * BigInt(10 ** pragma_decimals);
-      //   const tpOrderParams = {
-      //     ...createOrderParams,
-      //     trigger_price: uint256.bnToUint256(BigInt(tpPrice)),
-      //     acceptable_price : isLong ? uint256.bnToUint256(BigInt((tpPrice * BigInt(95) / BigInt(100)))) : uint256.bnToUint256(BigInt((tpPrice * BigInt(105) / BigInt(100)))),
-      //     order_type: new CairoCustomEnum({ LimitDecrease: {} }),
-      //   };
-      //   const createTpOrderCall = exchangeRouterContract.populate("create_order", [
-      //     tpOrderParams,
-      //   ]);
-      //   calls.push(createTpOrderCall);
-      // }
+      if (tpPrice != "") {
+        const tpPriceBigint = BigInt(tpPrice) * BigInt(10 ** 16);
+        const tpOrderParams = {
+          ...createOrderParams,
+          initial_collateral_delta_amount: uint256.bnToUint256(BigInt(collateralDeltaTp)),
+          trigger_price: uint256.bnToUint256(BigInt(tpPriceBigint)),
+          size_delta_usd:
+            sizeDeltaTp !== ""
+              ? uint256.bnToUint256(BigInt(Number(sizeDeltaTp) * 10 ** 34))
+              : size_delta_usd,
+          acceptable_price: isLong
+            ? uint256.bnToUint256(BigInt(tpPriceBigint * BigInt(10000 - Number(slippage) * 100)) / BigInt(10000))
+            : uint256.bnToUint256(BigInt(tpPriceBigint * BigInt(10000 + Number(slippage) * 100)) / BigInt(10000)),
+          order_type: new CairoCustomEnum({ LimitDecrease: {} }),
+        };
+        const createTpOrderCall = exchangeRouterContract.populate(
+          "create_order",
+          [tpOrderParams],
+        );
+        calls.push(createTpOrderCall);
+      }
 
-      // if (slPrice) {
-      //   const transferCall4 = ethContract.populate("transfer", [
-      //     ORDER_VAULT_CONTRACT_ADDRESS,
-      //     uint256.bnToUint256(BigInt("80000000000000")),
-      // ]);
-      // calls.push(transferCall4);
-      //   slPrice =  BigInt(slPrice) * BigInt(10 ** pragma_decimals);
-      //   const slOrderParams = {
-      //     ...createOrderParams,
-      //     trigger_price: uint256.bnToUint256(BigInt(slPrice)),
-      //     acceptable_price : isLong ? uint256.bnToUint256(BigInt((slPrice * BigInt(95) / BigInt(100)))) : uint256.bnToUint256(BigInt((slPrice * BigInt(105) / BigInt(100)))),
-      //     order_type: new CairoCustomEnum({ LimitDecrease: {} }),
-      //   };
-      //   const createSlOrderCall = exchangeRouterContract.populate("create_order", [
-      //     slOrderParams,
-      //   ]);
-      //   calls.push(createSlOrderCall);
-      // }
+      console.log("collateralSl", collateralDeltaSl)
+      console.log("collateralTp", collateralDeltaTp)
+
+      if (slPrice != "") {
+        // const transferCall4 = usdcContract.populate("transfer", [
+        //   ORDER_VAULT_CONTRACT_ADDRESS,
+        //   uint256.bnToUint256(BigInt("80000000000000")),
+        // ]);
+        // calls.push(transferCall4);
+        let slPriceBigint = BigInt(slPrice) * BigInt(10 ** 16);
+        const slOrderParams = {
+          ...createOrderParams,
+          initial_collateral_delta_amount: uint256.bnToUint256(BigInt(collateralDeltaSl)),
+          trigger_price: uint256.bnToUint256(BigInt(slPriceBigint)),
+          size_delta_usd:
+            sizeDeltaSl !== ""
+              ? uint256.bnToUint256(BigInt(Number(sizeDeltaSl) * 10 ** 34))
+              : size_delta_usd,
+          acceptable_price: isLong
+            ? uint256.bnToUint256(BigInt(slPriceBigint * BigInt(10000 - Number(slippage) * 100)) / BigInt(10000))
+            : uint256.bnToUint256(BigInt(slPriceBigint * BigInt(10000 + Number(slippage) * 100)) / BigInt(10000)),
+          order_type: new CairoCustomEnum({ StopLossDecrease: {} }),
+        };
+        const createSlOrderCall = exchangeRouterContract.populate(
+          "create_order",
+          [slOrderParams],
+        );
+        calls.push(createSlOrderCall);
+      }
 
       await account.execute(calls);
 

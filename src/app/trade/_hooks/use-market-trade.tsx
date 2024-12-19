@@ -31,7 +31,10 @@ export default function useMarketTrade() {
     slPrice: string,
     sizeDeltaTp: string,
     sizeDeltaSl: string,
+    collateralDeltaTp: string,
+    collateralDeltaSl: string,
     tradedPriceData: PriceData,
+    slippage: string,
   ) {
     if (account === undefined || address === undefined) {
       return;
@@ -64,8 +67,8 @@ export default function useMarketTrade() {
         BigInt(10 ** (pragma_decimals - 4)) /
         BigInt(10 ** Tokens[tradedTokenSymbol].decimals);
       let acceptable_price = isLong
-        ? uint256.bnToUint256(BigInt(priceTrade * (BigInt(105) / BigInt(100))))
-        : uint256.bnToUint256(BigInt(priceTrade * (BigInt(95) / BigInt(100))));
+        ? uint256.bnToUint256(BigInt(priceTrade * BigInt(10000 + Number(slippage) * 100)) / BigInt(10000))
+        : uint256.bnToUint256(BigInt(priceTrade * BigInt(10000 - Number(slippage) * 100)) / BigInt(10000));
       let size_delta_usd = uint256.bnToUint256(
         BigInt(leverage) *
           pricePay *
@@ -129,16 +132,15 @@ export default function useMarketTrade() {
         const tpPriceBigint = BigInt(tpPrice) * BigInt(10 ** 16);
         const tpOrderParams = {
           ...createOrderParams,
+          initial_collateral_delta_amount: uint256.bnToUint256(BigInt(collateralDeltaTp)),
           trigger_price: uint256.bnToUint256(BigInt(tpPriceBigint)),
           size_delta_usd:
             sizeDeltaTp !== ""
               ? uint256.bnToUint256(BigInt(Number(sizeDeltaTp) * 10 ** 34))
               : size_delta_usd,
           acceptable_price: isLong
-            ? uint256.bnToUint256(BigInt((tpPriceBigint * BigInt(95)) / BigInt(100)))
-            : uint256.bnToUint256(
-                BigInt((tpPriceBigint * BigInt(105)) / BigInt(100)),
-              ),
+            ? uint256.bnToUint256(BigInt(tpPriceBigint * BigInt(10000 - Number(slippage) * 100)) / BigInt(10000))
+            : uint256.bnToUint256(BigInt(tpPriceBigint * BigInt(10000 + Number(slippage) * 100)) / BigInt(10000)),
           order_type: new CairoCustomEnum({ LimitDecrease: {} }),
         };
         const createTpOrderCall = exchangeRouterContract.populate(
@@ -157,17 +159,16 @@ export default function useMarketTrade() {
         let slPriceBigint = BigInt(slPrice) * BigInt(10 ** 16);
         const slOrderParams = {
           ...createOrderParams,
+          initial_collateral_delta_amount: uint256.bnToUint256(BigInt(collateralDeltaSl)),
           trigger_price: uint256.bnToUint256(BigInt(slPriceBigint)),
           size_delta_usd:
             sizeDeltaSl !== ""
               ? uint256.bnToUint256(BigInt(Number(sizeDeltaSl) * 10 ** 34))
               : size_delta_usd,
           acceptable_price: isLong
-            ? uint256.bnToUint256(BigInt((slPriceBigint * BigInt(95)) / BigInt(100)))
-            : uint256.bnToUint256(
-                BigInt((slPriceBigint * BigInt(105)) / BigInt(100)),
-              ),
-          order_type: new CairoCustomEnum({ LimitDecrease: {} }),
+            ? uint256.bnToUint256(BigInt(slPriceBigint * BigInt(10000 - Number(slippage) * 100)) / BigInt(10000))
+            : uint256.bnToUint256(BigInt(slPriceBigint * BigInt(10000 + Number(slippage) * 100)) / BigInt(10000)),
+          order_type: new CairoCustomEnum({ StopLossDecrease: {} }),
         };
         const createSlOrderCall = exchangeRouterContract.populate(
           "create_order",

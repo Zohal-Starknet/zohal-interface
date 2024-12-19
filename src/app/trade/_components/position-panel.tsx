@@ -5,8 +5,8 @@ import Tabs, { type TabItemType } from "../../_ui/tabs";
 import Position from "./position";
 import Orders from "./orders";
 import OpenOrders from "./open-orders";
-import useUserOrder from "../_hooks/use-user-order";
-import useUserPosition from "../_hooks/use-user-position";
+import useGetPosition from "../_hooks/use-get-position";
+import useGetOrder from "../_hooks/use-get-order";
 
 
 type PositionPanelProps = {
@@ -14,8 +14,8 @@ type PositionPanelProps = {
 };
 
 export default function PositionPanel(props: PositionPanelProps) {
-  const { orders_count } = useUserOrder();
-  const { positions_count } = useUserPosition();
+  const { orders_count } = useGetOrder();
+  const { positions, positions_count } = useGetPosition();
   
   const tabItems: [TabItemType, TabItemType, TabItemType] = [
     {
@@ -35,7 +35,7 @@ export default function PositionPanel(props: PositionPanelProps) {
   const { className } = props;
 
   return (
-    <Panel className={clsx("lg:h-80 lg:overflow-y-auto border-border lg:border-r ", className)}>
+    <Panel className={clsx("h-80 overflow-y-auto border-border border-r ", className)}>
       <Tabs ariaLabel="Manage position" items={tabItems} defaultValue="trade"/>
     </Panel>
   );

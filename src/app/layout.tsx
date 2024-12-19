@@ -34,9 +34,9 @@ export default function RootLayout({
             <Providers>
               <Header />
               <div className="flex-auto">{children}</div>
-              <Toaster position="bottom-right" />
             </Providers>
           </div>
+          <Toaster/>
         </ThemeProvider>
       </body>
     </html>

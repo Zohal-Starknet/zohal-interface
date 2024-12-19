@@ -10,7 +10,7 @@ import {
 } from "@zohal/app/_ui/dropdown-menu";
 import { ChevronRight } from "@zohal/app/_ui/icons";
 import useEthPrice, {
-  usePythPriceSubscription,
+  usePriceDataSubscription,
 } from "../_hooks/use-market-data";
 
 interface ChartHeaderProps {
@@ -24,9 +24,8 @@ export default function ChartHeader(props: ChartHeaderProps) {
   const [tokenImg, setTokenImg] = useState("ETH");
   const pair = symbol.toLowerCase();
 
-  const { priceData } = usePythPriceSubscription(symbol);
+  const { tokenData: priceData } = usePriceDataSubscription({ pairSymbol: symbol });
 
-  console.log("Price chart header", priceData)
   return (
     <div className="flex h-[3.8rem] items-center pl-4">
       {/* Mobile View */}

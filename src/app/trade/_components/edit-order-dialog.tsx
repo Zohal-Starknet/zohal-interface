@@ -19,23 +19,27 @@ import useMarketTokenBalance from "@zohal/app/_hooks/use-market-token-balance";
 import useFormatNumber from "../_hooks/use-format-number";
 import useUserPositionInfos from "../_hooks/use-user-position-infos";
 import PriceInfoEditPosition from "./price-info-edit-position";
-import useUserOrder, { Order } from "../_hooks/use-user-order";
+import useUserOrder, { defaultOrder, Order } from "../_hooks/use-user-order";
 
 interface EditOrderDialogProps {
   order: Order;
+  old_size_delta: string;
+  old_trigger_price: string;
   onOpenChange(open: boolean): void;
   open: boolean;
 }
 
 export default function EditOrderDialog({
   order,
+  old_size_delta,
+  old_trigger_price,
   onOpenChange,
   open,
 }: EditOrderDialogProps) {
   const [inputValue, setInputValue] = useState("");
   const [limitPrice, setLimitPrice] = useState("");
-  const [tokenSymbol, setTokenSymbol] = useState("ETH")
-  const { editOrder } = useUserOrder();
+  const [tokenSymbol, setTokenSymbol] = useState("ETH");
+  const [ orderState, setOrderState ] = useState(defaultOrder);
   const { formatNumberWithoutExponent } = useFormatNumber();
 
   let new_size_delta_usd = parseFloat(inputValue) > 0
@@ -82,6 +86,13 @@ export default function EditOrderDialog({
     { label: "Collateral (USD)", value_before: "1", value_after: "1" },
   ];
 
+  // const { sendEdit } = useUserOrder(
+  //     orderState,
+  //     orderState.key,
+  //     new_size_delta_usd,
+  //     limit_price
+  //   );
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-black text-white">
@@ -101,6 +112,9 @@ export default function EditOrderDialog({
               :
               <label className="block text-xs">New Size delta</label>
             }
+            <span className="text-xs text-muted-foreground">
+            Old Size Delta: {old_size_delta}
+          </span>
           </div>
           <div className="mt-1 flex items-center justify-between bg-transparent">
             <Input
@@ -124,6 +138,9 @@ export default function EditOrderDialog({
               :
               <label className="block text-xs">New Trigger Price</label>
             }
+            <span className="text-xs text-muted-foreground">
+            Old Trig. Price: {old_trigger_price}
+          </span>
           </div>
           <div className="mt-1 flex items-center justify-between bg-transparent">
             <Input
@@ -147,9 +164,7 @@ export default function EditOrderDialog({
         </div>
         <button
           className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
-          onClick={() =>
-            editOrder(order, order.key, new_size_delta_usd, limit_price, onOpenChange)
-          }
+          onClick={() => {setOrderState(order); }}
         >
           Edit Order
         </button>

@@ -10,9 +10,7 @@ import { Position } from "../_hooks/use-user-position";
 import DecreaseLimitPositionDialog from "./decrease-limit-position-dialog";
 import IncreaseLimitPositionDialog from "./increase-limit-position-dialog";
 import { BTC_MARKET_TOKEN_CONTRACT_ADDRESS, ETH_MARKET_TOKEN_CONTRACT_ADDRESS, STRK_MARKET_TOKEN_CONTRACT_ADDRESS } from "@zohal/app/_lib/addresses";
-import useEthPrice, { usePythPriceSubscription } from "../_hooks/use-market-data";
-import useBtcPrice from "../_hooks/use-market-data-btc";
-import useStrkPrice from "../_hooks/use-market-data-strk";
+import useEthPrice, { usePriceDataSubscription } from "../_hooks/use-market-data";
 interface EditPositionProps {
   position: Position;
 }
@@ -22,9 +20,9 @@ export default function EditPosition({ position }: EditPositionProps) {
     | "increasePosition"
     | undefined
   >(undefined);
-  const { priceData: ethData } = usePythPriceSubscription("ETH/USD");
-  const { priceData: btcData } = usePythPriceSubscription("BTC/USD" );
-  const { priceData: strkData } = usePythPriceSubscription("STRK/USD");
+  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
   const [priceData, setPriceData] = useState(btcData);
   const [tokenSymbol, setTokenSymbol] = useState("BTC");
 
@@ -70,7 +68,6 @@ export default function EditPosition({ position }: EditPositionProps) {
         open={openedModal === "decreasePosition"}
         onOpenChange={handleOpenChange}
         price={priceData}
-        tokenSymbol={tokenSymbol}
       />
       <IncreaseLimitPositionDialog
         position={position}

@@ -3,7 +3,7 @@ import {
   STRK_MARKET_TOKEN_CONTRACT_ADDRESS,
   ETH_MARKET_TOKEN_CONTRACT_ADDRESS,
 } from "@zohal/app/_lib/addresses";
-import useEthPrice, { PriceData, usePythPriceSubscription } from "./use-market-data";
+import useEthPrice, { PriceData, usePriceDataSubscription } from "./use-market-data";
 import useBtcPrice from "./use-market-data-btc";
 import useStrkPrice from "./use-market-data-strk";
 import { Position } from "./use-user-position";
@@ -36,14 +36,15 @@ export type NewPositionInfos = {
   };
 
 export default function useUserPositionInfos() {
-  const { priceData: ethData } = usePythPriceSubscription("ETH/USD");
-  const { priceData: btcData } = usePythPriceSubscription("BTC/USD" );
-  const { priceData: strkData } = usePythPriceSubscription("STRK/USD");
+  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
 
   function getPositionInfos(position: Position) {
     let collateral_symbol = "ETH";
     let multiplicator = 10**12;
     let divisor = 10**16;
+    let divisor_pnl = 10**16;
     let tradedPriceData = ethData;
     const pragma_decimals = 8 ;
     if (position.market == ETH_MARKET_TOKEN_CONTRACT_ADDRESS) {
@@ -71,8 +72,8 @@ export default function useUserPositionInfos() {
 
     const priceTrade = BigInt(tradedPriceData.pragmaPrice.toFixed(0)) * BigInt(10**(30)) / BigInt(10**(pragma_decimals - 4)) / BigInt(10**(Tokens[collateral_symbol].decimals));
     const pnl = position.is_long ? 
-    (Number((BigInt(position.size_in_tokens) * BigInt(priceTrade)) - BigInt(position.size_in_usd)) / divisor) / Number(10**18)
-    : ((Number((BigInt(position.size_in_tokens) * BigInt(priceTrade)) - BigInt(position.size_in_usd)) / divisor) / Number(10**18)) * -1;
+    (Number((BigInt(position.size_in_tokens) * BigInt(priceTrade)) - BigInt(position.size_in_usd)) / divisor_pnl) / Number(10**18)
+    : ((Number((BigInt(position.size_in_tokens) * BigInt(priceTrade)) - BigInt(position.size_in_usd)) / divisor_pnl) / Number(10**18)) * -1;
 
     const liq_price = position.is_long ? (entryPrice - Number((BigInt(position.collateral_amount) * BigInt(multiplicator)) / BigInt(position.size_in_tokens))).toFixed(2).toString()
         : (entryPrice + Number((BigInt(position.collateral_amount) * BigInt(multiplicator)) / BigInt(position.size_in_tokens))).toFixed(2).toString()

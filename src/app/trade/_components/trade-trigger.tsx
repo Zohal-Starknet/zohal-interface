@@ -16,7 +16,7 @@ import TokenSwapButton from "./token-swap-button";
 import TradeLeverageInput from "./trade-leverage-input";
 import { ETH_CONTRACT_ADDRESS, USDC_CONTRACT_ADDRESS } from "../../_lib/addresses";
 import { useTokenInputs } from "../_hooks/use-token-input";
-import useEthPrice, { usePythPriceSubscription } from "@zohal/app/trade/_hooks/use-market-data";
+import useEthPrice, { usePriceDataSubscription } from "@zohal/app/trade/_hooks/use-market-data";
 
 import SlTpCheckbox from "./sl-tp-checkbox";
 import { SlTpInfos } from "./sl-tp-modal";
@@ -30,22 +30,25 @@ import useFormatNumber from "../_hooks/use-format-number";
 export default function TradeTrigger({ className }: PropsWithClassName) {
   const [triggerPrice, setTriggerPrice] = useState("");
   const [slTpInfos, setSlTpInfos] = useState<SlTpInfos>({
-    sl:"",
+    sl: "",
     slTriggerPrice: "",
     size_delta_usd_sl: "",
+    collateral_delta_sl: "",
     tp: "",
     tpTriggerPrice: "",
     size_delta_usd_tp: "",
+    collateral_delta_tp: ""
   });
   const [checkedLong, setCheckedLong] = useState(false);
   const [checkedShort, setCheckedShort] = useState(false);
   const [tokenSymbol, setTokenSymbol] = useState<TokenSymbol>("ETH");
   const initialRatio = 1;
   const [leverage, setLeverage] = useState(1);
-  const { priceData: ethData } = usePythPriceSubscription("ETH/USD");
-  const { priceData: btcData } = usePythPriceSubscription("BTC/USD" );
-  const { priceData: strkData } = usePythPriceSubscription("STRK/USD");
+  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
   const [priceData, setPriceData] = useState(ethData);
+  const [slippage, setSlippage] = useState("0.03");
   const {
     payTokenSymbol,
     payTokenValue,
@@ -93,6 +96,8 @@ export default function TradeTrigger({ className }: PropsWithClassName) {
         tpTriggerPrice: "",
         size_delta_usd_sl: "",
         size_delta_usd_tp: "",
+        collateral_delta_sl: "",
+        collateral_delta_tp: "",
       });
     }
   };
@@ -108,9 +113,25 @@ export default function TradeTrigger({ className }: PropsWithClassName) {
         tpTriggerPrice: "",
         size_delta_usd_sl: "",
         size_delta_usd_tp: "",
+        collateral_delta_sl: "",
+        collateral_delta_tp: "",
       });
     }
   };
+
+
+  function onSlippageChange(newSlippage: string) {
+    const formattedSlippage = newSlippage.replace(",", ".");
+    if (formattedSlippage.length > 4) {
+        return;
+    }
+    if (/^\d*([.]?\d*)$/.test(formattedSlippage)) {
+        const numericValue = parseFloat(formattedSlippage);
+        if (numericValue <= 100 || isNaN(numericValue)) {
+            setSlippage(formattedSlippage);
+        }
+    }
+}
 
   useEffect(() => {
     let fetchedRatio = 1;
@@ -137,7 +158,18 @@ export default function TradeTrigger({ className }: PropsWithClassName) {
   ];
 
   const handleTrade = (isBuy: boolean) => {
-    tradeTrigger(tokenSymbol, Number(payTokenValue), isBuy, leverage, Number(triggerPrice));
+    tradeTrigger(tokenSymbol,
+      Number(payTokenValue),
+      isBuy, leverage,
+      Number(triggerPrice),
+      slTpInfos.tpTriggerPrice,
+      slTpInfos.slTriggerPrice,
+      slTpInfos.size_delta_usd_tp,
+      slTpInfos.size_delta_usd_sl,
+      slTpInfos.collateral_delta_tp,
+      slTpInfos.collateral_delta_sl,
+      slippage
+    );
     
     toast({
       title: `Trade Executed`,
@@ -227,6 +259,26 @@ export default function TradeTrigger({ className }: PropsWithClassName) {
         </div>
       </div>
 
+       <div className="flex items-center justify-between rounded-md border border-neutral-700 p-1">
+        <label
+          htmlFor="allowedSlippage"
+          className="text-sm text-neutral-300 flex-shrink-0 px-2"
+        >
+          Allowed Slippage
+        </label>
+        <div className="flex items-center">
+          <Input
+            className="bg-secondary rounded-md border border-neutral-700 text-lg outline-none text-right w-12"
+            id="PricePosition"
+            onChange={onSlippageChange}
+            placeholder="0.00"
+            value={slippage}
+            disabled={false}
+          />
+          <div className="text-lg ml-1">%</div>
+        </div>
+      </div>
+
       <TradeLeverageInput
         className="py-4"
         leverage={leverage}
@@ -268,6 +320,7 @@ export default function TradeTrigger({ className }: PropsWithClassName) {
       orderPrice={Number(triggerPrice)}
       qty={Number(receiveTokenValue)}
       isLong={true}
+      collateral_delta={payTokenValue}
     /> :
     <></>}
 
@@ -278,6 +331,7 @@ export default function TradeTrigger({ className }: PropsWithClassName) {
       orderPrice={Number(triggerPrice)}
       qty={Number(receiveTokenValue)}
       isLong={false}
+      collateral_delta={payTokenValue}
     /> :
     <></>}
     

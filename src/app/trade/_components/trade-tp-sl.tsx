@@ -1,43 +1,31 @@
 "use client";
 
 import { TokenSymbol, Tokens } from "@zohal/app/_helpers/tokens";
-import useMarketTokenBalance from "@zohal/app/_hooks/use-market-token-balance";
 import { type PropsWithClassName } from "@zohal/app/_lib/utils";
 import { useEffect, useState } from "react";
 
 import Button from "../../_ui/button";
-import Fieldset from "../../_ui/fieldset";
 import Form from "../../_ui/form";
 import Input from "../../_ui/input";
-import useMarketTrade from "../_hooks/use-market-trade";
 import ChooseTokenButton from "./choose-token-button";
 import PriceInfo from "./price-info";
-import TokenSwapButton from "./token-swap-button";
-import TradeLeverageInput from "./trade-leverage-input";
-import { ETH_CONTRACT_ADDRESS, USDC_CONTRACT_ADDRESS } from "../../_lib/addresses";
-import { useTokenInputs } from "../_hooks/use-token-input";
-import useEthPrice, { usePythPriceSubscription } from "@zohal/app/trade/_hooks/use-market-data";
+import useEthPrice, { usePriceDataSubscription } from "@zohal/app/trade/_hooks/use-market-data";
 
-import SlTpCheckbox from "./sl-tp-checkbox";
-import { SlTpInfos } from "./sl-tp-modal";
 import { useToast } from "@zohal/app/_ui/use-toast";
-import { Heading4Icon } from "lucide-react";
 import useTpSl from "../_hooks/use-tp-sl";
-import useBtcPrice from "../_hooks/use-market-data-btc";
-import useStrkPrice from "../_hooks/use-market-data-strk";
 
 export default function TradeTpSl({ className }: PropsWithClassName) {
   const [sizePosition, setSizePosition] = useState("");
   const [triggerPrice, setTriggerPrice] = useState("");
   const [tokenSymbol, setTokenSymbol] = useState<TokenSymbol>("ETH");
-  const { priceData: ethData } = usePythPriceSubscription("ETH/USD");
-  const { priceData: btcData } = usePythPriceSubscription("BTC/USD" );
-  const { priceData: strkData } = usePythPriceSubscription("STRK/USD");
+  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
   const [priceData, setPriceData] = useState(ethData);
   console.log("this is priceData", priceData)
 
   const { tpSl } = useTpSl();
-  const { toast } = useToast(); 
+  const { toast } = useToast();
 
   const onSizePositionChange = (newPositionSize: string) => {
     const formattedValue = newPositionSize.replace(",", ".");

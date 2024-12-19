@@ -23,7 +23,7 @@ import useUserPositionInfos from "../_hooks/use-user-position-infos";
 import useFormatNumber from "../_hooks/use-format-number";
 import PriceInfoEditPosition from "./price-info-edit-position";
 import { CairoCustomEnum } from "starknet";
-import { usePythPriceSubscription } from "../_hooks/use-market-data";
+import { usePriceDataSubscription } from "../_hooks/use-market-data";
 
 interface ClosePositionDialogProps {
   position: Position;
@@ -40,27 +40,27 @@ export default function DecreasePositionDialog({
 }: ClosePositionDialogProps) {
   const [inputValue, setInputValue] = useState("");
   const [keepSameLeverage, setKeepSameLeverage] = useState(false);
-  const { editPosition } = useUserPosition();
   const { getPositionInfos, getNewPositionInfos } = useUserPositionInfos();
   const { formatNumberWithoutExponent } = useFormatNumber();
   const decimals = BigInt(10 ** 6);
   const collateralAmountBigInt = BigInt(position.collateral_amount);
   const collateralUsdAmount = Number(collateralAmountBigInt) / Number(decimals);
 
-  const { priceData: ethData } = usePythPriceSubscription("ETH/USD");
-  const { priceData: btcData } = usePythPriceSubscription("BTC/USD" );
-  const { priceData: strkData } = usePythPriceSubscription("STRK/USD");
+  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
   const [priceData, setPriceData] = useState(ethData);
   const [tokenSymbol, setTokenSymbol] = useState("ETH")
   
   useEffect(() => {
-    if (position.market === ETH_MARKET_TOKEN_CONTRACT_ADDRESS) {
+    console.log("MARKEET", position.market)
+    if (position.market == (BigInt(ETH_MARKET_TOKEN_CONTRACT_ADDRESS)).toString()) {
       setPriceData(ethData);
       setTokenSymbol("ETH")
-    } else if (position.market === BTC_MARKET_TOKEN_CONTRACT_ADDRESS) {
+    } else if (position.market == (BigInt(BTC_MARKET_TOKEN_CONTRACT_ADDRESS)).toString()) {
       setPriceData(btcData);
       setTokenSymbol("BTC")
-  } else if (position.market === STRK_MARKET_TOKEN_CONTRACT_ADDRESS) {
+  } else if (position.market == (BigInt(STRK_MARKET_TOKEN_CONTRACT_ADDRESS)).toString()) {
       setPriceData(strkData);
       setTokenSymbol("STRK")
     }
@@ -108,7 +108,7 @@ export default function DecreasePositionDialog({
             setSlippage(formattedSlippage);
         }
     }
-}
+  }
 
   useEffect(() => {
     if (!open) {
@@ -168,6 +168,27 @@ export default function DecreasePositionDialog({
       ),
     },
   ];
+
+  const { send, isLoading, isPending } = useUserPosition(
+    position,
+    BigInt(new_collateral_delta),
+    { MarketDecrease: {} } as unknown as CairoCustomEnum,
+    new_size_delta_usd,
+    BigInt("0"),
+    onOpenChange,
+    slippage
+      );
+  
+  
+    const { send: sendClose, isLoading: isLoadingClose, isPending: isPendingClose } = useUserPosition(
+      position,
+      collateral_amount,
+      { MarketDecrease: {} } as unknown as CairoCustomEnum,
+      position.size_in_usd,
+      BigInt("0"),
+      onOpenChange,
+      slippage
+    );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -268,36 +289,14 @@ export default function DecreasePositionDialog({
         {isCloseAction ? (
           <button
             className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
-            onClick={() =>
-              //@ts-ignore
-              editPosition(
-                position,
-                collateral_amount,
-                { MarketDecrease: {} } as unknown as CairoCustomEnum,
-                position.size_in_usd,
-                BigInt("0"),
-                onOpenChange,
-                slippage
-              )
-            }
+            onClick={() => sendClose() }
           >
             Close Position
           </button>
         ) : (
           <button
             className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
-            onClick={() =>
-              //@ts-ignore
-              editPosition(
-                position,
-                BigInt(new_collateral_delta),
-                { MarketDecrease: {} } as unknown as CairoCustomEnum,
-                new_size_delta_usd,
-                BigInt("0"),
-                onOpenChange,
-                slippage
-              )
-            }
+            onClick={() => send() }
           >
             Reduce position
           </button>
