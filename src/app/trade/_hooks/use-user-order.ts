@@ -1,4 +1,11 @@
-import { useAccount, useContract, useProvider, useReadContract, useSendTransaction, useTransactionReceipt } from "@starknet-react/core";
+import {
+  useAccount,
+  useContract,
+  useProvider,
+  useReadContract,
+  useSendTransaction,
+  useTransactionReceipt,
+} from "@starknet-react/core";
 import {
   DATA_STORE_CONTRACT_ADDRESS,
   MARKET_TOKEN_CONTRACT_ADDRESS,
@@ -12,7 +19,14 @@ import {
   USDC_CONTRACT_ADDRESS,
 } from "@zohal/app/_lib/addresses";
 import { useEffect, useState } from "react";
-import { Abi, BlockTag, CairoCustomEnum, Contract, provider, uint256 } from "starknet";
+import {
+  Abi,
+  BlockTag,
+  CairoCustomEnum,
+  Contract,
+  provider,
+  uint256,
+} from "starknet";
 
 import erc_20_abi from "../abi/erc_20.json";
 import exchange_router_abi from "../abi/exchange_router.json";
@@ -20,28 +34,29 @@ import datastore_abi from "../abi/datastore.json";
 import useEthPrice from "./use-market-data";
 import useBtcPrice from "./use-market-data-btc";
 import useStrkPrice from "./use-market-data-strk";
+import { useToast } from "@zohal/app/_ui/use-toast";
 
 export type Order = {
-  key: bigint,
-  order_type: CairoCustomEnum,
-  account: string,
-  market: string,
-  initial_collateral_token: string,
-  size_delta_usd: bigint,
-  initial_collateral_delta_amount: bigint,
-  trigger_price: bigint,
-  acceptable_price: bigint,
-  min_output_amount: bigint,
-  is_long: boolean,
-  is_frozen: boolean,
-  decrease_position_swap_type: CairoCustomEnum,
-  receiver: string,
-  callback_contract: string,
-  ui_fee_receiver: string,
-  swap_path: Array<string>,
-  execution_fee: bigint,
-  callback_gas_limit: bigint,
-  updated_at_block: bigint,
+  key: bigint;
+  order_type: CairoCustomEnum;
+  account: string;
+  market: string;
+  initial_collateral_token: string;
+  size_delta_usd: bigint;
+  initial_collateral_delta_amount: bigint;
+  trigger_price: bigint;
+  acceptable_price: bigint;
+  min_output_amount: bigint;
+  is_long: boolean;
+  is_frozen: boolean;
+  decrease_position_swap_type: CairoCustomEnum;
+  receiver: string;
+  callback_contract: string;
+  ui_fee_receiver: string;
+  swap_path: Array<string>;
+  execution_fee: bigint;
+  callback_gas_limit: bigint;
+  updated_at_block: bigint;
 };
 
 export const defaultOrder: Order = {
@@ -57,7 +72,9 @@ export const defaultOrder: Order = {
   min_output_amount: BigInt(0),
   is_long: false,
   is_frozen: false,
-  decrease_position_swap_type: { LimitDecrease: {} } as unknown as CairoCustomEnum, // Exemple d'initialisation pour CairoCustomEnum
+  decrease_position_swap_type: {
+    LimitDecrease: {},
+  } as unknown as CairoCustomEnum, // Exemple d'initialisation pour CairoCustomEnum
   receiver: "",
   callback_contract: "",
   ui_fee_receiver: "",
@@ -67,14 +84,13 @@ export const defaultOrder: Order = {
   updated_at_block: BigInt(0),
 };
 
-
 export default function useUserOrder(
   order: Order,
   key: bigint,
   new_size_delta_usd: bigint,
   trigger_price: bigint,
 ) {
-
+  const { toast } = useToast();
   let trigger_price_formatted = trigger_price * BigInt(10 ** 10);
   if (order.market == BTC_MARKET_TOKEN_CONTRACT_ADDRESS) {
     trigger_price_formatted = trigger_price * BigInt(10 ** 20);
@@ -97,69 +113,93 @@ export default function useUserOrder(
     calls:
       account && address
         ? [
-          exchangeRouterContract.populate("update_order",
-            [
+            exchangeRouterContract.populate("update_order", [
               key,
               new_size_delta_usd,
               order.is_long
-              ? uint256.bnToUint256(
-                  BigInt((trigger_price_formatted * BigInt(105)) / BigInt(100)),
-                )
-              : uint256.bnToUint256(
-                  BigInt((trigger_price_formatted * BigInt(105)) / BigInt(100)),
-                ),
+                ? uint256.bnToUint256(
+                    BigInt(
+                      (trigger_price_formatted * BigInt(105)) / BigInt(100),
+                    ),
+                  )
+                : uint256.bnToUint256(
+                    BigInt(
+                      (trigger_price_formatted * BigInt(105)) / BigInt(100),
+                    ),
+                  ),
               trigger_price_formatted,
-              BigInt(0)
-              ])
+              BigInt(0),
+            ]),
           ]
         : undefined,
-    });
+  });
 
-    const { isLoading: isLoadingEdit, isSuccess: isSuccessEdit } = useTransactionReceipt({
+  const { isLoading: isLoadingEdit, isSuccess: isSuccessEdit } =
+    useTransactionReceipt({
       hash: editOrderTransactionData?.transaction_hash,
     });
-    
-    const {
-      send: sendCancel,
-      data: cancelOrderTransactionData,
-      isPending: isPendingCancel,
-    } = useSendTransaction({
-      calls:
-        account && address
-          ? [
-            exchangeRouterContract.populate("cancel_order", [key])
-            ]
-          : undefined,
-    });
 
-    const { isLoading: isLoadingCancel, isSuccess: isSuccessCancel } = useTransactionReceipt({
-      hash: cancelOrderTransactionData?.transaction_hash,
-    });
+  const {
+    send: sendCancel,
+    data: cancelOrderTransactionData,
+    isPending: isPendingCancel,
+  } = useSendTransaction({
+    calls:
+      account && address
+        ? [exchangeRouterContract.populate("cancel_order", [key])]
+        : undefined,
+  });
 
-    const { data: allOrders } = useReadContract({
-      address: DATA_STORE_CONTRACT_ADDRESS,
-      abi: datastore_abi.abi,
-      // enabled: address !== undefined && ethData.currentPrice !== 0,
-      // enabled: ethData.currentPrice !== 0,
-      functionName: "get_account_all_order",
-      blockIdentifier: BlockTag.PENDING,
-      watch: true,
-      args: [address, 0, 10],
-    });
+  const {
+    data,
+    isLoading: isLoadingCancel,
+    isSuccess: isSuccessCancel,
+  } = useTransactionReceipt({
+    hash: cancelOrderTransactionData?.transaction_hash,
+  });
 
-    const { data: ordersCount } = useReadContract({
-      address: DATA_STORE_CONTRACT_ADDRESS,
-      abi: datastore_abi.abi,
-      // enabled: address !== undefined && ethData.currentPrice !== 0,
-      // enabled: ethData.currentPrice !== 0,
-      functionName: "get_account_order_count",
-      blockIdentifier: BlockTag.PENDING,
-      watch: true,
-      args: [address],
-    });
+  useEffect(() => {
+    if (isSuccessCancel) {
+      toast({
+        title: "Canceled order",
+        description: "Transaction Accepted on L2",
+      });
+    }
+  }, [isSuccessCancel, toast]);
 
-    const orders = allOrders as Array<Order>;
-    const orders_count = ordersCount ? Number(ordersCount) : 0;
+  const { data: allOrders } = useReadContract({
+    address: DATA_STORE_CONTRACT_ADDRESS,
+    abi: datastore_abi.abi,
+    // enabled: address !== undefined && ethData.currentPrice !== 0,
+    // enabled: ethData.currentPrice !== 0,
+    functionName: "get_account_all_order",
+    blockIdentifier: BlockTag.PENDING,
+    watch: true,
+    args: [address, 0, 10],
+  });
 
-    return { orders, orders_count, sendCancel, sendEdit, isLoadingCancel, isSuccessCancel, isLoadingEdit, isSuccessEdit };
+  const { data: ordersCount } = useReadContract({
+    address: DATA_STORE_CONTRACT_ADDRESS,
+    abi: datastore_abi.abi,
+    // enabled: address !== undefined && ethData.currentPrice !== 0,
+    // enabled: ethData.currentPrice !== 0,
+    functionName: "get_account_order_count",
+    blockIdentifier: BlockTag.PENDING,
+    watch: true,
+    args: [address],
+  });
+
+  const orders = allOrders as Array<Order>;
+  const orders_count = ordersCount ? Number(ordersCount) : 0;
+
+  return {
+    orders,
+    orders_count,
+    sendCancel,
+    sendEdit,
+    isLoadingCancel,
+    isSuccessCancel,
+    isLoadingEdit,
+    isSuccessEdit,
+  };
 }

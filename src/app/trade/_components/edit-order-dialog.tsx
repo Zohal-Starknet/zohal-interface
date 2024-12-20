@@ -13,7 +13,11 @@ import Input from "@zohal/app/_ui/input";
 import { useState, useEffect } from "react";
 
 import useUserPosition, { Position } from "../_hooks/use-user-position";
-import { BTC_MARKET_TOKEN_CONTRACT_ADDRESS, ETH_MARKET_TOKEN_CONTRACT_ADDRESS, STRK_MARKET_TOKEN_CONTRACT_ADDRESS } from "@zohal/app/_lib/addresses";
+import {
+  BTC_MARKET_TOKEN_CONTRACT_ADDRESS,
+  ETH_MARKET_TOKEN_CONTRACT_ADDRESS,
+  STRK_MARKET_TOKEN_CONTRACT_ADDRESS,
+} from "@zohal/app/_lib/addresses";
 import PriceInfo from "./price-info";
 import useMarketTokenBalance from "@zohal/app/_hooks/use-market-token-balance";
 import useFormatNumber from "../_hooks/use-format-number";
@@ -39,19 +43,20 @@ export default function EditOrderDialog({
   const [inputValue, setInputValue] = useState("");
   const [limitPrice, setLimitPrice] = useState("");
   const [tokenSymbol, setTokenSymbol] = useState("ETH");
-  const [ orderState, setOrderState ] = useState(defaultOrder);
+  const [orderState, setOrderState] = useState(defaultOrder);
   const { formatNumberWithoutExponent } = useFormatNumber();
 
-  let new_size_delta_usd = parseFloat(inputValue) > 0
-  ? BigInt(Math.round(parseFloat(inputValue) * 10 ** 16)) * BigInt(10 ** 18)
-  : BigInt("0");
+  let new_size_delta_usd =
+    parseFloat(inputValue) > 0
+      ? BigInt(Math.round(parseFloat(inputValue) * 10 ** 16)) * BigInt(10 ** 18)
+      : BigInt("0");
 
   if (order.market === ETH_MARKET_TOKEN_CONTRACT_ADDRESS) {
     setTokenSymbol("ETH");
   } else if (order.market === BTC_MARKET_TOKEN_CONTRACT_ADDRESS) {
-      setTokenSymbol("BTC");
+    setTokenSymbol("BTC");
   } else if (order.market === STRK_MARKET_TOKEN_CONTRACT_ADDRESS) {
-      setTokenSymbol("STRK");
+    setTokenSymbol("STRK");
   }
 
   function onInputChange(newValue: string) {
@@ -67,9 +72,11 @@ export default function EditOrderDialog({
       setLimitPrice(formattedPrice);
     }
   }
-  
+
   let limit_price =
-    limitPrice === "" ? BigInt(0) : BigInt(Math.round(parseFloat(limitPrice) * 10 ** 6));
+    limitPrice === ""
+      ? BigInt(0)
+      : BigInt(Math.round(parseFloat(limitPrice) * 10 ** 6));
 
   useEffect(() => {
     if (!open) {
@@ -79,19 +86,19 @@ export default function EditOrderDialog({
 
   const priceInfos = [
     { label: "Leverage", value_before: "1", value_after: "1" },
-    { label: "Entry Price", value_before: "1", value_after: "1"  },
+    { label: "Entry Price", value_before: "1", value_after: "1" },
     { label: "Market Price", value_before: "1", value_after: "1" },
     { label: "Liq. Price", value_before: "1", value_after: "1" },
     { label: "Size", value_before: "1", value_after: "1" },
     { label: "Collateral (USD)", value_before: "1", value_after: "1" },
   ];
 
-  // const { sendEdit } = useUserOrder(
-  //     orderState,
-  //     orderState.key,
-  //     new_size_delta_usd,
-  //     limit_price
-  //   );
+  const { sendEdit } = useUserOrder(
+    orderState,
+    orderState.key,
+    new_size_delta_usd,
+    limit_price,
+  );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -99,7 +106,11 @@ export default function EditOrderDialog({
         <DialogHeader>
           <DialogTitle>
             <div className="flex items-center gap-2">
-              <img alt={tokenSymbol} className="h-6 w-6" src={Tokens[tokenSymbol].icon} />
+              <img
+                alt={tokenSymbol}
+                className="h-6 w-6"
+                src={Tokens[tokenSymbol].icon}
+              />
               {tokenSymbol}-USDC
             </div>
           </DialogTitle>
@@ -107,14 +118,17 @@ export default function EditOrderDialog({
         </DialogHeader>
         <div className="rounded-md border border-border bg-secondary p-3">
           <div className="flex items-center justify-between">
-            { inputValue ?
-              <label className="block text-xs">New Size delta: ${formatNumberWithoutExponent(Number(inputValue))}</label>
-              :
+            {inputValue ? (
+              <label className="block text-xs">
+                New Size delta: $
+                {formatNumberWithoutExponent(Number(inputValue))}
+              </label>
+            ) : (
               <label className="block text-xs">New Size delta</label>
-            }
+            )}
             <span className="text-xs text-muted-foreground">
-            Old Size Delta: {old_size_delta}
-          </span>
+              Old Size Delta: {old_size_delta}
+            </span>
           </div>
           <div className="mt-1 flex items-center justify-between bg-transparent">
             <Input
@@ -125,22 +139,25 @@ export default function EditOrderDialog({
               value={inputValue}
               disabled={false}
             />
-          <div className="mt-1 mr-4 flex items-center gap-1">
-            <img alt="USDC" className="h-6 w-6" src={Tokens.USDC.icon} />
-            USD
+            <div className="mr-4 mt-1 flex items-center gap-1">
+              <img alt="USDC" className="h-6 w-6" src={Tokens.USDC.icon} />
+              USD
+            </div>
           </div>
         </div>
-      </div>
-      <div className="rounded-md border border-border bg-secondary p-3">
+        <div className="rounded-md border border-border bg-secondary p-3">
           <div className="flex items-center justify-between">
-            { inputValue ?
-              <label className="block text-xs">New Trigger Price: ${formatNumberWithoutExponent(Number(limitPrice))}</label>
-              :
+            {inputValue ? (
+              <label className="block text-xs">
+                New Trigger Price: $
+                {formatNumberWithoutExponent(Number(limitPrice))}
+              </label>
+            ) : (
               <label className="block text-xs">New Trigger Price</label>
-            }
+            )}
             <span className="text-xs text-muted-foreground">
-            Old Trig. Price: {old_trigger_price}
-          </span>
+              Old Trig. Price: {old_trigger_price}
+            </span>
           </div>
           <div className="mt-1 flex items-center justify-between bg-transparent">
             <Input
@@ -151,20 +168,23 @@ export default function EditOrderDialog({
               value={limitPrice}
               disabled={false}
             />
-          <div className="mt-1 mr-4 flex items-center gap-1">
-            <img alt="USDC" className="h-6 w-6" src={Tokens.USDC.icon} />
-            USD
+            <div className="mr-4 mt-1 flex items-center gap-1">
+              <img alt="USDC" className="h-6 w-6" src={Tokens.USDC.icon} />
+              USD
+            </div>
           </div>
         </div>
-      </div>
         <div className="flex flex-col gap-2 rounded-md border border-border p-3">
-        {priceInfos.map((priceInfo, index) => (
-          <PriceInfoEditPosition key={index} {...priceInfo} />
-        ))}
+          {priceInfos.map((priceInfo, index) => (
+            <PriceInfoEditPosition key={index} {...priceInfo} />
+          ))}
         </div>
         <button
           className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
-          onClick={() => {setOrderState(order); }}
+          onClick={() => {
+            setOrderState(order);
+            sendEdit();
+          }}
         >
           Edit Order
         </button>

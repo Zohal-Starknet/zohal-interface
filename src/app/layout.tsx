@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { robotoMono } from "@zohal/app/_helpers/fonts";
-import { Toaster } from "sonner";
 import Header from "./_components/header";
 import "./globals.css";
 import Providers from "./providers";
 import { ThemeProvider } from "./_components/theme-provider";
-import { Toast } from "./_ui/toast";
+import { Toaster } from "./_ui/toaster";
 
 export const metadata: Metadata = {
   description:
@@ -36,7 +35,7 @@ export default function RootLayout({
               <div className="flex-auto">{children}</div>
             </Providers>
           </div>
-          <Toaster/>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

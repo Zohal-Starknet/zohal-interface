@@ -8,6 +8,7 @@ export type PriceData = {
   high24h: number;
   low24h: number;
 };
+import { PriceServiceConnection } from "@pythnetwork/price-service-client";
 
 const pair = "eth/usd";
 const apiUrl = `/api/fetch-candlestick?pair=${pair}`;
@@ -23,13 +24,21 @@ const getLastTwoDaysData = (data: any[]): any[] => {
   return data.filter((item) => item.time >= twoDaysAgo);
 };
 
+const PAIR_SYMBOL_TO_PRICE_ID: Record<string, string> = {
+  "ETH/USD":
+    "0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace",
+  "BTC/USD":
+    "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43",
+  "STRK/USD": "",
+};
+
 export function usePriceDataSubscription({
   pairSymbol,
 }: {
   pairSymbol: string;
 }) {
   const [tokenData, setTokenData] = useState<{
-    pragmaPrice: number,
+    pragmaPrice: number;
     currentPrice: number;
     change24h: number;
     change24hPercent: number;
@@ -43,64 +52,30 @@ export function usePriceDataSubscription({
     high24h: 0,
     low24h: 0,
   });
+  const priceId = PAIR_SYMBOL_TO_PRICE_ID[pairSymbol];
 
   useEffect(() => {
-    const ws = new WebSocket(
-      "wss://ws.dev.pragma.build/node/v1/onchain/ohlc/subscribe",
+    const connection = new PriceServiceConnection(
+      "https://hermes.pyth.network",
     );
-    ws.onopen = () => {
-      const subscribeMessage = {
-        msg_type: "subscribe",
-        pair: pairSymbol,
-        network: "mainnet",
-        interval: "15min",
-        candles_to_get: 1,
-      };
-      ws.send(JSON.stringify(subscribeMessage));
-    };
 
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (Array.isArray(data)) {
-        const candle = data[data.length - 1];
+    connection.subscribePriceFeedUpdates([priceId], (priceFeed) => {
+      const priceNoOlderThan = priceFeed.getPriceNoOlderThan(60);
 
-        if (candle) {
-          setTokenData({
-            pragmaPrice: parseFloat(candle.close),
-            currentPrice: parseFloat(candle.close) / 10 ** 8,
-            change24h: 0,
-            change24hPercent: 0,
-            high24h: 0,
-            low24h: 0,
-          });
-        }
+      if (!priceNoOlderThan) {
+        return;
       }
-    };
-
-    ws.onclose = () => {
-      console.log("WebSocket connection closed");
-    };
-
-    ws.onerror = (error) => {
-      console.error("WebSocket error", error);
-    };
+      const price =
+        Number(priceNoOlderThan.price) / 10 ** (priceNoOlderThan.expo * -1);
+      setTokenData((previous) => ({ ...previous, currentPrice: price }));
+    });
 
     return () => {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(
-          JSON.stringify({
-            msg_type: "unsubscribe",
-            pair: pairSymbol,
-          }),
-        );
-      }
-      ws.close();
+      connection.closeWebSocket();
     };
-  }, [pairSymbol]);
+  }, []);
 
-  return {
-    tokenData,
-  };
+  return { tokenData };
 }
 
 export default function useEthPrice() {

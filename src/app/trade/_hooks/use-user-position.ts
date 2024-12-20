@@ -1,4 +1,10 @@
-import { useAccount, useProvider, useReadContract, useSendTransaction, useTransactionReceipt } from "@starknet-react/core";
+import {
+  useAccount,
+  useProvider,
+  useReadContract,
+  useSendTransaction,
+  useTransactionReceipt,
+} from "@starknet-react/core";
 import {
   DATA_STORE_CONTRACT_ADDRESS,
   EXCHANGE_ROUTER_CONTRACT_ADDRESS,
@@ -41,15 +47,21 @@ export default function useUserPosition(
   size_delta_usd: bigint,
   trigger_price: bigint,
   onOpenChange: (open: boolean) => void,
-  slippage: string
+  slippage: string,
 ) {
-  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
-  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
-  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  const { tokenData: ethData } = usePriceDataSubscription({
+    pairSymbol: "ETH/USD",
+  });
+  const { tokenData: btcData } = usePriceDataSubscription({
+    pairSymbol: "BTC/USD",
+  });
+  const { tokenData: strkData } = usePriceDataSubscription({
+    pairSymbol: "STRK/USD",
+  });
   const { account, address } = useAccount();
   const { provider } = useProvider();
   const { toast } = useToast();
- 
+
   const usdcContract = new Contract(
     erc_20_abi.abi,
     USDC_CONTRACT_ADDRESS,
@@ -79,23 +91,25 @@ export default function useUserPosition(
 
   let acceptable_price = BigInt(0);
   if (
-    isEqual(order_type, { MarketIncrease: {} }) || isEqual(order_type, { MarketDecrease: {} })
+    isEqual(order_type, { MarketIncrease: {} }) ||
+    isEqual(order_type, { MarketDecrease: {} })
   ) {
     if (
       (position.is_long && isEqual(order_type, { MarketIncrease: {} })) ||
       (!position.is_long && isEqual(order_type, { MarketDecrease: {} }))
     ) {
-      console.log("ENTER HERE")
-      console.log("real price:", price)
-      acceptable_price = (price * BigInt((Number(slippage) * 100) + 10000)) / BigInt(10000)
-      console.log("acceptable_price", acceptable_price)
-
-    } 
-    else if (
+      console.log("ENTER HERE");
+      console.log("real price:", price);
+      acceptable_price =
+        (price * BigInt(Number(slippage) * 100 + 10000)) / BigInt(10000);
+      console.log("acceptable_price", acceptable_price);
+    } else if (
       (position.is_long && isEqual(order_type, { MarketDecrease: {} })) ||
       (!position.is_long && isEqual(order_type, { MarketIncrease: {} }))
     ) {
-      acceptable_price = BigInt((price * BigInt(10000 - Number(slippage) * 100)) / BigInt(10000))
+      acceptable_price = BigInt(
+        (price * BigInt(10000 - Number(slippage) * 100)) / BigInt(10000),
+      );
     }
   } else {
     if (
@@ -104,13 +118,18 @@ export default function useUserPosition(
       (!position.is_long && isEqual(order_type, { LimitDecrease: {} })) ||
       (!position.is_long && isEqual(order_type, { StopLossDecrease: {} }))
     ) {
-      acceptable_price = BigInt((trigger_price_formatted * BigInt(Number(slippage) * 100 + 10000)) / BigInt(10000))
-    } 
-    else if (
+      acceptable_price = BigInt(
+        (trigger_price_formatted * BigInt(Number(slippage) * 100 + 10000)) /
+          BigInt(10000),
+      );
+    } else if (
       (!position.is_long && isEqual(order_type, { LimitIncrease: {} })) ||
       (position.is_long && isEqual(order_type, { StopLossDecrease: {} }))
     ) {
-      acceptable_price = BigInt((trigger_price_formatted * BigInt(10000 - Number(slippage) * 100)) / BigInt(10000))
+      acceptable_price = BigInt(
+        (trigger_price_formatted * BigInt(10000 - Number(slippage) * 100)) /
+          BigInt(10000),
+      );
     }
   }
 
@@ -149,7 +168,8 @@ export default function useUserPosition(
 
   if (
     (isEqual(order_type, { MarketIncrease: {} }) ||
-    isEqual(order_type, { LimitIncrease: {} })) && collateral_amount > BigInt(0)
+      isEqual(order_type, { LimitIncrease: {} })) &&
+    collateral_amount > BigInt(0)
   ) {
     const transferCall = usdcContract.populate("transfer", [
       ORDER_VAULT_CONTRACT_ADDRESS,
@@ -171,10 +191,7 @@ export default function useUserPosition(
     data: editPositionTransactionData,
     isPending,
   } = useSendTransaction({
-    calls:
-      account && address
-        ? calls
-        : undefined,
+    calls: account && address ? calls : undefined,
   });
 
   const { isLoading, isSuccess } = useTransactionReceipt({
