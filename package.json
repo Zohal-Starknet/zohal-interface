@@ -10,6 +10,7 @@
     "test": "jest --watch"
   },
   "dependencies": {
+    "@pythnetwork/price-service-client": "^1.9.0",
     "@radix-ui/react-accessible-icon": "^1.0.3",
     "@radix-ui/react-checkbox": "^1.1.1",
     "@radix-ui/react-collapsible": "^1.0.3",
