@@ -23,7 +23,7 @@ import useUserPositionInfos from "../_hooks/use-user-position-infos";
 import useFormatNumber from "../_hooks/use-format-number";
 import PriceInfoEditPosition from "./price-info-edit-position";
 import { CairoCustomEnum } from "starknet";
-import { usePriceDataSubscription } from "../_hooks/use-market-data";
+import {  usePrices } from "../_hooks/use-market-data";
 
 interface ClosePositionDialogProps {
   position: Position;
@@ -46,14 +46,17 @@ export default function DecreasePositionDialog({
   const collateralAmountBigInt = BigInt(position.collateral_amount);
   const collateralUsdAmount = Number(collateralAmountBigInt) / Number(decimals);
 
-  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
-  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
-  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  // const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  // const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  // const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  const { prices } = usePrices();
+  const ethData = prices["ETH/USD"];
+  const btcData = prices["BTC/USD"];
+  const strkData = prices["STRK/USD"];
   const [priceData, setPriceData] = useState(ethData);
   const [tokenSymbol, setTokenSymbol] = useState("ETH")
   
   useEffect(() => {
-    console.log("MARKEET", position.market)
     if (position.market == (BigInt(ETH_MARKET_TOKEN_CONTRACT_ADDRESS)).toString()) {
       setPriceData(ethData);
       setTokenSymbol("ETH")
@@ -236,7 +239,7 @@ export default function DecreasePositionDialog({
               <label className="block text-xs">Reduce</label>
             )}
             <span className="text-xs text-muted-foreground">
-              Max: {formattedSizeDeltaUsdcAmount} USD
+              Max: {formatNumberWithoutExponent(Number(formattedSizeDeltaUsdcAmount))} USD
             </span>
           </div>
           <div className="mt-1 flex items-center justify-between bg-transparent">

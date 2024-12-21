@@ -16,13 +16,9 @@ import TokenSwapButton from "./token-swap-button";
 import TradeLeverageInput from "./trade-leverage-input";
 import { ETH_CONTRACT_ADDRESS, USDC_CONTRACT_ADDRESS } from "../../_lib/addresses";
 import { useTokenInputs } from "../_hooks/use-token-input";
-import useEthPrice, { usePriceDataSubscription } from "@zohal/app/trade/_hooks/use-market-data";
+import  {  usePrices } from "@zohal/app/trade/_hooks/use-market-data";
 
-import SlTpCheckbox from "./sl-tp-checkbox";
 import { SlTpInfos } from "./sl-tp-modal";
-import { useToast } from "@zohal/app/_ui/use-toast";
-import useBtcPrice from "../_hooks/use-market-data-btc";
-import useStrkPrice from "../_hooks/use-market-data-strk";
 import useTriggerTrade from "../_hooks/use-trigger-trade";
 import SlTpDropdownMenu from "./sl-tp-dropdown-menu";
 import useFormatNumber from "../_hooks/use-format-number";
@@ -44,9 +40,13 @@ export default function TradeTrigger({ className }: PropsWithClassName) {
   const [tokenSymbol, setTokenSymbol] = useState<TokenSymbol>("ETH");
   const initialRatio = 1;
   const [leverage, setLeverage] = useState(1);
-  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
-  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
-  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  // const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  // const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  // const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  const { prices } = usePrices();
+  const ethData = prices["ETH/USD"];
+  const btcData = prices["BTC/USD"];
+  const strkData = prices["STRK/USD"];
   const [priceData, setPriceData] = useState(ethData);
   const [slippage, setSlippage] = useState("0.03");
   const {
@@ -71,7 +71,6 @@ export default function TradeTrigger({ className }: PropsWithClassName) {
   });
 
   const { tradeTrigger } = useTriggerTrade();
-  const { toast } = useToast(); 
 
   const onTokenSymbolChange = (newTokenSymbol: TokenSymbol) => {
     setTokenSymbol(newTokenSymbol);
@@ -158,9 +157,11 @@ export default function TradeTrigger({ className }: PropsWithClassName) {
   ];
 
   const handleTrade = (isBuy: boolean) => {
-    tradeTrigger(tokenSymbol,
+    tradeTrigger(
+      tokenSymbol,
       Number(payTokenValue),
-      isBuy, leverage,
+      isBuy,
+      leverage,
       Number(triggerPrice),
       slTpInfos.tpTriggerPrice,
       slTpInfos.slTriggerPrice,
@@ -170,11 +171,6 @@ export default function TradeTrigger({ className }: PropsWithClassName) {
       slTpInfos.collateral_delta_sl,
       slippage
     );
-    
-    toast({
-      title: `Trade Executed`,
-      description: `You have ${isBuy ? "long" : "short"} ${payTokenValue} ${Tokens[tokenSymbol].name}`,
-    });
   };
 
   return (

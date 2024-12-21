@@ -10,13 +10,14 @@ import { Tokens } from "@zohal/app/_helpers/tokens";
 import { CairoCustomEnum, Contract, uint256 } from "starknet";
 import erc_20_abi from "../abi/erc_20.json";
 import exchange_router_abi from "../abi/exchange_router.json";
-import useEthPrice from "./use-market-data";
+import { usePrices } from "./use-market-data";
 
 type TransactionStatus = "idle" | "loading" | "rejected";
 
 export default function useMarketSwap() {
   const { account, address } = useAccount();
-  const { ethData } = useEthPrice();
+  const { prices } = usePrices();
+  const ethData = prices["ETH/USD"];
   const { provider } = useProvider();
   const [status, setStatus] = useState<TransactionStatus>("idle");
 

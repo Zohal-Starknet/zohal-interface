@@ -5,7 +5,7 @@ import { cn, type PropsWithClassName } from "@zohal/app/_lib/utils";
 import clsx from "clsx";
 
 import useUserPosition from "../_hooks/use-user-position";
-import useEthPrice, { usePriceDataSubscription } from "../_hooks/use-market-data";
+import  {  usePrices } from "../_hooks/use-market-data";
 import EditMarketPositionDialog from "./edit-market-position-dialog";
 import EditLimitPositionDialog from "./edit-limit-position-dialog";
 import EditCollateralPositionDialog from "./edit-collateral-position-dialog";
@@ -18,9 +18,13 @@ import useGetPosition from "../_hooks/use-get-position";
 export default function Position({ className }: PropsWithClassName) {
   // TODO @YohanTz: Add ? icon to explain each of the table header
   const { positions } = useGetPosition();
-  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
-  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
-  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  // const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  // const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  // const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  const { prices } = usePrices();
+  const ethData = prices["ETH/USD"];
+  const btcData = prices["BTC/USD"];
+  const strkData = prices["STRK/USD"];
   const { closeAllPositions } = useCloseAllPositions();
   const { getPositionInfos } = useUserPositionInfos();
   const { formatNumberWithoutExponent } = useFormatNumber();
@@ -55,7 +59,7 @@ export default function Position({ className }: PropsWithClassName) {
             <th className={tableHeaderCommonStyles}>Market Price</th>
             <th className={cn("text-end", tableHeaderCommonStyles)}>
               <button 
-                className="rounded-lg border border-border bg-secondary px-1 hover:bg-gray-800"
+                className="rounded-lg border border-border bg-secondary px-1 hover:bg-blue-950"
                 onClick={() => closeAllPositions(positions)}>
                 Close all positions
               </button>
@@ -95,6 +99,7 @@ export default function Position({ className }: PropsWithClassName) {
                   </div>
                 </td>
                 <td>
+                  { positionInfos.pnl ? (
                   <div className={clsx(
                         positionInfos.pnl > 0
                           ? "text-sm text-[#40B68B]"
@@ -103,7 +108,12 @@ export default function Position({ className }: PropsWithClassName) {
                     {positionInfos.pnl > 0 ? "+" : ""}
                       {formatNumberWithoutExponent(Number(positionInfos.pnl.toFixed(2)))}
                     <br />
-                  </div>
+                  </div>)
+                  : <div
+                  className="h-5 w-5 animate-spin rounded-full border-4 border-gray-700 border-t-blue-600"
+                  role="status"
+                ></div>
+                  }
                 </td>
                 <td className="pr-6">
                   ${formatNumberWithoutExponent(Number(positionInfos.size_in_usd))}
@@ -122,10 +132,28 @@ export default function Position({ className }: PropsWithClassName) {
                 </td>
                 <td>
                   {positionInfos.collateral_symbol === "ETH" ? (
+                    ethData.currentPrice === 0 ?
+                    <div
+                      className="h-5 w-5 animate-spin rounded-full border-4 border-gray-700 border-t-blue-600"
+                      role="status"
+                    ></div>
+                    :
                     `$${formatNumberWithoutExponent(Number(ethData.currentPrice.toFixed(2)))}`
                   ) : positionInfos.collateral_symbol === "BTC" ? (
+                     btcData.currentPrice == 0 ?
+                     <div
+                        className="h-5 w-5 animate-spin rounded-full border-4 border-gray-700 border-t-blue-600"
+                        role="status"
+                      ></div>
+                      :
                     `$${formatNumberWithoutExponent(Number(btcData.currentPrice.toFixed(2)))}`
                   ) : (
+                      strkData.currentPrice === 0 ?
+                      <div
+                        className="h-5 w-5 animate-spin rounded-full border-4 border-gray-700 border-t-blue-600"
+                        role="status"
+                      ></div>
+                      :
                     `$${formatNumberWithoutExponent(Number(strkData.currentPrice.toFixed(2)))}`
                   )}
                 </td>

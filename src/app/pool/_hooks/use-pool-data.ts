@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { Contract } from "starknet";
 
 import reader_abi from "../_abi/reader_abi.json";
-import useEthPrice from "@zohal/app/trade/_hooks/use-market-data";
+import { usePrices } from "@zohal/app/trade/_hooks/use-market-data";
 
 type PoolData = {
   borrowing_fee_pool_factor: bigint;
@@ -29,7 +29,8 @@ type PoolData = {
 export default function usePoolData() {
   const { provider } = useProvider();
   const [poolData, setPoolData] = useState<PoolData | undefined>(undefined);
-  const { ethData } = useEthPrice();
+  const { prices } = usePrices();
+  const ethData = prices["ETH/USD"];
 
   useEffect(() => {
     const fetchPoolData = async () => {

@@ -28,12 +28,8 @@ import {
   uint256,
 } from "starknet";
 
-import erc_20_abi from "../abi/erc_20.json";
 import exchange_router_abi from "../abi/exchange_router.json";
 import datastore_abi from "../abi/datastore.json";
-import useEthPrice from "./use-market-data";
-import useBtcPrice from "./use-market-data-btc";
-import useStrkPrice from "./use-market-data-strk";
 import { useToast } from "@zohal/app/_ui/use-toast";
 
 export type Order = {
@@ -89,8 +85,15 @@ export default function useUserOrder(
   key: bigint,
   new_size_delta_usd: bigint,
   trigger_price: bigint,
+  onOpenChange: (open: boolean) => void,
 ) {
+  const { account, address } = useAccount();
+  const { contract: exchangeRouterContract } = useContract({
+    abi: exchange_router_abi.abi as Abi,
+    address: EXCHANGE_ROUTER_CONTRACT_ADDRESS,
+  });
   const { toast } = useToast();
+
   let trigger_price_formatted = trigger_price * BigInt(10 ** 10);
   if (order.market == BTC_MARKET_TOKEN_CONTRACT_ADDRESS) {
     trigger_price_formatted = trigger_price * BigInt(10 ** 20);
@@ -98,12 +101,6 @@ export default function useUserOrder(
   if (order.market == STRK_MARKET_TOKEN_CONTRACT_ADDRESS) {
     trigger_price_formatted = trigger_price * BigInt(10 ** 10);
   }
-
-  const { account, address } = useAccount();
-  const { contract: exchangeRouterContract } = useContract({
-    abi: exchange_router_abi.abi as Abi,
-    address: EXCHANGE_ROUTER_CONTRACT_ADDRESS,
-  });
 
   const {
     send: sendEdit,
@@ -139,6 +136,21 @@ export default function useUserOrder(
       hash: editOrderTransactionData?.transaction_hash,
     });
 
+    useEffect(() => {
+      if (isLoadingEdit) {
+        onOpenChange(false)
+      }
+    }, [isLoadingEdit, toast]);
+
+    useEffect(() => {
+      if (isSuccessEdit) {
+        toast({
+          title: "Ediited order",
+          description: "Transaction Accepted on L2",
+        });
+      }
+    }, [isSuccessEdit, toast]);
+
   const {
     send: sendCancel,
     data: cancelOrderTransactionData,
@@ -157,6 +169,12 @@ export default function useUserOrder(
   } = useTransactionReceipt({
     hash: cancelOrderTransactionData?.transaction_hash,
   });
+
+  useEffect(() => {
+    if (isLoadingCancel) {
+      onOpenChange(false)
+    }
+  }, [isLoadingCancel, toast]);
 
   useEffect(() => {
     if (isSuccessCancel) {

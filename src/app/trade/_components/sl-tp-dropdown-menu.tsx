@@ -55,34 +55,30 @@ function SlTpDropdownMenu({
   const [keepSameLeverageSl, setKeepSameLeverageSl] = useState(false);
   const { formatNumberWithoutExponent } = useFormatNumber();
 
-  const [temporarySlTpInfos, setTemporarySlTpInfos] =
-    useState<SlTpInfos>(slTpInfos);
 
-    const onUpdateTpTriggerPrice = useCallback(
-      function onUpdateTpTriggerPrice(tpPrice: string) {
-        const newTpTriggerPrice = tpPrice.replace(",", ".");
-        if (/^\d*([.]?\d*)$/.test(newTpTriggerPrice)) {
-          setSlTpInfos((prev) => ({
-            ...prev,
-            tpTriggerPrice: newTpTriggerPrice,
-          }));
+    function onUpdateTpTriggerPrice(tpPrice: string) {
+      const newTpTriggerPrice = tpPrice.replace(",", ".");
+      if (/^\d*([.]?\d*)$/.test(newTpTriggerPrice)) {
+        let collateral_Tp = slTpInfos.collateral_delta_tp;
+        if (applicableEntirePosition) {
+          collateral_Tp = (parseFloat(collateral_delta) * 10 ** 6).toString();
         }
-      },
-      [orderPrice, qty]
-    );
+        const newInfos : SlTpInfos = { ...slTpInfos, tpTriggerPrice: newTpTriggerPrice, collateral_delta_tp: collateral_Tp,};
+        setSlTpInfos(newInfos)
+      }
+    }
 
-    const onUpdateSlTriggerPrice = useCallback(
-      function onUpdateSlTriggerPrice(slPrice: string) {
-        const newSlTriggerPrice = slPrice.replace(",", ".");
-        if (/^\d*([.]?\d*)$/.test(newSlTriggerPrice)) {
-          setSlTpInfos((prev) => ({
-            ...prev,
-            slTriggerPrice: newSlTriggerPrice,
-          }));
+    function onUpdateSlTriggerPrice(slPrice: string) {
+      const newSlTriggerPrice = slPrice.replace(",", ".");
+      if (/^\d*([.]?\d*)$/.test(newSlTriggerPrice)) {
+        let collateral_Sl = slTpInfos.collateral_delta_sl;
+        if (applicableEntirePosition) {
+          collateral_Sl = (parseFloat(collateral_delta) * 10 ** 6).toString();
         }
-      },
-      [orderPrice, qty]
-    );
+        const newInfos : SlTpInfos = { ...slTpInfos, slTriggerPrice: newSlTriggerPrice, collateral_delta_sl: collateral_Sl,};
+        setSlTpInfos(newInfos)
+      }
+    }
 
   const onUpdateTp = useCallback(
     function onUpdateTp(tpPrice: string) {
@@ -97,7 +93,7 @@ function SlTpDropdownMenu({
         }
       }
     },
-    [orderPrice, qty],
+    [slTpInfos.tpTriggerPrice],
   );
 
   const onUpdateSl = useCallback(
@@ -113,7 +109,7 @@ function SlTpDropdownMenu({
         }
       }
     },
-    [orderPrice, qty],
+    [slTpInfos.slTriggerPrice],
   );
 
   useEffect(() => {
@@ -123,10 +119,8 @@ function SlTpDropdownMenu({
         : isLong
         ? (Number(slTpInfos.tpTriggerPrice) - orderPrice) * qty
         : (orderPrice - Number(slTpInfos.tpTriggerPrice)) * qty;
-    setSlTpInfos((prev) => ({
-      ...prev,
-      tp: "" + newTp,
-    }));
+      const newInfos : SlTpInfos = { ...slTpInfos, tp: "" + newTp};
+      setSlTpInfos(newInfos);
   }, [slTpInfos.tpTriggerPrice, orderPrice, qty, isLong]);
   
   useEffect(() => {
@@ -136,20 +130,9 @@ function SlTpDropdownMenu({
         : isLong
         ? (Number(slTpInfos.slTriggerPrice) - orderPrice) * qty
         : (orderPrice - Number(slTpInfos.slTriggerPrice)) * qty;
-    setSlTpInfos((prev) => ({
-      ...prev,
-      sl: "" + newSl,
-    }));
+    const newInfos : SlTpInfos = { ...slTpInfos, sl: "" + newSl};
+    setSlTpInfos(newInfos);
   }, [slTpInfos.slTriggerPrice, orderPrice, qty, isLong]);
-
-  const [isTransitioning, setIsTransitioning] = useState(false);
-
-  function onConfirm() {
-    setSlTpInfos(slTpInfos); // Met à jour les infos
-    setTimeout(() => {
-      setIsOpen(false); // Ferme la modale après un petit délai pour éviter les conflits avec le DOM
-    }, 10); // 10ms suffisent pour sécuriser la fermeture
-  }
 
   function onPositionSizeTp(newSize: string) {
     const newSizeFormatted = newSize.replace(",", ".");
@@ -173,7 +156,7 @@ function SlTpDropdownMenu({
     const newSizeFormatted = newSize.replace(",", ".");
       if (/^\d*([.]?\d*)$/.test(newSizeFormatted)) {
         let new_collateral_delta_sl = Number(newSizeFormatted) >= (qty * orderPrice) ? parseFloat(collateral_delta) * 10 ** 6
-        : (keepSameLeverage
+        : (keepSameLeverageSl
           ? Math.round(
               (parseFloat(newSizeFormatted) / (qty * orderPrice)) *
               parseFloat(collateral_delta) *

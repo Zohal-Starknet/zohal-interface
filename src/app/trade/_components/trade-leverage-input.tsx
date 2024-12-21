@@ -22,13 +22,20 @@ export default function TradeLeverageInput(props: TradeLeverageInputProps) {
   const { className, leverage, setLeverage } = props;
 
   function onLeverageChange(value: string) {
-    const numericValue = parseFloat(value);
-    if (!isNaN(numericValue) && numericValue >= 0 && numericValue <= 20) {
-      setLeverage(numericValue);
-    } else if (numericValue < 0) {
-      setLeverage(0);
-    } else if (numericValue > 20) {
-      setLeverage(20);
+    if (value === "") {
+      // Permet de tout effacer
+      setLeverage(0); // Temporaire, sera réajusté avec une validation
+    } else {
+      const numericValue = parseFloat(value);
+      if (!isNaN(numericValue)) {
+        if (numericValue < 1) {
+          setLeverage(1);
+        } else if (numericValue > 20) {
+          setLeverage(20);
+        } else {
+          setLeverage(numericValue);
+        }
+      }
     }
   }
 
@@ -51,7 +58,7 @@ export default function TradeLeverageInput(props: TradeLeverageInputProps) {
               className="h-full w-full bg-transparent px-2 text-sm"
               onChange={onLeverageChange}
               placeholder="0.00×"
-              value={leverage.toString()}
+              value={leverage === 0 ? "" : leverage.toString()}
               disabled={false}
             />
           </div>

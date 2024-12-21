@@ -1,4 +1,7 @@
-import { useState, useEffect } from "react";
+"use client"
+
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { PriceServiceConnection } from "@pythnetwork/price-service-client";
 
 export type PriceData = {
   pragmaPrice: number;
@@ -8,66 +11,43 @@ export type PriceData = {
   high24h: number;
   low24h: number;
 };
-import { PriceServiceConnection } from "@pythnetwork/price-service-client";
 
-const pair = "eth/usd";
-const apiUrl = `/api/fetch-candlestick?pair=${pair}`;
-
-const convertToUnixTimestamp = (dateString: string): number => {
-  return Math.floor(new Date(dateString).getTime() / 1000);
+type PriceContextType = {
+  prices: Record<string, PriceData>;
 };
 
-const getLastTwoDaysData = (data: any[]): any[] => {
-  const now = Math.floor(Date.now() / 1000); // Current time in Unix timestamp
-  const twoDaysAgo = now - 2 * 24 * 60 * 60; // Unix timestamp for 2 days ago
-
-  return data.filter((item) => item.time >= twoDaysAgo);
-};
+const PriceContext = createContext<PriceContextType | undefined>(undefined);
 
 const PAIR_SYMBOL_TO_PRICE_ID: Record<string, string> = {
-  "ETH/USD":
-    "0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace",
-  "BTC/USD":
-    "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43",
-  "STRK/USD": "",
+  "ETH/USD": "0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace",
+  "BTC/USD": "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43",
+  "STRK/USD": "0x6a182399ff70ccf3e06024898942028204125a819e519a335ffa4579e66cd870",
 };
 
-export function usePriceDataSubscription({
-  pairSymbol,
-}: {
-  pairSymbol: string;
-}) {
-  const [tokenData, setTokenData] = useState<{
-    pragmaPrice: number;
-    currentPrice: number;
-    change24h: number;
-    change24hPercent: number;
-    high24h: number;
-    low24h: number;
-  }>({
-    pragmaPrice: 0,
-    currentPrice: 0,
-    change24h: 0,
-    change24hPercent: 0,
-    high24h: 0,
-    low24h: 0,
+export function PriceProvider({ children }: { children: React.ReactNode }) {
+  const [prices, setPrices] = useState<Record<string, PriceData>>({
+    "ETH/USD": { pragmaPrice: 0, currentPrice: 0, change24h: 0, change24hPercent: 0, high24h: 0, low24h: 0 },
+    "BTC/USD": { pragmaPrice: 0, currentPrice: 0, change24h: 0, change24hPercent: 0, high24h: 0, low24h: 0 },
+    "STRK/USD": { pragmaPrice: 0, currentPrice: 0, change24h: 0, change24hPercent: 0, high24h: 0, low24h: 0 },
   });
-  const priceId = PAIR_SYMBOL_TO_PRICE_ID[pairSymbol];
 
   useEffect(() => {
-    const connection = new PriceServiceConnection(
-      "https://hermes.pyth.network",
-    );
+    const connection = new PriceServiceConnection("https://hermes.pyth.network");
 
-    connection.subscribePriceFeedUpdates([priceId], (priceFeed) => {
-      const priceNoOlderThan = priceFeed.getPriceNoOlderThan(60);
+    Object.entries(PAIR_SYMBOL_TO_PRICE_ID).forEach(([pairSymbol, priceId]) => {
+      connection.subscribePriceFeedUpdates([priceId], (priceFeed) => {
+        const priceNoOlderThan = priceFeed.getPriceNoOlderThan(60);
 
-      if (!priceNoOlderThan) {
-        return;
-      }
-      const price =
-        Number(priceNoOlderThan.price) / 10 ** (priceNoOlderThan.expo * -1);
-      setTokenData((previous) => ({ ...previous, currentPrice: price }));
+        if (!priceNoOlderThan) return;
+
+        const price = Number(priceNoOlderThan.price) / 10 ** (priceNoOlderThan.expo * -1);
+
+        setPrices((prev) => ({
+          ...prev,
+          [pairSymbol]: { ...prev[pairSymbol], currentPrice: price },
+        }));
+
+      });
     });
 
     return () => {
@@ -75,88 +55,13 @@ export function usePriceDataSubscription({
     };
   }, []);
 
-  return { tokenData };
+  return <PriceContext.Provider value={{ prices }}>{children}</PriceContext.Provider>;
 }
 
-export default function useEthPrice() {
-  const [ethData, setEthData] = useState<PriceData>({
-    pragmaPrice: 0,
-    currentPrice: 0,
-    change24h: 0,
-    change24hPercent: 0,
-    high24h: 0,
-    low24h: 0,
-  });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  const convertToUnixTimestamp = (dateString: string): number => {
-    return Math.floor(new Date(dateString).getTime() / 1000);
-  };
-
-  const filterLast24Hours = (data: any[]) => {
-    const now = Math.floor(Date.now() / 1000); // Current time in seconds
-    const twentyFourHoursAgo = now - 24 * 60 * 60; // 24 hours ago in seconds
-    return data.filter((d) => d.time >= twentyFourHoursAgo);
-  };
-
-  const fetchData = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(apiUrl);
-      if (response.ok) {
-        const responseData = await response.json();
-
-        const formattedData = responseData.data.map((d: any) => ({
-          time: convertToUnixTimestamp(d.time),
-          open: Number(d.open) / 100000000,
-          high: Number(d.high) / 100000000,
-          low: Number(d.low) / 100000000,
-          close: Number(d.close) / 100000000,
-        }));
-
-        const last24HoursData = filterLast24Hours(formattedData);
-
-        if (last24HoursData.length < 2) {
-          console.error("Not enough data for 24-hour calculations.");
-          return;
-        }
-
-        last24HoursData.sort((a, b) => a.time - b.time);
-
-        const latestData = last24HoursData[last24HoursData.length - 1];
-        const previousData = last24HoursData[last24HoursData.length - 2];
-        const high24h = Math.max(...last24HoursData.map((d: any) => d.high));
-        const low24h = Math.min(...last24HoursData.map((d: any) => d.low));
-        const change24h = latestData.close - previousData.close;
-        const change24hPercent = (change24h / previousData.close) * 100;
-
-        setEthData({
-          pragmaPrice: latestData.close * 100000000,
-          currentPrice: latestData.close,
-          change24h,
-          change24hPercent,
-          high24h,
-          low24h,
-        });
-      } else {
-        setError(new Error("Failed to fetch data"));
-      }
-    } catch (error) {
-      console.error("Failed to fetch data: ", error);
-      //@ts-ignore
-      setError(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-    const interval = setInterval(fetchData, 60_000); // Fetch data every 60 seconds
-    return () => clearInterval(interval); // Cleanup on unmount
-  }, []);
-
-  return { ethData, loading, error };
+export function usePrices() {
+  const context = useContext(PriceContext);
+  if (!context) {
+    throw new Error("usePrices must be used within a PriceProvider");
+  }
+  return context;
 }

@@ -55,12 +55,15 @@ export default function useTriggerTrade() {
 
       let pricePay = BigInt("10000000000000000000000000000");
 
-      let trigger_price = (BigInt(triggeredPrice) * BigInt(10 ** 6))
+      let divisor = 10**16;
+      let divisor_BTC = 10**26;
+      let trigger_price = tradedTokenSymbol === "BTC" ? BigInt(triggeredPrice * divisor_BTC) : BigInt(triggeredPrice * divisor);
+
       let acceptable_price = isLong
           ? uint256.bnToUint256(BigInt(trigger_price * BigInt(10000 + Number(slippage) * 100)) / BigInt(10000))
           : uint256.bnToUint256(BigInt(trigger_price * BigInt(10000 - Number(slippage) * 100)) / BigInt(10000));
       let size_delta_usd = uint256.bnToUint256(
-        BigInt(leverage) * pricePay * BigInt(payTokenAmount),
+        BigInt(leverage) * pricePay * BigInt(payTokenAmount * 10 ** 6),
       );
 
       const createOrderParams = {
@@ -135,9 +138,6 @@ export default function useTriggerTrade() {
         );
         calls.push(createTpOrderCall);
       }
-
-      console.log("collateralSl", collateralDeltaSl)
-      console.log("collateralTp", collateralDeltaTp)
 
       if (slPrice != "") {
         // const transferCall4 = usdcContract.populate("transfer", [

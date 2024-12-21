@@ -32,7 +32,7 @@ export default function EditPosition({ position }: EditPositionProps) {
     <>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <button className="rounded-lg border border-border bg-secondary px-3 py-2 hover:bg-gray-800">
+          <button className="rounded-lg border border-border bg-secondary px-3 py-2 hover:bg-blue-950">
             Market
           </button>
         </DropdownMenuTrigger>

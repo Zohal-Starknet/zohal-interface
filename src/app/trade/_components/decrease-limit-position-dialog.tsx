@@ -13,7 +13,7 @@ import Input from "@zohal/app/_ui/input";
 import { useState, useEffect } from "react";
 
 import useUserPosition, { Position } from "../_hooks/use-user-position";
-import useEthPrice, { PriceData, usePriceDataSubscription } from "../_hooks/use-market-data";
+import  { PriceData,  usePrices } from "../_hooks/use-market-data";
 import useFormatNumber from "../_hooks/use-format-number";
 import useUserPositionInfos from "../_hooks/use-user-position-infos";
 import PriceInfoEditPosition from "./price-info-edit-position";
@@ -47,14 +47,17 @@ export default function DecreaseLimitPositionDialog({
   const decimals = BigInt(10 ** 6);
   const collateralAmountBigInt = BigInt(position.collateral_amount);
   const collateralUsdAmount = Number(collateralAmountBigInt) / Number(decimals);
-  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
-  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
-  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  // const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  // const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  // const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  const { prices } = usePrices();
+  const ethData = prices["ETH/USD"];
+  const btcData = prices["BTC/USD"];
+  const strkData = prices["STRK/USD"];
   const [priceData, setPriceData] = useState(ethData);
   const [tokenSymbol, setTokenSymbol] = useState("ETH")
 
   useEffect(() => {
-    console.log("MARKEET", position.market)
     if (position.market == (BigInt(ETH_MARKET_TOKEN_CONTRACT_ADDRESS)).toString()) {
       setPriceData(ethData);
       setTokenSymbol("ETH")
@@ -88,8 +91,6 @@ export default function DecreaseLimitPositionDialog({
           10 ** 6,
       )
     : 0;
-
-  console.log("new collatrela delta", new_collateral_delta);
 
   function onInputChange(newValue: string) {
     const formattedValue = newValue.replace(",", ".");
@@ -216,7 +217,7 @@ export default function DecreaseLimitPositionDialog({
 
   const { send: sendClose, isLoading: isLoadingClose, isPending: isPendingClose } = useUserPosition(
       position,
-      BigInt(new_collateral_delta),
+      new_collateral_delta ? BigInt(new_collateral_delta) : BigInt(0),
       orderType,
       new_size_delta_usd,
       limit_price,
@@ -262,7 +263,7 @@ export default function DecreaseLimitPositionDialog({
         </div>
         <div>
           <p className="mb-1 w-full text-right text-sm text-neutral-300">
-            Max: {formattedSizeDeltaUsdcAmount} USD
+            Max: {formatNumberWithoutExponent(Number(formattedSizeDeltaUsdcAmount))} USD
           </p>
         </div>
         <div className="rounded-md border border-border bg-secondary p-3">
@@ -275,7 +276,7 @@ export default function DecreaseLimitPositionDialog({
               <label className="block text-xs">Reduce</label>
             )}
             <span className="text-xs text-muted-foreground">
-              Max: {formattedSizeDeltaUsdcAmount} USD
+              Max: {formatNumberWithoutExponent(Number(formattedSizeDeltaUsdcAmount))} USD
             </span>
           </div>
           <div className="mt-1 flex items-center justify-between bg-transparent">
@@ -305,7 +306,7 @@ export default function DecreaseLimitPositionDialog({
           <div className="flex items-center justify-between">
             <label className="block text-xs">Price</label>
             <span className="text-xs text-muted-foreground">
-              Price: {priceData.currentPrice.toString()}
+              Price: {formatNumberWithoutExponent(Number(priceData.currentPrice.toFixed(2)))}
             </span>
           </div>
           <div className="mt-1 flex items-center justify-between bg-transparent">

@@ -5,6 +5,8 @@ import "./globals.css";
 import Providers from "./providers";
 import { ThemeProvider } from "./_components/theme-provider";
 import { Toaster } from "./_ui/toaster";
+import { PriceProvider } from "./trade/_hooks/use-market-data";
+
 
 export const metadata: Metadata = {
   description:
@@ -31,12 +33,14 @@ export default function RootLayout({
         >
           <div className="flex h-full min-h-screen flex-col">
             <Providers>
+            <PriceProvider>
               <Header />
               <div className="flex-auto">{children}</div>
+              </PriceProvider>
             </Providers>
           </div>
-          <Toaster />
         </ThemeProvider>
+        <Toaster />
       </body>
     </html>
   );

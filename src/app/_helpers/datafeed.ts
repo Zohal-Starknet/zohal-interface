@@ -112,7 +112,7 @@ const datafeed = (pairSymbol: string) => ({
         const bars: any = []
         results.forEach((data) => {
           if (data.t.length > 0) {
-            data.t.forEach((time, index) => {
+            data.t.forEach((time: number, index: string | number) => {
               bars.push({
                 time: time * 1000,
                 low: data.l[index],

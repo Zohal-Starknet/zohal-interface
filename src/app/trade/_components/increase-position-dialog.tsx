@@ -24,7 +24,7 @@ import useFormatNumber from "../_hooks/use-format-number";
 import useUserPositionInfos from "../_hooks/use-user-position-infos";
 import PriceInfoEditPosition from "./price-info-edit-position";
 import { CairoCustomEnum } from "starknet";
-import { usePriceDataSubscription } from "../_hooks/use-market-data";
+import {  usePrices } from "../_hooks/use-market-data";
 
 interface ClosePositionDialogProps {
   position: Position;
@@ -47,14 +47,17 @@ export default function IncreasePositionDialog({
   const collateralUsdAmount = Number(collateralAmountBigInt) / Number(decimals);
   const { formatNumberWithoutExponent } = useFormatNumber();
 
-  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
-  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
-  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  // const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  // const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  // const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  const { prices } = usePrices();
+  const ethData = prices["ETH/USD"];
+  const btcData = prices["BTC/USD"];
+  const strkData = prices["STRK/USD"];
   const [priceData, setPriceData] = useState(ethData);
   const [tokenSymbol, setTokenSymbol] = useState("ETH")
 
   useEffect(() => {
-    console.log("MARKEET", position.market)
     if (position.market == (BigInt(ETH_MARKET_TOKEN_CONTRACT_ADDRESS)).toString()) {
       setPriceData(ethData);
       setTokenSymbol("ETH")
@@ -90,8 +93,6 @@ export default function IncreasePositionDialog({
           10 ** 6,
       )
     : 0;
-
-  console.log("new collatrela delta", new_collateral_delta);
 
   function onInputChange(newValue: string) {
     const formattedValue = newValue.replace(",", ".");

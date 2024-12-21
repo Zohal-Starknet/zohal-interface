@@ -27,7 +27,7 @@ export default function EditOrder({ order, old_size_delta, old_trigger_price }: 
   return (
     <>
       <button
-        className="rounded-lg border border-border bg-secondary px-3 py-2 mr-2 hover:bg-gray-800"
+        className="rounded-lg border border-border bg-secondary px-3 py-2 mr-2 hover:bg-blue-950"
         onClick={() => setOpenedModal("editOrder")}
       >
         Edit Order

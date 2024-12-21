@@ -43,7 +43,6 @@ export default function EditOrderDialog({
   const [inputValue, setInputValue] = useState("");
   const [limitPrice, setLimitPrice] = useState("");
   const [tokenSymbol, setTokenSymbol] = useState("ETH");
-  const [orderState, setOrderState] = useState(defaultOrder);
   const { formatNumberWithoutExponent } = useFormatNumber();
 
   let new_size_delta_usd =
@@ -94,10 +93,11 @@ export default function EditOrderDialog({
   ];
 
   const { sendEdit } = useUserOrder(
-    orderState,
-    orderState.key,
+    order,
+    order.key,
     new_size_delta_usd,
     limit_price,
+    onOpenChange,
   );
 
   return (
@@ -182,7 +182,6 @@ export default function EditOrderDialog({
         <button
           className="w-full rounded-lg border border-[#363636] bg-[#1b1d22] px-3 py-2 text-sm"
           onClick={() => {
-            setOrderState(order);
             sendEdit();
           }}
         >

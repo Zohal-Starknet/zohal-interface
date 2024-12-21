@@ -12,7 +12,7 @@ import SwapActionButton from "./swap-action-button";
 import SwapInput from "./swap-input";
 import TokenSwapButton from "./token-swap-button";
 import ChooseTokenButton from "./choose-token-button";
-import useEthPrice, { usePriceDataSubscription } from "@zohal/app/trade/_hooks/use-market-data";
+import  {  usePrices } from "@zohal/app/trade/_hooks/use-market-data";
 
 // import usePoolData from "@zohal/app/pool/_hooks/use-pool-data";
 
@@ -31,9 +31,13 @@ export default function MarketSwap({ className }: PropsWithClassName) {
     updatePayTokenValue,
     updateReceiveTokenValue,
   } = useTokenInputs({ ratio: initialRatio, leverage: 0, tokenSymbol: tokenSymbol });
-  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
-  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
-  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  // const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  // const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  // const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  const { prices } = usePrices();
+  const ethData = prices["ETH/USD"];
+  const btcData = prices["BTC/USD"];
+  const strkData = prices["STRK/USD"];
   const [priceData, setPriceData] = useState(ethData);
 
   useEffect(() => {

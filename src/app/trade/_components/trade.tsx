@@ -13,8 +13,9 @@ import ChooseTokenButton from "./choose-token-button";
 import PriceInfo from "./price-info";
 import TradeLeverageInput from "./trade-leverage-input";
 import { useTokenInputs } from "../_hooks/use-token-input";
-import useEthPrice, {
-  usePriceDataSubscription,
+import  {
+  
+  usePrices,
 } from "@zohal/app/trade/_hooks/use-market-data";
 
 import { SlTpInfos } from "./sl-tp-modal";
@@ -40,15 +41,19 @@ export default function Trade({ className }: PropsWithClassName) {
   const [checkedShort, setCheckedShort] = useState(false);
   const initialRatio = 1;
   const [leverage, setLeverage] = useState(1);
-  const { tokenData: ethData } = usePriceDataSubscription({
-    pairSymbol: "ETH/USD",
-  });
-  const { tokenData: btcData } = usePriceDataSubscription({
-    pairSymbol: "BTC/USD",
-  });
-  const { tokenData: strkData } = usePriceDataSubscription({
-    pairSymbol: "STRK/USD",
-  });
+  // const { tokenData: ethData } = usePriceDataSubscription({
+  //   pairSymbol: "ETH/USD",
+  // });
+  // const { tokenData: btcData } = usePriceDataSubscription({
+  //   pairSymbol: "BTC/USD",
+  // });
+  // const { tokenData: strkData } = usePriceDataSubscription({
+  //   pairSymbol: "STRK/USD",
+  // });
+  const { prices } = usePrices();
+  const ethData = prices["ETH/USD"];
+  const btcData = prices["BTC/USD"];
+  const strkData = prices["STRK/USD"];
   const [priceData, setPriceData] = useState(ethData);
   const {
     payTokenSymbol,
@@ -76,7 +81,6 @@ export default function Trade({ className }: PropsWithClassName) {
   });
 
   const { trade } = useMarketTrade();
-  const { toast } = useToast();
 
   const onTokenSymbolChange = (newTokenSymbol: TokenSymbol) => {
     setTokenSymbol(newTokenSymbol);
@@ -208,7 +212,6 @@ export default function Trade({ className }: PropsWithClassName) {
   ];
 
   const handleTrade = (isBuy: boolean) => {
-    console.log("slTpInfos", slTpInfos);
     trade(
       tokenSymbol,
       Number(payTokenValue),

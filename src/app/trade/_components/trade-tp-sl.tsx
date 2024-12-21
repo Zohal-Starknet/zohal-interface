@@ -9,7 +9,7 @@ import Form from "../../_ui/form";
 import Input from "../../_ui/input";
 import ChooseTokenButton from "./choose-token-button";
 import PriceInfo from "./price-info";
-import useEthPrice, { usePriceDataSubscription } from "@zohal/app/trade/_hooks/use-market-data";
+import  {  usePrices } from "@zohal/app/trade/_hooks/use-market-data";
 
 import { useToast } from "@zohal/app/_ui/use-toast";
 import useTpSl from "../_hooks/use-tp-sl";
@@ -18,9 +18,13 @@ export default function TradeTpSl({ className }: PropsWithClassName) {
   const [sizePosition, setSizePosition] = useState("");
   const [triggerPrice, setTriggerPrice] = useState("");
   const [tokenSymbol, setTokenSymbol] = useState<TokenSymbol>("ETH");
-  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
-  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
-  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  // const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  // const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  // const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  const { prices } = usePrices();
+  const ethData = prices["ETH/USD"];
+  const btcData = prices["BTC/USD"];
+  const strkData = prices["STRK/USD"];
   const [priceData, setPriceData] = useState(ethData);
   console.log("this is priceData", priceData)
 

@@ -10,7 +10,7 @@ import { Position } from "../_hooks/use-user-position";
 import DecreaseLimitPositionDialog from "./decrease-limit-position-dialog";
 import IncreaseLimitPositionDialog from "./increase-limit-position-dialog";
 import { BTC_MARKET_TOKEN_CONTRACT_ADDRESS, ETH_MARKET_TOKEN_CONTRACT_ADDRESS, STRK_MARKET_TOKEN_CONTRACT_ADDRESS } from "@zohal/app/_lib/addresses";
-import useEthPrice, { usePriceDataSubscription } from "../_hooks/use-market-data";
+import  {  usePrices } from "../_hooks/use-market-data";
 interface EditPositionProps {
   position: Position;
 }
@@ -20,9 +20,13 @@ export default function EditPosition({ position }: EditPositionProps) {
     | "increasePosition"
     | undefined
   >(undefined);
-  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
-  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
-  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  // const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  // const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  // const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  const { prices } = usePrices();
+  const ethData = prices["ETH/USD"];
+  const btcData = prices["BTC/USD"];
+  const strkData = prices["STRK/USD"];
   const [priceData, setPriceData] = useState(btcData);
   const [tokenSymbol, setTokenSymbol] = useState("BTC");
 
@@ -48,7 +52,7 @@ export default function EditPosition({ position }: EditPositionProps) {
     <>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <button className="rounded-lg border border-border bg-secondary px-3 py-2 mr-2 hover:bg-gray-800">
+          <button className="rounded-lg border border-border bg-secondary px-3 py-2 mr-2 hover:bg-blue-950">
             Limit
           </button>
         </DropdownMenuTrigger>

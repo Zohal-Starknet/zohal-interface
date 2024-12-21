@@ -83,9 +83,6 @@ function SlTpModal({
         const newTp = isLong
           ? (Number(tpPrice) - orderPrice) * qty
           : orderPrice - Number(tpPrice) * qty;
-        console.log("orderPrice :" + orderPrice);
-        console.log("qty :" + qty);
-        console.log("TP :" + newTp);
         setTemporarySlTpInfos((prevInfos) => ({
           ...prevInfos,
           tp: "" + newTp,

@@ -18,7 +18,7 @@ import { BlockTag, CairoCustomEnum, Contract, uint256 } from "starknet";
 import erc_20_abi from "../abi/erc_20.json";
 import exchange_router_abi from "../abi/exchange_router.json";
 import datastore_abi from "../abi/datastore.json";
-import { usePriceDataSubscription } from "./use-market-data";
+import {  usePrices } from "./use-market-data";
 import isEqual from "lodash.isequal";
 import { useEffect } from "react";
 import { useToast } from "@zohal/app/_ui/use-toast";
@@ -49,15 +49,19 @@ export default function useUserPosition(
   onOpenChange: (open: boolean) => void,
   slippage: string,
 ) {
-  const { tokenData: ethData } = usePriceDataSubscription({
-    pairSymbol: "ETH/USD",
-  });
-  const { tokenData: btcData } = usePriceDataSubscription({
-    pairSymbol: "BTC/USD",
-  });
-  const { tokenData: strkData } = usePriceDataSubscription({
-    pairSymbol: "STRK/USD",
-  });
+  // const { tokenData: ethData } = usePriceDataSubscription({
+  //   pairSymbol: "ETH/USD",
+  // });
+  // const { tokenData: btcData } = usePriceDataSubscription({
+  //   pairSymbol: "BTC/USD",
+  // });
+  // const { tokenData: strkData } = usePriceDataSubscription({
+  //   pairSymbol: "STRK/USD",
+  // });
+  const { prices } = usePrices();
+  const ethData = prices["ETH/USD"];
+  const btcData = prices["BTC/USD"];
+  const strkData = prices["STRK/USD"];
   const { account, address } = useAccount();
   const { provider } = useProvider();
   const { toast } = useToast();
@@ -98,11 +102,8 @@ export default function useUserPosition(
       (position.is_long && isEqual(order_type, { MarketIncrease: {} })) ||
       (!position.is_long && isEqual(order_type, { MarketDecrease: {} }))
     ) {
-      console.log("ENTER HERE");
-      console.log("real price:", price);
       acceptable_price =
         (price * BigInt(Number(slippage) * 100 + 10000)) / BigInt(10000);
-      console.log("acceptable_price", acceptable_price);
     } else if (
       (position.is_long && isEqual(order_type, { MarketDecrease: {} })) ||
       (!position.is_long && isEqual(order_type, { MarketIncrease: {} }))
@@ -199,13 +200,16 @@ export default function useUserPosition(
   });
 
   useEffect(() => {
+    if (isLoading) {
+      onOpenChange(false);
+    }
     if (isSuccess) {
       toast({
         title: "Opened order",
-        description: "transaction passed",
+        description: "Transaction accepeted on L2",
       });
     }
-  }, [isSuccess, toast]);
+  }, [isLoading, isSuccess, toast]);
 
   return { send, isPending, isLoading };
 }

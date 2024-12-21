@@ -4,8 +4,9 @@ import { Tokens } from "@zohal/app/_helpers/tokens";
 import { cn, type PropsWithClassName } from "@zohal/app/_lib/utils";
 import clsx from "clsx";
 
-import useEthPrice, {
-  usePriceDataSubscription,
+import  {
+  
+  usePrices,
 } from "../_hooks/use-market-data";
 import {
   BTC_MARKET_TOKEN_CONTRACT_ADDRESS,
@@ -18,24 +19,26 @@ import EditOrder from "./edit-order";
 import useFormatNumber from "../_hooks/use-format-number";
 import useGetOrder from "../_hooks/use-get-order";
 import { useState } from "react";
+import CancelOrder from "./cancel-order";
 
 /* eslint-disable @next/next/no-img-element */
 export default function OpenOrders({ className }: PropsWithClassName) {
   // TODO @YohanTz: Add ? icon to explain each of the table header
   const { orders } = useGetOrder();
-  const { tokenData: ethData } = usePriceDataSubscription({
-    pairSymbol: "ETH/USD",
-  });
-  const { tokenData: btcData } = usePriceDataSubscription({
-    pairSymbol: "BTC/USD",
-  });
-  const { tokenData: strkData } = usePriceDataSubscription({
-    pairSymbol: "STRK/USD",
-  });
+  // const { tokenData: ethData } = usePriceDataSubscription({
+  //   pairSymbol: "ETH/USD",
+  // });
+  // const { tokenData: btcData } = usePriceDataSubscription({
+  //   pairSymbol: "BTC/USD",
+  // });
+  // const { tokenData: strkData } = usePriceDataSubscription({
+  //   pairSymbol: "STRK/USD",
+  // });
+  const { prices } = usePrices();
+  const ethData = prices["ETH/USD"];
+  const btcData = prices["BTC/USD"];
+  const strkData = prices["STRK/USD"];
   const { formatNumberWithoutExponent } = useFormatNumber();
-  const [key, setKey] = useState(BigInt(0));
-
-  const { sendCancel } = useUserOrder(defaultOrder, key, BigInt(0), BigInt(0));
 
   if (orders === undefined) {
     return (
@@ -191,15 +194,9 @@ export default function OpenOrders({ className }: PropsWithClassName) {
                     old_size_delta={formattedSizeInUsd}
                     old_trigger_price={triggerPrice.toFixed(2)}
                   />
-                  <button
-                    className="rounded-lg border border-border bg-secondary px-3 py-2 hover:bg-gray-800"
-                    onClick={() => {
-                      setKey(order.key);
-                      sendCancel();
-                    }}
-                  >
-                    Cancel Order
-                  </button>
+                  <CancelOrder
+                    order={order}
+                  />
                 </td>
               </tr>
             );

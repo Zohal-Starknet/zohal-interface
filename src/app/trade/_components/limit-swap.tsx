@@ -15,7 +15,7 @@ import TokenSwapButton from "./token-swap-button";
 import ChooseTokenButton from "./choose-token-button";
 import SwapLimitInput from "./swap-limit-input";
 import usePoolData from "@zohal/app/pool/_hooks/use-pool-data";
-import useEthPrice from "../_hooks/use-market-data";
+import { usePrices } from "../_hooks/use-market-data";
 
 export default function LimitSwap({ className }: PropsWithClassName) {
     const [tokenSymbol, setTokenSymbol] = useState<TokenSymbol>("ETH");
@@ -36,7 +36,8 @@ export default function LimitSwap({ className }: PropsWithClassName) {
         updateReceiveTokenLimitValue,
         updateLimitPrice,
     } = useTokenInputs({ ratio: initialRatio, leverage: 0, tokenSymbol: tokenSymbol });
-    const { ethData } = useEthPrice();
+    const { prices } = usePrices();
+    const ethData = prices["ETH/USD"];
 
 
     const fetchPrice = async (token: any) => {

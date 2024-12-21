@@ -17,9 +17,6 @@ import { BlockTag, CairoCustomEnum, Contract, provider, uint256 } from "starknet
 import erc_20_abi from "../abi/erc_20.json";
 import exchange_router_abi from "../abi/exchange_router.json";
 import datastore_abi from "../abi/datastore.json";
-import useEthPrice from "./use-market-data";
-import useBtcPrice from "./use-market-data-btc";
-import useStrkPrice from "./use-market-data-strk";
 
 export type Order = {
   key: bigint,

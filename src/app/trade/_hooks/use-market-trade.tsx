@@ -39,11 +39,6 @@ export default function useMarketTrade() {
     if (account === undefined || address === undefined) {
       return;
     }
-    console.log(tradedTokenSymbol, "tradedTokenSymbol");
-    console.log(payTokenAmount, "payTokenAmount");
-    console.log(isLong, "isLong");
-    console.log(leverage, "leverage");
-    console.log(tradedPriceData, "tradedPriceData");
 
     setStatus("loading");
     try {
@@ -61,11 +56,9 @@ export default function useMarketTrade() {
 
       let pricePay = BigInt("10000000000000000000000000000");
 
-      const pragma_decimals = 8;
-      let priceTrade =
-        (BigInt(tradedPriceData.pragmaPrice.toFixed(0)) * BigInt(10 ** 30)) /
-        BigInt(10 ** (pragma_decimals - 4)) /
-        BigInt(10 ** Tokens[tradedTokenSymbol].decimals);
+      let divisor = 10**16;
+      let divisor_BTC = 10**26;
+      let priceTrade = tradedTokenSymbol === "BTC" ? BigInt(tradedPriceData.currentPrice * divisor_BTC) : BigInt(tradedPriceData.currentPrice * divisor);
       let acceptable_price = isLong
         ? uint256.bnToUint256(BigInt(priceTrade * BigInt(10000 + Number(slippage) * 100)) / BigInt(10000))
         : uint256.bnToUint256(BigInt(priceTrade * BigInt(10000 - Number(slippage) * 100)) / BigInt(10000));
@@ -74,9 +67,6 @@ export default function useMarketTrade() {
           pricePay *
           BigInt(payTokenAmount * 10 ** Tokens["USDC"].decimals),
       );
-
-      console.log(size_delta_usd, "size delta usd");
-      console.log(priceTrade, "price TRADE");
 
       const createOrderParams = {
         receiver: address,

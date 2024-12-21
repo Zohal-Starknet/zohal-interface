@@ -20,7 +20,7 @@ import {
 } from "@zohal/app/_lib/addresses";
 import PriceInfo from "./price-info";
 import useMarketTokenBalance from "@zohal/app/_hooks/use-market-token-balance";
-import useEthPrice, { usePriceDataSubscription } from "../_hooks/use-market-data";
+import  {  usePrices } from "../_hooks/use-market-data";
 import useFormatNumber from "../_hooks/use-format-number";
 import useUserPositionInfos from "../_hooks/use-user-position-infos";
 import PriceInfoEditPosition from "./price-info-edit-position";
@@ -52,9 +52,13 @@ export default function DecreaseCollateralDialog({
     BigInt(10 ** 16) /
     BigInt(10 ** 18)
   ).toString();
-  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
-  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
-  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  // const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  // const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  // const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  const { prices } = usePrices();
+  const ethData = prices["ETH/USD"];
+  const btcData = prices["BTC/USD"];
+  const strkData = prices["STRK/USD"];
   const [priceData, setPriceData] = useState(ethData);
   const [tokenSymbol, setTokenSymbol] = useState("ETH")
   const { formatNumberWithoutExponent } = useFormatNumber();
@@ -63,8 +67,8 @@ export default function DecreaseCollateralDialog({
     marketTokenAddress: Tokens["USDC"].address,
     decimal: Tokens["USDC"].decimals,
   });
+
   useEffect(() => {
-    console.log("MARKEET", position.market)
     if (position.market == (BigInt(ETH_MARKET_TOKEN_CONTRACT_ADDRESS)).toString()) {
       setPriceData(ethData);
       setTokenSymbol("ETH")
@@ -91,8 +95,6 @@ export default function DecreaseCollateralDialog({
         )
       ) * BigInt(10**28)
     : BigInt(0);
-
-  console.log("new collatrela delta", new_collateral_delta);
 
   function onInputChange(newValue: string) {
     const formattedValue = newValue.replace(",", ".");
@@ -251,7 +253,7 @@ export default function DecreaseCollateralDialog({
             <div className="flex items-center justify-between">
               <label className="block text-xs">Price</label>
               <span className="text-xs text-muted-foreground">
-                Price: {priceData.currentPrice.toFixed(2)}
+                Price: {formatNumberWithoutExponent(Number(priceData.currentPrice.toFixed(2)))}
               </span>
             </div>
             <div className="mt-1 flex items-center justify-between bg-transparent">

@@ -3,12 +3,8 @@ import {
   STRK_MARKET_TOKEN_CONTRACT_ADDRESS,
   ETH_MARKET_TOKEN_CONTRACT_ADDRESS,
 } from "@zohal/app/_lib/addresses";
-import useEthPrice, { PriceData, usePriceDataSubscription } from "./use-market-data";
-import useBtcPrice from "./use-market-data-btc";
-import useStrkPrice from "./use-market-data-strk";
+import  { usePrices } from "./use-market-data";
 import { Position } from "./use-user-position";
-import { Tokens } from "@zohal/app/_helpers/tokens";
-import useFormatNumber from "./use-format-number";
 
 export type PositionInfos = {
   account: bigint;
@@ -19,7 +15,7 @@ export type PositionInfos = {
   market: string;
   size_in_tokens: bigint;
   size_in_usd: string;
-  pnl: number;
+  pnl: number | undefined;
   entry_price: string;
   leverage: string;
   liq_price: string;
@@ -36,16 +32,20 @@ export type NewPositionInfos = {
   };
 
 export default function useUserPositionInfos() {
-  const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
-  const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
-  const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  // const { tokenData: ethData } = usePriceDataSubscription({ pairSymbol: "ETH/USD" });
+  // const { tokenData: btcData } = usePriceDataSubscription({ pairSymbol: "BTC/USD" });
+  // const { tokenData: strkData } = usePriceDataSubscription({ pairSymbol: "STRK/USD" });
+  const { prices } = usePrices();
+  const ethData = prices["ETH/USD"];
+  const btcData = prices["BTC/USD"];
+  const strkData = prices["STRK/USD"];
 
   function getPositionInfos(position: Position) {
     let collateral_symbol = "ETH";
     let multiplicator = 10**12;
     let divisor = 10**16;
     let divisor_pnl = 10**16;
-    let tradedPriceData = ethData;
+    let tradedPriceData = BigInt(ethData.currentPrice * divisor_pnl);
     const pragma_decimals = 8 ;
     if (position.market == ETH_MARKET_TOKEN_CONTRACT_ADDRESS) {
         collateral_symbol = "ETH";
@@ -53,10 +53,10 @@ export default function useUserPositionInfos() {
         collateral_symbol = "BTC";
         divisor = 10**26;
         multiplicator = 10**2;
-        tradedPriceData = btcData;
+        tradedPriceData = BigInt(btcData.currentPrice * divisor);
     } if (position.market == STRK_MARKET_TOKEN_CONTRACT_ADDRESS) {
         collateral_symbol = "STRK";
-        tradedPriceData = strkData;
+        tradedPriceData = BigInt(strkData.currentPrice * divisor_pnl);
     }
 
     const decimals = BigInt(10 ** 6);
@@ -70,13 +70,14 @@ export default function useUserPositionInfos() {
     const positionLeverage = (Number(position.size_in_usd) / 10**16) / (Number(position.collateral_amount) * 10**12);
     const entryPrice = (Number((BigInt(position.size_in_usd) / BigInt(position.size_in_tokens))) / divisor);
 
-    const priceTrade = BigInt(tradedPriceData.pragmaPrice.toFixed(0)) * BigInt(10**(30)) / BigInt(10**(pragma_decimals - 4)) / BigInt(10**(Tokens[collateral_symbol].decimals));
+    const priceTrade = tradedPriceData;
+    
     const pnl = position.is_long ? 
     (Number((BigInt(position.size_in_tokens) * BigInt(priceTrade)) - BigInt(position.size_in_usd)) / divisor_pnl) / Number(10**18)
     : ((Number((BigInt(position.size_in_tokens) * BigInt(priceTrade)) - BigInt(position.size_in_usd)) / divisor_pnl) / Number(10**18)) * -1;
 
-    const liq_price = position.is_long ? (entryPrice - Number((BigInt(position.collateral_amount) * BigInt(multiplicator)) / BigInt(position.size_in_tokens))).toFixed(2).toString()
-        : (entryPrice + Number((BigInt(position.collateral_amount) * BigInt(multiplicator)) / BigInt(position.size_in_tokens))).toFixed(2).toString()
+    const liq_price = position.is_long ? (entryPrice - Number((BigInt(position.collateral_amount) * BigInt(multiplicator)) / BigInt(position.size_in_tokens))).toFixed(3).toString()
+        : (entryPrice + Number((BigInt(position.collateral_amount) * BigInt(multiplicator)) / BigInt(position.size_in_tokens))).toFixed(3).toString()
 
     const positionInfos: PositionInfos = {
         account: position.account,
@@ -87,8 +88,8 @@ export default function useUserPositionInfos() {
         market: position.market,
         size_in_tokens: position.size_in_tokens,
         size_in_usd: formattedSizeInUsd,
-        pnl: pnl,
-        entry_price: entryPrice.toFixed(2),
+        pnl: priceTrade === BigInt(0) ? undefined : pnl,
+        entry_price: entryPrice.toFixed(3),
         leverage: positionLeverage.toFixed(2).toString(),
         liq_price: liq_price
       };
